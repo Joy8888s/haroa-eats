@@ -52,7 +52,63 @@ async function login(){
     loginMsg.textContent = 'Server error';
   }
 }
-async function register(){
+async function loadRiderDashboard() {
+  try {
+    const me = await api('/api/me');
+
+    if (!me.user || me.user.role !== 'rider') return;
+
+    const dashboard = document.createElement('section');
+
+    dashboard.id = 'riderDashboard';
+
+    dashboard.style.cssText = `
+      padding:20px;
+      max-width:900px;
+      margin:20px auto;
+    `;
+
+    dashboard.innerHTML = `
+      <div style="
+        background:#fff;
+        padding:25px;
+        border-radius:16px;
+        box-shadow:0 4px 15px rgba(0,0,0,.12);
+      ">
+        <h1>🏍️ Rider Dashboard</h1>
+
+        <h2>Welcome, ${me.user.name || 'Haroa Rider'}!</h2>
+
+        <hr>
+
+        <h2>📦 Available Orders</h2>
+
+        <div id="riderOrders">
+          <p>No new orders right now.</p>
+        </div>
+
+        <hr>
+
+        <h2>🚴 My Delivery</h2>
+
+        <div style="
+          padding:15px;
+          background:#f5f5f5;
+          border-radius:10px;
+        ">
+          <p>No active delivery.</p>
+        </div>
+      </div>
+    `;
+
+    document.querySelector('main').prepend(dashboard);
+
+  } catch (e) {
+    console.log('Rider dashboard error:', e);
+  }
+}
+
+loadRiderDashboard();async function register(){
   try {
     const nameEl = document.getElementById('name');
     const phoneEl = document.getElementById('phone');
