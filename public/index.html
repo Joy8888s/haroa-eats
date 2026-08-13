@@ -16,7 +16,42 @@ function drawCart(){cnt.textContent=cartItems.reduce((s,x)=>s+x.qty,0);cart.inne
 function openCart(){cartModal.classList.add('on');drawCart()}function closeCart(){cartModal.classList.remove('on')}
 async function checkout(){if(!cartItems.length)return alert('Cart খালি');let me=await api('/api/me');if(!me.user)return loginBox();if(!address.value.trim())return alert('Address দিন');let rid=cartItems[0].restaurantId;if(cartItems.some(x=>x.restaurantId!==rid))return alert('একবারে একটি restaurant থেকে order করুন');let x=await api('/api/orders',{method:'POST',body:JSON.stringify({restaurantId:rid,address:address.value,items:cartItems.map(x=>({menuId:x.menuId,qty:x.qty}))})});checkoutMsg.innerHTML='<div class="notice">Order ID: <b>'+x.orderId+'</b><br>Order received successfully.</div>';cartItems=[];drawCart()}
 function loginBox(){loginModal.classList.add('on')}function closeLogin(){loginModal.classList.remove('on')}
-async function login(){try{let x=await api('/api/login',{method:'POST',body:JSON.stringify({phone:phone.value,password:pass.value})});loginMsg.textContent='Login successful: '+x.user.role;closeLogin()}catch(e){loginMsg.textContent=e.message}}
+async function login(){
+  try {
+    const x = await api('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        phone: phone.value,
+        password: pass.value
+      })
+    });
+
+    if (!x.ok) {
+      loginMsg.textContent = x.message || 'Login failed';
+      return;
+    }
+
+    loginMsg.textContent = 'Login successful';
+
+    if (x.user && x.user.role === 'rider') {
+      alert('Rider Login Successful');
+      location.reload();
+      return;
+    }
+
+    if (x.user && x.user.role === 'admin') {
+      alert('Admin Login Successful');
+      location.reload();
+      return;
+    }
+
+    alert('Customer Login Successful');
+    location.reload();
+
+  } catch (e) {
+    loginMsg.textContent = 'Server error';
+  }
+}
 async function register(){
   try {
     const nameEl = document.getElementById('name');
