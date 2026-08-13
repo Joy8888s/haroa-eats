@@ -78,9 +78,9 @@ if(req.session.user.role==="admin"||req.session.user.role==="rider"||(req.sessio
    db.prepare("UPDATE orders SET status=? WHERE id=?").run(req.body.status,o.id);return res.json({ok:true});
  }res.status(403).json({error:"Not allowed"});
 });
-app.post("/api/rider/claim/:id",auth,role("rider"),(req,res)=>{const o=db.prepare("SELECT * FROM orders WHERE id=?").get(req.params.id);if(!o)return res.status(404).json({error:"Not found"});db.prepare("UPDATE orders SET rider_id=?,status='Accepted' WHERE id=? AND rider_id IS NULL").run(req.session.user.id,o.id);res.json({ok:true})});
+app.post("/api/delivery/claim/:id",auth,role("rider"),(req,res)=>{
 
 app.post("/api/restaurants",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO restaurants(name,area,phone,approved) VALUES(?,?,?,1)").run(x.name,x.area,x.phone||"").lastInsertRowid;res.json({id})});
 app.post("/api/menu",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO menu(restaurant_id,name,price) VALUES(?,?,?)").run(x.restaurantId,x.name,x.price).lastInsertRowid;res.json({id})});
-app.get("/api/admin/stats",auth,role("admin"),(req,res)=>res.json({restaurants:db.prepare("SELECT COUNT(*) c FROM restaurants").get().c,customers:db.prepare("SELECT COUNT(*) c FROM users WHERE role='customer'").get().c,delivery:db.prepare("SELECT COUNT(*) c FROM users WHERE role='delivery'").get().c,orders:db.prepare("SELECT COUNT(*) c FROM orders").get().c,revenue:db.prepare("SELECT COALESCE(SUM(total),0) s FROM orders WHERE status!='Cancelled'").get().s}));
+app.get("/api/admin/stats",auth,role("admin"),(req,res)=>res.json({restaurants:db.prepare("SELECT COUNT(*) c FROM restaurants").get().c,customers:db.prepare("SELECT COUNT(*) c FROM users WHERE role='customer'").get().c,riders:db.prepare("SELECT COUNT(*) c FROM users WHERE role='rider'").get().c
 app.listen(process.env.PORT||3000,()=>console.log("Haroa Eats running on http://localhost:"+(process.env.PORT||3000)));
