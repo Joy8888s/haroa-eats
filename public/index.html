@@ -194,6 +194,14 @@ async function acceptRiderOrder(id) {
 function home(){homeView.classList.remove('hidden');ordersView.classList.add('hidden');adminView.classList.add('hidden');render()}
 async function orders(){homeView.classList.add('hidden');adminView.classList.add('hidden');ordersView.classList.remove('hidden');try{let x=await api('/api/orders');ordersList.innerHTML=x.map(o=>`<div class="card"><b>Order #${o.id}</b> — ${o.status}<br>${o.restaurant}<br>${o.items.map(i=>i.name+' × '+i.qty).join(', ')}<br><b>₹${o.total}</b><br>${o.address}</div>`).join('')||'<p>No orders</p>'}catch(e){ordersList.innerHTML='<p>'+e.message+'</p>'}}
 async function admin(){homeView.classList.add('hidden');ordersView.classList.add('hidden');adminView.classList.remove('hidden');try{let s=await api('/api/admin/stats');stats.innerHTML=Object.entries(s).map(([k,v])=>`<div class="card"><b>${k}</b><h2>${v}</h2></div>`).join('');let os=await api('/api/orders');adminOrders.innerHTML=os.map(o=>`<div class="item"><span>#${o.id} ${o.customer||''} — ₹${o.total}<br>${o.status}</span><button onclick="status(${o.id},'Preparing')">Preparing</button> <button onclick="status(${o.id},'Delivered')">Delivered</button></div>`).join('')}catch(e){adminOrders.innerHTML='<p>'+e.message+'</p>'}}
-async function status(id,s){await api('/api/orders/'+id+'/status',{method:'PATCH',body:JSON.stringify({status:s})});admin()}
+async function status(id,s){
+  await api('/api/orders/'+id+'/status',{
+    method:'PATCH',
+    body:JSON.stringify({status:s})
+  });
+  admin();
+}
+
 home();
+loadRiderDashboard();
 </script></body></html>
