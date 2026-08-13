@@ -52,7 +52,7 @@ async function login(){
     loginMsg.textContent = 'Server error';
   }
 }
-  async function loadRiderDashboard() {
+async function loadRiderDashboard() {
   try {
     const me = await api('/api/me');
 
@@ -84,120 +84,13 @@ async function login(){
         <h2>📦 Available Orders</h2>
 
         <div id="riderOrders">
-          <p>Loading orders...</p>
+          <p>No new orders right now.</p>
         </div>
 
         <hr>
 
         <h2>🚴 My Delivery</h2>
 
-        <div id="myDelivery">
-          <p>Loading delivery...</p>
-        </div>
-      </div>
-    `;
-
-    document.querySelector('main').prepend(dashboard);
-
-    await loadRiderOrders();
-
-  } catch (e) {
-    console.log('Rider dashboard error:', e);
-  }
-}
-
-
-async function loadRiderOrders() {
-  try {
-    const orders = await api('/api/orders');
-
-    const availableBox = document.getElementById('riderOrders');
-    const deliveryBox = document.getElementById('myDelivery');
-
-    if (!availableBox || !deliveryBox) return;
-
-    /*
-      Available orders:
-      যে order এখনো কোনো rider নেয়নি
-    */
-
-    const available = orders.filter(o =>
-      !o.delivery_id &&
-      o.status !== 'Delivered' &&
-      o.status !== 'Cancelled'
-    );
-
-    if (!available.length) {
-      availableBox.innerHTML = `
-        <div style="
-          padding:15px;
-          background:#f5f5f5;
-          border-radius:10px;
-        ">
-          <p>No new orders right now.</p>
-        </div>
-      `;
-    } else {
-
-      availableBox.innerHTML = available.map(o => `
-        <div style="
-          padding:18px;
-          margin:12px 0;
-          background:#f8f8f8;
-          border-radius:12px;
-          border:1px solid #eee;
-        ">
-
-          <h3>📦 Order #${o.id}</h3>
-
-          <p>
-            <b>Restaurant:</b>
-            ${o.restaurant || 'Restaurant'}
-          </p>
-
-          <p>
-            <b>Address:</b>
-            ${o.address || 'No address'}
-          </p>
-
-          <p>
-            <b>Items:</b>
-            ${(o.items || []).map(i =>
-              `${i.name} × ${i.qty}`
-            ).join(', ')}
-          </p>
-
-          <p>
-            <b>Total:</b> ₹${o.total || 0}
-          </p>
-
-          <p>
-            <b>Status:</b>
-            <span class="pill">${o.status || 'Pending'}</span>
-          </p>
-
-          <button onclick="claimOrder(${o.id})">
-            🏍️ Accept Order
-          </button>
-
-        </div>
-      `).join('');
-    }
-
-
-    /*
-      My Delivery
-    */
-
-    const mine = orders.filter(o =>
-      o.delivery_id &&
-      o.status !== 'Delivered' &&
-      o.status !== 'Cancelled'
-    );
-
-    if (!mine.length) {
-
-      deliveryBox.innerHTML = `
         <div style="
           padding:15px;
           background:#f5f5f5;
@@ -205,114 +98,15 @@ async function loadRiderOrders() {
         ">
           <p>No active delivery.</p>
         </div>
-      `;
+      </div>
+    `;
 
-    } else {
-
-      deliveryBox.innerHTML = mine.map(o => `
-        <div style="
-          padding:18px;
-          margin:12px 0;
-          background:#fff8e8;
-          border-radius:12px;
-          border:1px solid #eee;
-        ">
-
-          <h3>🚴 Order #${o.id}</h3>
-
-          <p>
-            <b>Restaurant:</b>
-            ${o.restaurant || 'Restaurant'}
-          </p>
-
-          <p>
-            <b>Address:</b>
-            ${o.address || 'No address'}
-          </p>
-
-          <p>
-            <b>Total:</b> ₹${o.total || 0}
-          </p>
-
-          <p>
-            <b>Current Status:</b>
-            <span class="pill">${o.status || 'Accepted'}</span>
-          </p>
-
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-
-            <button onclick="riderStatus(${o.id},'Picked up')">
-              📦 Picked Up
-            </button>
-
-            <button onclick="riderStatus(${o.id},'Delivered')">
-              ✅ Delivered
-            </button>
-
-          </div>
-
-        </div>
-      `).join('');
-    }
+    document.querySelector('main').prepend(dashboard);
 
   } catch (e) {
-
-    const availableBox = document.getElementById('riderOrders');
-    const deliveryBox = document.getElementById('myDelivery');
-
-    if (availableBox) {
-      availableBox.innerHTML =
-        `<p>Unable to load orders: ${e.message}</p>`;
-    }
-
-    if (deliveryBox) {
-      deliveryBox.innerHTML =
-        `<p>Unable to load delivery.</p>`;
-    }
+    console.log('Rider dashboard error:', e);
   }
 }
-
-
-async function claimOrder(id) {
-  try {
-
-    const x = await api('/api/delivery/' + id + '/claim', {
-      method: 'POST'
-    });
-
-    alert(x.message || 'Order accepted successfully');
-
-    await loadRiderOrders();
-
-  } catch (e) {
-
-    alert(e.message || 'Unable to accept order');
-
-  }
-}
-
-
-async function riderStatus(id, statusValue) {
-  try {
-
-    await api('/api/orders/' + id + '/status', {
-      method: 'PATCH',
-      body: JSON.stringify({
-        status: statusValue
-      })
-    });
-
-    alert('Order status updated: ' + statusValue);
-
-    await loadRiderOrders();
-
-  } catch (e) {
-
-    alert(e.message || 'Unable to update order status');
-
-  }
-}
-
 
 loadRiderDashboard();
   try {
