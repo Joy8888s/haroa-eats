@@ -11,7 +11,17 @@ CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY AUTOINCREMENT,customer_
 CREATE TABLE IF NOT EXISTS order_items(id INTEGER PRIMARY KEY AUTOINCREMENT,order_id INTEGER NOT NULL,menu_id INTEGER NOT NULL,name TEXT NOT NULL,price REAL NOT NULL,qty INTEGER NOT NULL);`);
 
 function seed(){
- const admin=db.prepare("SELECT id FROM users WHERE phone=?").get("9999999999");
+ const admin=db.prepare("SELECT id FROM users WHERE phone=?").get("9999999999");const rider = db.prepare("SELECT id FROM users WHERE phone=?").get("8888888888");
+
+if (!rider) {
+  db.prepare(
+    "INSERT INTO users(name,phone,password,role) VALUES(?,?,?,'rider')"
+  ).run(
+    "Haroa Rider",
+    "8888888888",
+    bcrypt.hashSync("rider123", 10)
+  );
+}
  if(!admin) db.prepare("INSERT INTO users(name,phone,password,role) VALUES(?,?,?,?)").run("Haroa Eats Admin","9999999999",bcrypt.hashSync("admin123",10),"admin");
  const count=db.prepare("SELECT COUNT(*) c FROM restaurants").get().c;
  if(!count){
