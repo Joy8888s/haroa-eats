@@ -51,7 +51,8 @@ async function login(){
   } catch (e) {
     loginMsg.textContent = 'Server error';
   }
-}async function loadRiderDashboard() {
+}
+  async function loadRiderDashboard() {
   try {
     const me = await api('/api/me');
 
