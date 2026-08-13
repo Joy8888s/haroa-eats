@@ -52,7 +52,9 @@ async function login(){
     loginMsg.textContent = 'Server error';
   }
 }
-async function loadRiderDashboard() {
+loadRiderDashboard();
+
+async function register(){
   try {
     const me = await api('/api/me');
 
