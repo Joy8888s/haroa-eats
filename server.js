@@ -74,11 +74,11 @@ app.get("/api/orders",auth,(req,res)=>{
 app.patch("/api/orders/:id/status",auth,(req,res)=>{
  const allowed=["Accepted","Preparing","Picked up","Delivered","Cancelled"];if(!allowed.includes(req.body.status))return res.status(400).json({error:"Invalid status"});
  const o=db.prepare("SELECT * FROM orders WHERE id=?").get(req.params.id);if(!o)return res.status(404).json({error:"Order not found"});
- if(req.session.user.role==="admin"||req.session.user.role==="delivery"||(req.session.user.role==="customer"&&o.customer_id===req.session.user.id)){
+if(req.session.user.role==="admin"||req.session.user.role==="rider"||(req.session.user.role==="customer"&&o.customer_id===req.session.user.id)){
    db.prepare("UPDATE orders SET status=? WHERE id=?").run(req.body.status,o.id);return res.json({ok:true});
  }res.status(403).json({error:"Not allowed"});
 });
-app.post("/api/delivery/claim/:id",auth,role("delivery"),(req,res)=>{const o=db.prepare("SELECT * FROM orders WHERE id=?").get(req.params.id);if(!o)return res.status(404).json({error:"Not found"});db.prepare("UPDATE orders SET delivery_id=?,status='Accepted' WHERE id=? AND delivery_id IS NULL").run(req.session.user.id,o.id);res.json({ok:true})});
+app.post("/api/rider/claim/:id",auth,role("rider"),(req,res)=>{const o=db.prepare("SELECT * FROM orders WHERE id=?").get(req.params.id);if(!o)return res.status(404).json({error:"Not found"});db.prepare("UPDATE orders SET rider_id=?,status='Accepted' WHERE id=? AND rider_id IS NULL").run(req.session.user.id,o.id);res.json({ok:true})});
 
 app.post("/api/restaurants",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO restaurants(name,area,phone,approved) VALUES(?,?,?,1)").run(x.name,x.area,x.phone||"").lastInsertRowid;res.json({id})});
 app.post("/api/menu",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO menu(restaurant_id,name,price) VALUES(?,?,?)").run(x.restaurantId,x.name,x.price).lastInsertRowid;res.json({id})});
