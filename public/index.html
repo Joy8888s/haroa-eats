@@ -19,17 +19,22 @@ function loginBox(){loginModal.classList.add('on')}function closeLogin(){loginMo
 async function login(){try{let x=await api('/api/login',{method:'POST',body:JSON.stringify({phone:phone.value,password:pass.value})});loginMsg.textContent='Login successful: '+x.user.role;closeLogin()}catch(e){loginMsg.textContent=e.message}}
 async function register(){
   try {
+    const nameEl = document.getElementById('name');
+    const phoneEl = document.getElementById('phone');
+    const passEl = document.getElementById('pass');
+
     const x = await api('/api/register', {
       method: 'POST',
       body: JSON.stringify({
-        name: name.value,
-        phone: phone.value,
-        password: pass.value
+        name: nameEl.value.trim(),
+        phone: phoneEl.value.trim(),
+        password: passEl.value
       })
     });
 
     loginMsg.textContent = x.message || 'Registration successful';
     alert(x.message || 'Registration successful');
+
   } catch(e) {
     loginMsg.textContent = e.message;
     alert(e.message);
