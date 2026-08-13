@@ -82,5 +82,16 @@ app.post("/api/delivery/claim/:id",auth,role("rider"),(req,res)=>{
 
 app.post("/api/restaurants",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO restaurants(name,area,phone,approved) VALUES(?,?,?,1)").run(x.name,x.area,x.phone||"").lastInsertRowid;res.json({id})});
 app.post("/api/menu",auth,role("admin"),(req,res)=>{const x=req.body;const id=db.prepare("INSERT INTO menu(restaurant_id,name,price) VALUES(?,?,?)").run(x.restaurantId,x.name,x.price).lastInsertRowid;res.json({id})});
-app.get("/api/admin/stats",auth,role("admin"),(req,res)=>res.json({restaurants:db.prepare("SELECT COUNT(*) c FROM restaurants").get().c,customers:db.prepare("SELECT COUNT(*) c FROM users WHERE role='customer'").get().c,riders:db.prepare("SELECT COUNT(*) c FROM users WHERE role='rider'").get().c
-app.listen(process.env.PORT||3000,()=>console.log("Haroa Eats running on http://localhost:"+(process.env.PORT||3000)));
+app.get("/api/admin/stats",auth,role("admin"),(req,res)=>{
+  res.json({
+    restaurants: db.prepare("SELECT COUNT(*) c FROM restaurants").get().c,
+    customers: db.prepare("SELECT COUNT(*) c FROM users WHERE role='customer'").get().c,
+    riders: db.prepare("SELECT COUNT(*) c FROM users WHERE role='rider'").get().c,
+    orders: db.prepare("SELECT COUNT(*) c FROM orders").get().c,
+    revenue: db.prepare("SELECT COALESCE(SUM(total),0) s FROM orders WHERE status!='Cancelled'").get().s
+  });
+});
+
+app.listen(process.env.PORT||3000,()=>{
+  console.log("Haroa Eats running on http://localhost:"+(process.env.PORT||3000));
+});
