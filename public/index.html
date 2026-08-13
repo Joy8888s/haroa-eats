@@ -17,8 +17,24 @@ function openCart(){cartModal.classList.add('on');drawCart()}function closeCart(
 async function checkout(){if(!cartItems.length)return alert('Cart খালি');let me=await api('/api/me');if(!me.user)return loginBox();if(!address.value.trim())return alert('Address দিন');let rid=cartItems[0].restaurantId;if(cartItems.some(x=>x.restaurantId!==rid))return alert('একবারে একটি restaurant থেকে order করুন');let x=await api('/api/orders',{method:'POST',body:JSON.stringify({restaurantId:rid,address:address.value,items:cartItems.map(x=>({menuId:x.menuId,qty:x.qty}))})});checkoutMsg.innerHTML='<div class="notice">Order ID: <b>'+x.orderId+'</b><br>Order received successfully.</div>';cartItems=[];drawCart()}
 function loginBox(){loginModal.classList.add('on')}function closeLogin(){loginModal.classList.remove('on')}
 async function login(){try{let x=await api('/api/login',{method:'POST',body:JSON.stringify({phone:phone.value,password:pass.value})});loginMsg.textContent='Login successful: '+x.user.role;closeLogin()}catch(e){loginMsg.textContent=e.message}}
-async function register(){try{let x=await api('/api/register',{method:'POST',body:JSON.stringify({name:name.value,phone:phone.value,password:pass.value})});loginMsg.textContent='Registered as '+x.user.name;closeLogin()}catch(e){loginMsg.textContent=e.message}}
-async function logout(){await api('/api/logout',{method:'POST'});alert('Logged out')}
+async function register(){
+  try {
+    const x = await api('/api/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: name.value,
+        phone: phone.value,
+        password: pass.value
+      })
+    });
+
+    loginMsg.textContent = x.message || 'Registration successful';
+    alert(x.message || 'Registration successful');
+  } catch(e) {
+    loginMsg.textContent = e.message;
+    alert(e.message);
+  }
+}
 function home(){homeView.classList.remove('hidden');ordersView.classList.add('hidden');adminView.classList.add('hidden');render()}
 async function orders(){homeView.classList.add('hidden');adminView.classList.add('hidden');ordersView.classList.remove('hidden');try{let x=await api('/api/orders');ordersList.innerHTML=x.map(o=>`<div class="card"><b>Order #${o.id}</b> — ${o.status}<br>${o.restaurant}<br>${o.items.map(i=>i.name+' × '+i.qty).join(', ')}<br><b>₹${o.total}</b><br>${o.address}</div>`).join('')||'<p>No orders</p>'}catch(e){ordersList.innerHTML='<p>'+e.message+'</p>'}}
 async function admin(){homeView.classList.add('hidden');ordersView.classList.add('hidden');adminView.classList.remove('hidden');try{let s=await api('/api/admin/stats');stats.innerHTML=Object.entries(s).map(([k,v])=>`<div class="card"><b>${k}</b><h2>${v}</h2></div>`).join('');let os=await api('/api/orders');adminOrders.innerHTML=os.map(o=>`<div class="item"><span>#${o.id} ${o.customer||''} — ₹${o.total}<br>${o.status}</span><button onclick="status(${o.id},'Preparing')">Preparing</button> <button onclick="status(${o.id},'Delivered')">Delivered</button></div>`).join('')}catch(e){adminOrders.innerHTML='<p>'+e.message+'</p>'}}
