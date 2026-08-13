@@ -52,13 +52,16 @@ async function login(){
     loginMsg.textContent = 'Server error';
   }
 }
-loadRiderDashboard();
-
-async function register(){
+  
+async function loadRiderDashboard() {
   try {
     const me = await api('/api/me');
 
+    // Rider না হলে dashboard দেখাবে না
     if (!me.user || me.user.role !== 'rider') return;
+
+    // আগের dashboard থাকলে duplicate করবে না
+    if (document.getElementById('riderDashboard')) return;
 
     const dashboard = document.createElement('section');
 
@@ -77,16 +80,19 @@ async function register(){
         border-radius:16px;
         box-shadow:0 4px 15px rgba(0,0,0,.12);
       ">
+
         <h1>🏍️ Rider Dashboard</h1>
 
-        <h2>Welcome, ${me.user.name || 'Haroa Rider'}!</h2>
+        <h2>
+          Welcome, ${me.user.name || 'Haroa Rider'}!
+        </h2>
 
         <hr>
 
         <h2>📦 Available Orders</h2>
 
         <div id="riderOrders">
-          <p>No new orders right now.</p>
+          <p>Loading orders...</p>
         </div>
 
         <hr>
@@ -100,39 +106,66 @@ async function register(){
         ">
           <p>No active delivery.</p>
         </div>
+
       </div>
     `;
 
     document.querySelector('main').prepend(dashboard);
 
+    // Rider-এর জন্য available orders load করা
+    const orders = await api('/api/orders');
+
+    const riderOrders = document.getElementById('riderOrders');
+
+    if (!orders || !orders.length) {
+      riderOrders.innerHTML = '<p>No new orders right now.</p>';
+      return;
+    }
+
+    riderOrders.innerHTML = orders.map(o => `
+      <div class="card">
+
+        <h3>📦 Order #${o.id}</h3>
+
+        <p>
+          <b>Restaurant:</b> ${o.restaurant || 'Unknown'}
+        </p>
+
+        <p>
+          <b>Status:</b> ${o.status}
+        </p>
+
+        <p>
+          <b>Address:</b> ${o.address || 'Not available'}
+        </p>
+
+        <p>
+          <b>Total:</b> ₹${o.total || 0}
+        </p>
+
+        <button onclick="acceptRiderOrder(${o.id})">
+          🏍️ Accept Order
+        </button>
+
+      </div>
+    `).join('');
+
   } catch (e) {
     console.log('Rider dashboard error:', e);
   }
 }
-
-loadRiderDashboard();
-
-async function register() {
+async function acceptRiderOrder(id) {
   try {
-    const nameEl = document.getElementById('name');
-    const phoneEl = document.getElementById('phone');
-    const passEl = document.getElementById('pass');
-
-    const x = await api('/api/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: nameEl.value.trim(),
-        phone: phoneEl.value.trim(),
-        password: passEl.value
-      })
+    await api('/api/delivery/' + id + '/claim', {
+      method: 'POST'
     });
 
-    loginMsg.textContent = x.message || 'Registration successful';
-    alert(x.message || 'Registration successful');
+    alert('Order accepted successfully!');
+
+    loadRiderDashboard();
 
   } catch (e) {
-    loginMsg.textContent = e.message || 'Registration failed';
-    alert(e.message || 'Registration failed');
+    alert(e.message || 'Could not accept order');
   }
 }
 function home(){homeView.classList.remove('hidden');ordersView.classList.add('hidden');adminView.classList.add('hidden');render()}
