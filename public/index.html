@@ -111,6 +111,8 @@ async function register(){
 }
 
 loadRiderDashboard();
+
+async function register() {
   try {
     const nameEl = document.getElementById('name');
     const phoneEl = document.getElementById('phone');
@@ -128,9 +130,9 @@ loadRiderDashboard();
     loginMsg.textContent = x.message || 'Registration successful';
     alert(x.message || 'Registration successful');
 
-  } catch(e) {
-    loginMsg.textContent = e.message;
-    alert(e.message);
+  } catch (e) {
+    loginMsg.textContent = e.message || 'Registration failed';
+    alert(e.message || 'Registration failed');
   }
 }
 function home(){homeView.classList.remove('hidden');ordersView.classList.add('hidden');adminView.classList.add('hidden');render()}
