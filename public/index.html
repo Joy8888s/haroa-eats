@@ -6,7 +6,282 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Haroa Eats — Local Food Delivery</title>
 
-<style>
+/* =========================================
+   FINAL HERO DESIGN
+   ========================================= */
+
+.hero {
+    position: relative;
+    min-height: 600px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Hero Food Image */
+
+.heroImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.heroImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* Hero Content */
+
+.heroContent {
+    position: relative;
+    z-index: 5;
+
+    width: 48%;
+    padding: 100px 0 60px 7%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.heroContent h1 {
+    font-size: 55px;
+    line-height: 1.15;
+    margin: 0 0 20px;
+    font-weight: 800;
+    color: #333;
+}
+
+.heroContent h1 span {
+    color: #e53935;
+}
+
+.heroContent p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #666;
+    max-width: 520px;
+    margin-bottom: 25px;
+}
+
+
+/* Search Box */
+
+.heroSearchBox {
+    display: flex;
+    width: 100%;
+    max-width: 520px;
+
+    background: white;
+    border-radius: 12px;
+    padding: 6px;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.heroSearchBox input {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    padding: 15px 18px;
+
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.heroSearchBox button {
+    border: none;
+
+    background: #e53935;
+    color: white;
+
+    padding: 0 25px;
+
+    border-radius: 9px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.heroSearchBox button:hover {
+    background: #c62828;
+}
+
+
+/* =========================================
+   HAMBURGER BUTTON
+   ========================================= */
+
+.hamburgerBtn {
+    position: absolute;
+
+    top: 20px;
+    left: 20px;
+
+    z-index: 1000;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: white;
+    color: #333;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+}
+
+.hamburgerBtn:hover {
+    background: #f5f5f5;
+}
+
+
+/* =========================================
+   SIDE MENU
+   ========================================= */
+
+.sideMenu {
+    position: fixed;
+
+    top: 0;
+    left: -320px;
+
+    width: 300px;
+    height: 100vh;
+
+    background: white;
+
+    z-index: 2000;
+
+    box-shadow: 5px 0 25px rgba(0,0,0,0.2);
+
+    transition: left 0.3s ease;
+
+    padding-top: 20px;
+}
+
+.sideMenu.active {
+    left: 0;
+}
+
+
+/* Menu Header */
+
+.sideMenuHeader {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #eee;
+}
+
+.sideMenuHeader span {
+    font-size: 22px;
+    font-weight: 800;
+    color: #e53935;
+}
+
+.sideMenuHeader button {
+    border: none;
+
+    background: transparent;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+
+/* Menu Items */
+
+.menuItem {
+    display: flex;
+
+    align-items: center;
+    gap: 12px;
+
+    padding: 18px 22px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.menuItem span:nth-child(2) {
+    flex: 1;
+}
+
+.menuItem:hover {
+    background: #fff3f3;
+    color: #e53935;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .hero {
+        min-height: 650px;
+    }
+
+    .heroImage {
+        width: 100%;
+        height: 300px;
+
+        top: 0;
+        right: 0;
+    }
+
+    .heroContent {
+        width: auto;
+
+        padding: 330px 25px 40px;
+
+        text-align: center;
+    }
+
+    .heroContent h1 {
+        font-size: 38px;
+    }
+
+    .heroContent p {
+        font-size: 16px;
+    }
+
+    .heroSearchBox {
+        max-width: 100%;
+    }
+
+    .hamburgerBtn {
+        top: 15px;
+        left: 15px;
+    }
+
+}<style>
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -528,7 +803,81 @@ footer ul{padding:0;list-style:none}
 <!-- HOME -->
 <div id="homePage">
 
-  <div class="hero">
+<div class="hero">
+
+    <!-- Hamburger Menu -->
+    <button class="hamburgerBtn" onclick="toggleSideMenu()">
+        ☰
+    </button>
+
+    <!-- Side Menu -->
+    <div id="sideMenu" class="sideMenu">
+
+        <div class="sideMenuHeader">
+            <span>Haroa Eats</span>
+            <button onclick="toggleSideMenu()">✕</button>
+        </div>
+
+        <div class="menuItem" onclick="showCategory('Food')">
+            🍔 <span>Food</span>
+            <span>➡️</span>
+        </div>
+
+        <div class="menuItem" onclick="showCategory('Grocery')">
+            🛒 <span>Grocery</span>
+            <span>➡️</span>
+        </div>
+
+        <div class="menuItem" onclick="showCategory('Beverages')">
+            🥤 <span>Beverages</span>
+            <span>➡️</span>
+        </div>
+
+        <div class="menuItem" onclick="showCategory('Drinks')">
+            🍹 <span>Drinks</span>
+            <span>➡️</span>
+        </div>
+
+    </div>
+
+
+    <!-- Hero Image -->
+    <div class="heroImage">
+        <img src="hero-food.jpg" alt="Har oa Eats Food">
+    </div>
+
+
+    <!-- Hero Content -->
+    <div class="heroContent">
+
+        <h1>
+            খাবার <span>ঘরে বসেই</span>
+        </h1>
+
+        <p>
+            Har oa-এর সেরা restaurant থেকে
+            আপনার পছন্দের খাবার দ্রুত বাড়ি পৌঁছে যাবে 😍
+        </p>
+
+        <!-- Search -->
+        <div class="heroSearchBox">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Restaurant বা খাবার খুঁজুন..."
+                oninput="renderRestaurants()"
+            >
+
+            <button onclick="renderRestaurants()">
+                খুঁজুন
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
     <div class="container heroInner">
 
  <div class="heroText">
@@ -542,57 +891,10 @@ footer ul{padding:0;list-style:none}
         <button onclick="renderRestaurants()">খুঁজুন</button>
     </div>
 
-    <div class="categoryMenu">
 
-        <div class="categoryItem" onclick="showCategory('Food')">
-            <span>🍔 Food</span>
-            <span>➡️</span>
-        </div>
-
-        <div class="categoryItem" onclick="showCategory('Grocery')">
-            <span>🛒 Grocery</span>
-            <span>➡️</span>
-        </div>
-
-        <div class="categoryItem" onclick="showCategory('Beverages')">
-            <span>🥤 Beverages</span>
-            <span>➡️</span>
-        </div>
-
-        <div class="categoryItem" onclick="showCategory('Drinks')">
-            <span>🍹 Drinks</span>
-            <span>➡️</span>
-        </div>
-
-    </div>
 
 </div>
   
-<div class="heroFeatures">
-
-          <div class="feature">
-            <div class="featureIcon">🏍️</div>
-            <div>
-              <b>Fast Delivery</b>
-              <small>দ্রুত ও ঝামেলামুক্ত</small>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="featureIcon">🏆</div>
-            <div>
-              <b>Best Quality</b>
-              <small>সেরা মানের খাবার</small>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="featureIcon">🛡️</div>
-            <div>
-              <b>Safe & Hygienic</b>
-              <small>নিরাপদ ও স্বাস্থ্যকর</small>
-            </div>
-          </div>
 
         </div>
       </div>
