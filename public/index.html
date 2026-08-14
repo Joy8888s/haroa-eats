@@ -3,21 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Haroa Eats — Local Food Delivery</title>
 
 <style>
-*{box-sizing:border-box}
 
-:root{
-  --red:#e23744;
-  --red-dark:#c91f2d;
-  --dark:#181818;
-  --muted:#777;
-  --green:#16834b;
-  --card:#fff;
+*{
+  box-sizing:border-box;
 }
 
-html{scroll-behavior:smooth}
+:root{
+  --red:#e21d25;
+  --red-dark:#c9151d;
+  --white:#ffffff;
+  --black:#171717;
+  --muted:#777;
+  --light:#f7f7f7;
+  --border:#eeeeee;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
@@ -26,241 +33,267 @@ body{
   color:#191919;
 }
 
-button,input,textarea{font:inherit}
-button{cursor:pointer;border:0}
-
-.container{
-  width:min(1180px,92%);
-  margin:auto;
+button,
+input,
+textarea{
+  font:inherit;
 }
 
-/* =========================
+button{
+  cursor:pointer;
+  border:0;
+}
+
+img{
+  max-width:100%;
+}
+
+
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
+
 header{
-  background:linear-gradient(135deg,#d91624,#ef3340);
-  color:#fff;
   position:sticky;
   top:0;
-  z-index:50;
-  box-shadow:0 3px 15px #0002;
+  z-index:100;
+  background:linear-gradient(135deg,#d91620,#ef2b32);
+  color:#fff;
+  box-shadow:0 4px 18px rgba(0,0,0,.20);
 }
 
-.navbar{
-  min-height:78px;
+.headerTop{
+  width:min(1400px,96%);
+  margin:auto;
+
+  min-height:82px;
+
+  display:grid;
+  grid-template-columns:auto auto minmax(300px,1fr) auto;
+  align-items:center;
+
+  gap:18px;
+}
+
+
+/* Hamburger */
+
+.hamburgerBtn{
+  width:52px;
+  height:52px;
+
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:20px;
+  justify-content:center;
+
+  background:rgba(255,255,255,.14);
+  color:#fff;
+
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:12px;
+
+  font-size:28px;
+  font-weight:700;
+
+  transition:.2s;
 }
+
+.hamburgerBtn:hover{
+  background:#fff;
+  color:var(--red);
+}
+
+
+/* Logo */
 
 .logo{
   display:flex;
   align-items:center;
   gap:10px;
-  font-size:25px;
-  font-weight:800;
+
   white-space:nowrap;
 }
 
-.logoIcon{font-size:30px}
+.logoIcon{
+  font-size:31px;
+}
 
-.logo small{
+.logoText{
+  font-size:27px;
+  font-weight:800;
+  line-height:1.05;
+}
+
+.logoText small{
   display:block;
+  margin-top:5px;
+
   font-size:11px;
   font-weight:400;
+
   opacity:.9;
 }
 
-.navLinks{
+
+/* Header Search */
+
+.headerSearch{
+  width:100%;
+  max-width:680px;
+  justify-self:center;
+
   display:flex;
-  gap:6px;
   align-items:center;
+
+  background:#fff;
+  border-radius:13px;
+
+  padding:5px;
+
+  box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
-.navLinks button{
+.headerSearchIcon{
+  color:#999;
+  font-size:21px;
+  padding-left:13px;
+}
+
+.headerSearch input{
+  flex:1;
+
+  min-width:0;
+
+  border:0;
+  outline:0;
+
+  padding:14px 12px;
+
+  background:#fff;
+  color:#222;
+
+  font-size:16px;
+}
+
+.headerSearch input::placeholder{
+  color:#999;
+}
+
+.headerSearch button{
+  background:var(--red);
   color:#fff;
-  background:transparent;
-  padding:11px 14px;
+
+  padding:12px 20px;
+
   border-radius:9px;
-  font-weight:700;
+
+  font-weight:800;
 }
 
-.navLinks button:hover{
-  background:#fff2;
+.headerSearch button:hover{
+  background:var(--red-dark);
 }
 
-.navRight{
+
+/* Right side */
+
+.headerRight{
   display:flex;
-  gap:9px;
   align-items:center;
+  gap:9px;
 }
 
 .locationBtn{
-  background:#fff1;
-  border:1px solid #fff8;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.45);
+
   color:#fff;
-  padding:11px 16px;
+
+  padding:12px 16px;
+
   border-radius:10px;
+
+  white-space:nowrap;
+}
+
+.locationBtn:hover{
+  background:rgba(255,255,255,.18);
 }
 
 .cartBtn{
   background:#fff;
   color:var(--red);
-  padding:11px 15px;
+
+  padding:12px 16px;
+
   border-radius:10px;
+
   font-weight:800;
+
+  white-space:nowrap;
 }
 
 .userBtn{
+  width:44px;
+  height:44px;
+
+  border-radius:50%;
+
   background:#ffca28;
   color:#222;
-  width:40px;
-  height:40px;
-  border-radius:50%;
+
   font-weight:800;
-}
-
-/* =========================
-   HERO
-========================= */
-.hero{
-  position:relative;
-  min-height:500px;
-  overflow:hidden;
-  background:#222;
-}
-
-.heroImage{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-
-.heroImage img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-  object-position:center center;
-  filter:brightness(.72);
-}
-
-.heroOverlay{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,.60) 0%,
-      rgba(0,0,0,.28) 50%,
-      rgba(0,0,0,.15) 100%
-    ),
-    linear-gradient(
-      0deg,
-      rgba(0,0,0,.35),
-      transparent 55%
-    );
-}
-
-.heroContent{
-  position:relative;
-  z-index:4;
-  min-height:500px;
-  width:min(1180px,92%);
-  margin:auto;
-  padding:105px 0 70px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:flex-start;
-}
-
-.heroContent h1{
-  margin:0 0 12px;
-  color:#fff;
-  font-size:clamp(38px,5vw,62px);
-  line-height:1.08;
-  font-weight:800;
-  text-shadow:0 3px 18px #0007;
-}
-
-.heroContent h1 span{
-  color:#ff6f78;
-}
-
-.heroContent p{
-  max-width:600px;
-  margin:0 0 24px;
-  color:#fff;
   font-size:18px;
-  line-height:1.6;
-  text-shadow:0 2px 10px #0008;
 }
 
-/* SEARCH ON HERO IMAGE */
-.heroSearchBox{
-  width:min(650px,100%);
+
+/* Navigation row */
+
+.navRow{
+  border-top:1px solid rgba(255,255,255,.18);
+}
+
+.navLinks{
+  width:min(1400px,96%);
+  margin:auto;
+
   display:flex;
   align-items:center;
+
   gap:6px;
-  padding:6px;
-  background:#fff;
-  border-radius:14px;
-  box-shadow:0 10px 35px #0005;
+
+  min-height:54px;
 }
 
-.heroSearchBox input{
-  flex:1;
-  min-width:0;
-  border:0;
-  outline:0;
-  background:#fff;
-  color:#222;
-  padding:15px 16px;
-  border-radius:10px;
-}
-
-.heroSearchBox button{
-  flex:0 0 auto;
-  background:var(--red);
+.navLinks button{
+  background:transparent;
   color:#fff;
-  padding:14px 24px;
-  border-radius:10px;
-  font-weight:800;
+
+  padding:11px 20px;
+
+  border-radius:8px;
+
+  font-weight:700;
+  font-size:16px;
 }
 
-.heroSearchBox button:hover{
-  background:var(--red-dark);
+.navLinks button:hover{
+  background:rgba(255,255,255,.14);
 }
 
-/* =========================
-   HAMBURGER + SIDE MENU
-========================= */
-.hamburgerBtn{
-  position:absolute;
-  top:20px;
-  left:20px;
-  z-index:10;
-  width:48px;
-  height:48px;
-  border-radius:12px;
-  background:#fff;
-  color:#222;
-  font-size:25px;
-  box-shadow:0 5px 18px #0004;
-}
 
-.hamburgerBtn:hover{
-  background:#f4f4f4;
-}
+/* =====================================================
+   SIDE MENU
+===================================================== */
 
 .menuBackdrop{
   position:fixed;
   inset:0;
-  z-index:90;
-  background:#0007;
+
+  background:rgba(0,0,0,.55);
+
+  z-index:500;
+
   display:none;
 }
 
@@ -270,16 +303,23 @@ header{
 
 .sideMenu{
   position:fixed;
+
   top:0;
-  left:-330px;
-  width:310px;
-  max-width:86vw;
+  left:-340px;
+
+  width:320px;
+  max-width:88vw;
   height:100vh;
-  z-index:100;
+
   background:#fff;
-  box-shadow:8px 0 30px #0003;
+
+  z-index:600;
+
+  box-shadow:8px 0 30px rgba(0,0,0,.25);
+
   transition:left .28s ease;
-  overflow:auto;
+
+  overflow-y:auto;
 }
 
 .sideMenu.open{
@@ -287,101 +327,264 @@ header{
 }
 
 .sideMenuHeader{
-  min-height:78px;
+  min-height:80px;
+
   padding:18px 20px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  border-bottom:1px solid #eee;
+
+  background:linear-gradient(135deg,#d91620,#ef2b32);
+
+  color:#fff;
 }
 
 .sideMenuHeader strong{
-  font-size:22px;
-  color:var(--red);
+  font-size:23px;
 }
 
 .sideMenuClose{
-  background:#f2f2f2;
-  color:#222;
   width:40px;
   height:40px;
+
   border-radius:9px;
-  font-size:20px;
+
+  background:rgba(255,255,255,.15);
+  color:#fff;
+
+  font-size:21px;
+}
+
+.sideMenuClose:hover{
+  background:#fff;
+  color:var(--red);
 }
 
 .menuItem{
   display:flex;
   align-items:center;
+
   gap:12px;
-  padding:18px 20px;
+
+  padding:19px 20px;
+
   border-bottom:1px solid #eee;
+
   color:#222;
+
   font-size:18px;
   font-weight:700;
+
   transition:.15s;
 }
 
-.menuItem .menuLabel{
-  flex:1;
-}
-
 .menuItem:hover{
-  background:#fff3f3;
+  background:#fff2f2;
   color:var(--red);
 }
 
-/* =========================
+.menuLabel{
+  flex:1;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+  position:relative;
+
+  min-height:650px;
+
+  overflow:hidden;
+
+  background:#222;
+}
+
+.heroImage{
+  position:absolute;
+
+  inset:0;
+
+  z-index:1;
+}
+
+.heroImage img{
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  object-fit:cover;
+
+  object-position:center center;
+
+  filter:brightness(.70);
+}
+
+.heroOverlay{
+  position:absolute;
+
+  inset:0;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.72) 0%,
+      rgba(0,0,0,.42) 42%,
+      rgba(0,0,0,.10) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0,0,0,.30),
+      transparent 60%
+    );
+}
+
+.heroContent{
+  position:relative;
+
+  z-index:3;
+
+  width:min(1400px,96%);
+
+  min-height:650px;
+
+  margin:auto;
+
+  padding:110px 0 80px;
+
+  display:flex;
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.heroSmall{
+  margin:0 0 12px;
+
+  color:#fff;
+
+  font-size:20px;
+
+  text-shadow:0 2px 10px rgba(0,0,0,.6);
+}
+
+.heroContent h1{
+  margin:0;
+
+  max-width:700px;
+
+  color:#fff;
+
+  font-size:clamp(42px,6vw,72px);
+
+  line-height:1.08;
+
+  font-weight:800;
+
+  text-shadow:0 4px 18px rgba(0,0,0,.7);
+}
+
+.heroContent h1 span{
+  color:#ff626b;
+}
+
+.heroDescription{
+  max-width:600px;
+
+  margin:22px 0 0;
+
+  color:#fff;
+
+  font-size:19px;
+
+  line-height:1.7;
+
+  text-shadow:0 2px 10px rgba(0,0,0,.7);
+}
+
+
+/* =====================================================
    SECTIONS
-========================= */
+===================================================== */
+
 section{
   padding:55px 0;
 }
 
+.container{
+  width:min(1180px,92%);
+  margin:auto;
+}
+
 .sectionHead{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
-  margin-bottom:22px;
+
   gap:15px;
+
+  margin-bottom:22px;
 }
 
 .sectionHead h2{
   margin:0;
+
   font-size:30px;
 }
 
 .viewAll{
-  color:var(--red);
   background:none;
+
+  color:var(--red);
+
   font-weight:800;
 }
 
-/* =========================
+
+/* =====================================================
    RESTAURANTS
-========================= */
+===================================================== */
+
 .restaurantGrid{
   display:grid;
+
   grid-template-columns:repeat(4,1fr);
+
   gap:20px;
 }
 
 .restaurantCard{
   background:#fff;
+
   border-radius:17px;
+
   overflow:hidden;
-  box-shadow:0 4px 18px #0000000d;
+
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+
   transition:.2s;
 }
 
 .restaurantCard:hover{
   transform:translateY(-4px);
-  box-shadow:0 10px 28px #0002;
+
+  box-shadow:0 10px 28px rgba(0,0,0,.14);
 }
 
 .restaurantImg{
-  height:170px;
   width:100%;
+  height:170px;
+
   object-fit:cover;
+
   display:block;
 }
 
@@ -391,18 +594,22 @@ section{
 
 .restaurantBody h3{
   margin:0 0 7px;
+
   font-size:20px;
 }
 
 .area{
   color:#777;
+
   font-size:14px;
 }
 
 .ratingRow{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   margin-top:14px;
 }
 
@@ -416,20 +623,31 @@ section{
 
 .time{
   background:#e9f8ef;
+
   color:#147a43;
+
   padding:6px 9px;
+
   border-radius:8px;
+
   font-size:12px;
+
   font-weight:700;
 }
 
 .menuBtn{
   width:100%;
+
   margin-top:14px;
+
   background:var(--red);
+
   color:#fff;
+
   padding:11px;
+
   border-radius:9px;
+
   font-weight:800;
 }
 
@@ -437,25 +655,34 @@ section{
   background:var(--red-dark);
 }
 
-/* =========================
-   MENU / FOODS
-========================= */
+
+/* =====================================================
+   FOODS
+===================================================== */
+
 .menuGrid{
   display:grid;
+
   grid-template-columns:repeat(3,1fr);
+
   gap:18px;
 }
 
 .menuCard{
   background:#fff;
+
   padding:18px;
+
   border-radius:15px;
-  box-shadow:0 3px 15px #0001;
+
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
 }
 
 .menuTop{
   display:flex;
+
   justify-content:space-between;
+
   gap:10px;
 }
 
@@ -465,22 +692,30 @@ section{
 
 .price{
   color:var(--red);
+
   font-weight:800;
 }
 
 .addBtn{
   background:#fff0f1;
+
   color:var(--red);
+
   padding:9px 14px;
+
   border-radius:8px;
+
   font-weight:800;
 }
 
-/* =========================
+
+/* =====================================================
    DASHBOARDS
-========================= */
+===================================================== */
+
 .dashboard{
   display:none;
+
   padding:40px 0;
 }
 
@@ -490,9 +725,12 @@ section{
 
 .dashboardTitle{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   gap:20px;
+
   margin-bottom:25px;
 }
 
@@ -502,16 +740,22 @@ section{
 
 .statsGrid{
   display:grid;
+
   grid-template-columns:repeat(4,1fr);
+
   gap:17px;
+
   margin-bottom:25px;
 }
 
 .statCard{
   background:#fff;
+
   padding:22px;
+
   border-radius:15px;
-  box-shadow:0 3px 15px #0001;
+
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
 }
 
 .statCard small{
@@ -520,38 +764,55 @@ section{
 
 .statCard h2{
   margin:8px 0 0;
+
   font-size:30px;
 }
 
 .orderCard{
   background:#fff;
+
   padding:20px;
+
   border-radius:15px;
+
   margin-bottom:14px;
-  box-shadow:0 3px 14px #0001;
+
+  box-shadow:0 3px 14px rgba(0,0,0,.08);
 }
 
 .orderHeader{
   display:flex;
+
   justify-content:space-between;
+
   gap:10px;
 }
 
 .status{
   padding:6px 10px;
+
   border-radius:20px;
+
   background:#fff0f1;
+
   color:var(--red);
+
   font-size:12px;
+
   font-weight:800;
 }
 
 .actionBtn{
   background:var(--red);
+
   color:#fff;
+
   padding:9px 13px;
+
   border-radius:8px;
+
   font-weight:700;
+
   margin:4px;
 }
 
@@ -565,9 +826,13 @@ section{
 
 .riderHero{
   background:linear-gradient(135deg,#1c1c1c,#343434);
+
   color:#fff;
+
   border-radius:18px;
+
   padding:25px;
+
   margin-bottom:22px;
 }
 
@@ -577,20 +842,26 @@ section{
 
 .riderHero p{
   margin:0;
+
   color:#ccc;
 }
 
 .deliveryGrid{
   display:grid;
+
   grid-template-columns:repeat(3,1fr);
+
   gap:18px;
 }
 
 .deliveryCard{
   background:#fff;
+
   border-radius:16px;
+
   padding:20px;
-  box-shadow:0 3px 15px #0001;
+
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
 }
 
 .deliveryCard h3{
@@ -599,19 +870,27 @@ section{
 
 .deliveryInfo{
   padding:10px 0;
+
   border-bottom:1px solid #eee;
 }
 
-/* =========================
+
+/* =====================================================
    MODALS / CART
-========================= */
+===================================================== */
+
 .modal{
   position:fixed;
+
   inset:0;
-  background:#0009;
+
+  background:rgba(0,0,0,.60);
+
   display:none;
+
   align-items:flex-end;
-  z-index:200;
+
+  z-index:700;
 }
 
 .modal.show{
@@ -620,88 +899,130 @@ section{
 
 .sheet{
   width:100%;
+
   max-height:92vh;
+
   overflow:auto;
+
   background:#fff;
+
   border-radius:22px 22px 0 0;
+
   padding:25px;
 }
 
 .sheetInner{
   max-width:650px;
+
   margin:auto;
 }
 
 .closeBtn{
   float:right;
+
   background:#222;
+
   color:#fff;
+
   padding:9px 13px;
+
   border-radius:8px;
 }
 
 .formInput{
   width:100%;
+
   border:1px solid #ddd;
+
   padding:13px;
+
   border-radius:9px;
+
   margin:6px 0 13px;
+
   outline:none;
 }
 
 .primary{
   width:100%;
+
   background:var(--red);
+
   color:#fff;
+
   padding:13px;
+
   border-radius:9px;
+
   font-weight:800;
 }
 
 .secondary{
   background:#eee;
+
   color:#222;
+
   padding:11px 15px;
+
   border-radius:9px;
+
   font-weight:700;
 }
 
 .notice{
   padding:13px;
+
   background:#fff8d7;
+
   border-radius:9px;
+
   margin-top:12px;
 }
 
 .cartItem{
   display:flex;
+
   justify-content:space-between;
+
   gap:15px;
+
   padding:14px 0;
+
   border-bottom:1px solid #eee;
 }
 
 .cartTotal{
   display:flex;
+
   justify-content:space-between;
+
   font-size:21px;
+
   font-weight:800;
+
   margin:18px 0;
 }
 
-/* =========================
+
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
+
 footer{
   background:#171717;
+
   color:#fff;
+
   padding:45px 0 25px;
+
   margin-top:40px;
 }
 
 .footerGrid{
   display:grid;
+
   grid-template-columns:2fr 1fr 1fr;
+
   gap:30px;
 }
 
@@ -712,20 +1033,34 @@ footer h3{
 footer p,
 footer li{
   color:#bbb;
+
   line-height:1.7;
 }
 
 footer ul{
   padding:0;
+
   list-style:none;
 }
 
-/* =========================
-   MOBILE
-========================= */
-@media(max-width:950px){
 
-  .navLinks{
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(max-width:1050px){
+
+  .headerTop{
+    grid-template-columns:auto auto 1fr auto;
+
+    gap:12px;
+  }
+
+  .logoText{
+    font-size:23px;
+  }
+
+  .locationBtn{
     display:none;
   }
 
@@ -742,70 +1077,126 @@ footer ul{
   }
 
   .hero{
-    min-height:470px;
+    min-height:580px;
   }
 
   .heroContent{
-    min-height:470px;
-    padding:100px 0 50px;
+    min-height:580px;
   }
 }
 
-@media(max-width:600px){
 
-  .navbar{
-    min-height:68px;
-  }
+/* =====================================================
+   MOBILE
+===================================================== */
 
-  .logo{
-    font-size:20px;
-  }
+@media(max-width:700px){
 
-  .logoIcon{
-    font-size:25px;
-  }
+  .headerTop{
+    width:94%;
 
-  .locationBtn{
-    display:none;
-  }
+    grid-template-columns:auto 1fr auto;
 
-  .hero{
-    min-height:420px;
-  }
+    min-height:72px;
 
-  .heroContent{
-    min-height:420px;
-    padding:85px 0 35px;
-  }
-
-  .heroContent h1{
-    font-size:38px;
-  }
-
-  .heroContent p{
-    font-size:15px;
-    margin-bottom:18px;
-  }
-
-  .heroSearchBox{
-    border-radius:12px;
-  }
-
-  .heroSearchBox input{
-    padding:13px 11px;
-    font-size:14px;
-  }
-
-  .heroSearchBox button{
-    padding:12px 14px;
-    font-size:14px;
+    gap:9px;
   }
 
   .hamburgerBtn{
-    top:14px;
-    left:14px;
-    width:44px;
-    height:44px;
+    width:45px;
+    height:45px;
+
+    font-size:24px;
+  }
+
+  .logo{
+    gap:6px;
+  }
+
+  .logoIcon{
+    font-size:24px;
+  }
+
+  .logoText{
+    font-size:19px;
+  }
+
+  .logoText small{
+    font-size:9px;
+  }
+
+  .headerSearch{
+    grid-column:1 / -1;
+    grid-row:2;
+
+    max-width:none;
+
+    margin-bottom:10px;
+  }
+
+  .headerSearch input{
+    padding:12px 8px;
+
+    font-size:14px;
+  }
+
+  .headerSearch button{
+    padding:11px 14px;
+  }
+
+  .headerRight{
+    gap:5px;
+  }
+
+  .cartBtn{
+    padding:10px 11px;
+
+    font-size:14px;
+  }
+
+  .userBtn{
+    width:40px;
+    height:40px;
+  }
+
+  .navRow{
+    overflow-x:auto;
+  }
+
+  .navLinks{
+    width:max-content;
+
+    min-height:48px;
+  }
+
+  .navLinks button{
+    padding:9px 13px;
+
+    font-size:14px;
+  }
+
+  .hero{
+    min-height:560px;
+  }
+
+  .heroContent{
+    width:92%;
+
+    min-height:560px;
+
+    padding:90px 0 50px;
+  }
+
+  .heroSmall{
+    font-size:16px;
+  }
+
+  .heroContent h1{
+    font-size:42px;
+  }
+
+  .heroDescription{
+    font-size:16px;
   }
 
   .restaurantGrid,
@@ -815,10 +1206,6 @@ footer ul{
     grid-template-columns:1fr;
   }
 
-  .sectionHead{
-    align-items:flex-start;
-  }
-
   .footerGrid{
     grid-template-columns:1fr;
   }
@@ -826,37 +1213,143 @@ footer ul{
   section{
     padding:35px 0;
   }
+
 }
 
-img{
-  max-width:100%;
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media(max-width:430px){
+
+  .logoText{
+    font-size:17px;
+  }
+
+  .headerTop{
+    grid-template-columns:auto 1fr auto;
+  }
+
+  .heroContent h1{
+    font-size:36px;
+  }
+
+  .hero{
+    min-height:500px;
+  }
+
+  .heroContent{
+    min-height:500px;
+  }
+
 }
+
 </style>
 </head>
 
+
 <body>
 
-<!-- =========================
+
+<!-- =====================================================
      HEADER
-========================= -->
+===================================================== -->
+
 <header>
 
-  <div class="container navbar">
+  <div class="headerTop">
+
+    <!-- HAMBURGER -->
+
+    <button
+      class="hamburgerBtn"
+      aria-label="Open menu"
+      onclick="toggleSideMenu()"
+    >
+      ☰
+    </button>
+
+
+    <!-- LOGO -->
 
     <div class="logo">
 
-      <div class="logoIcon">🍴</div>
+      <div class="logoIcon">
+        🍴
+      </div>
 
-      <div>
+      <div class="logoText">
         Haroa Eats
-        <small>Haroa-এর local food delivery</small>
+
+        <small>
+          Haroa-এর local food delivery
+        </small>
       </div>
 
     </div>
 
-    <div class="navLinks">
 
-      <button onclick="showHome()">Home</button>
+    <!-- SEARCH -->
+
+    <div class="headerSearch">
+
+      <span class="headerSearchIcon">
+        🔍
+      </span>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for restaurant or food..."
+        oninput="renderRestaurants()"
+      >
+
+      <button onclick="renderRestaurants()">
+        খুঁজুন
+      </button>
+
+    </div>
+
+
+    <!-- RIGHT -->
+
+    <div class="headerRight">
+
+      <button class="locationBtn">
+        📍 Haroa
+      </button>
+
+      <button
+        class="cartBtn"
+        onclick="openCart()"
+      >
+        🛒
+        <span id="cartCount">0</span>
+      </button>
+
+      <button
+        class="userBtn"
+        onclick="openLogin()"
+        id="userBtn"
+      >
+        J
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="navRow">
+
+    <nav class="navLinks">
+
+      <button onclick="showHome()">
+        Home
+      </button>
 
       <button onclick="showRestaurants()">
         Restaurants
@@ -874,165 +1367,17 @@ img{
         Admin
       </button>
 
-    </div>
-
-    <div class="navRight">
-
-      <button class="locationBtn">
-        📍 Haroa
-      </button>
-
-      <button
-        class="cartBtn"
-        onclick="openCart()"
-      >
-        🛒 <span id="cartCount">0</span>
-      </button>
-
-      <button
-        class="userBtn"
-        onclick="openLogin()"
-        id="userBtn"
-      >
-        J
-      </button>
-
-    </div>
+    </nav>
 
   </div>
 
 </header>
 
 
-<!-- =========================
-     HOME
-========================= -->
-<div id="homePage">
 
-  <section class="hero">
-
-    <!-- HAMBURGER -->
-    <button
-      class="hamburgerBtn"
-      aria-label="Open menu"
-      onclick="toggleSideMenu()"
-    >
-      ☰
-    </button>
-
-    <!-- HERO IMAGE -->
-    <div class="heroImage">
-
-      <img
-        src="./hero-food.jpg"
-        alt="Haroa Eats Food"
-      >
-
-    </div>
-
-    <!-- DARK OVERLAY -->
-    <div class="heroOverlay"></div>
-
-    <!-- HERO CONTENT -->
-    <div class="heroContent">
-
-      <h1>
-        খাবার
-        <span>ঘরে বসেই</span>
-      </h1>
-
-      <p>
-        Haroa-এর সেরা restaurant থেকে
-        আপনার পছন্দের খাবার দ্রুত বাড়ি পৌঁছে যাবে 😍
-      </p>
-
-      <!-- SEARCH ON IMAGE -->
-      <div class="heroSearchBox">
-
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Restaurant বা খাবার খুঁজুন..."
-          oninput="renderRestaurants()"
-        >
-
-        <button onclick="renderRestaurants()">
-          খুঁজুন
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       RESTAURANTS
-  ========================= -->
-  <section>
-
-    <div class="container">
-
-      <div class="sectionHead">
-
-        <h2>
-          Popular Restaurants
-        </h2>
-
-        <button
-          class="viewAll"
-          onclick="showRestaurants()"
-        >
-          View all →
-        </button>
-
-      </div>
-
-      <div
-        id="restaurantGrid"
-        class="restaurantGrid"
-      >
-        <p>
-          Loading restaurants...
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       POPULAR FOODS
-  ========================= -->
-  <section style="background:#fff">
-
-    <div class="container">
-
-      <div class="sectionHead">
-
-        <h2>
-          Popular Foods
-        </h2>
-
-      </div>
-
-      <div
-        id="foodGrid"
-        class="menuGrid"
-      ></div>
-
-    </div>
-
-  </section>
-
-</div>
-
-
-<!-- =========================
-     SIDE MENU
-========================= -->
+<!-- =====================================================
+     SIDE MENU BACKDROP
+===================================================== -->
 
 <div
   id="menuBackdrop"
@@ -1040,6 +1385,11 @@ img{
   onclick="toggleSideMenu(false)"
 ></div>
 
+
+
+<!-- =====================================================
+     SIDE MENU
+===================================================== -->
 
 <aside
   id="sideMenu"
@@ -1055,7 +1405,6 @@ img{
 
     <button
       class="sideMenuClose"
-      aria-label="Close menu"
       onclick="toggleSideMenu(false)"
     >
       ✕
@@ -1138,9 +1487,125 @@ img{
 </aside>
 
 
-<!-- =========================
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<div id="homePage">
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="heroImage">
+
+      <img
+        src="./hero-food.jpg"
+        alt="Haroa Eats Food"
+      >
+
+    </div>
+
+
+    <div class="heroOverlay"></div>
+
+
+    <div class="heroContent">
+
+      <p class="heroSmall">
+        Haroa-এর সেরা restaurant থেকে
+      </p>
+
+      <h1>
+        আপনার পছন্দের খাবার
+        <br>
+        <span>ঘরে বসেই</span>
+      </h1>
+
+      <p class="heroDescription">
+        Haroa-এর সেরা restaurant থেকে
+        আপনার পছন্দের খাবার দ্রুত বাড়ি পৌঁছে যাবে 😍
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- POPULAR RESTAURANTS -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="sectionHead">
+
+        <h2>
+          Popular Restaurants
+        </h2>
+
+        <button
+          class="viewAll"
+          onclick="showRestaurants()"
+        >
+          View all →
+        </button>
+
+      </div>
+
+
+      <div
+        id="restaurantGrid"
+        class="restaurantGrid"
+      >
+
+        <p>
+          Loading restaurants...
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- POPULAR FOODS -->
+
+  <section style="background:#fff">
+
+    <div class="container">
+
+      <div class="sectionHead">
+
+        <h2>
+          Popular Foods
+        </h2>
+
+      </div>
+
+
+      <div
+        id="foodGrid"
+        class="menuGrid"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+</div>
+
+
+
+<!-- =====================================================
      CUSTOMER ORDERS
-========================= -->
+===================================================== -->
 
 <div
   id="customerDashboard"
@@ -1172,6 +1637,7 @@ img{
 
     </div>
 
+
     <div id="customerOrders">
       Loading...
     </div>
@@ -1181,9 +1647,10 @@ img{
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      RIDER DASHBOARD
-========================= -->
+===================================================== -->
 
 <div
   id="riderDashboard"
@@ -1265,6 +1732,7 @@ img{
       Available Orders
     </h2>
 
+
     <div id="riderOrders">
       Loading orders...
     </div>
@@ -1274,9 +1742,10 @@ img{
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      ADMIN DASHBOARD
-========================= -->
+===================================================== -->
 
 <div
   id="adminDashboard"
@@ -1385,6 +1854,7 @@ img{
       Recent Orders
     </h2>
 
+
     <div id="adminOrders">
       Loading...
     </div>
@@ -1394,9 +1864,10 @@ img{
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      CART MODAL
-========================= -->
+===================================================== -->
 
 <div
   id="cartModal"
@@ -1417,6 +1888,7 @@ img{
       <h2>
         🛒 Your Cart
       </h2>
+
 
       <div id="cartItems"></div>
 
@@ -1459,9 +1931,10 @@ img{
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      LOGIN MODAL
-========================= -->
+===================================================== -->
 
 <div
   id="loginModal"
@@ -1479,9 +1952,11 @@ img{
         Close
       </button>
 
+
       <h2>
         Login
       </h2>
+
 
       <p style="color:#777">
         Haroa Eats account-এ login করুন
@@ -1554,9 +2029,10 @@ img{
 </div>
 
 
-<!-- =========================
+
+<!-- =====================================================
      FOOTER
-========================= -->
+===================================================== -->
 
 <footer>
 
@@ -1626,12 +2102,21 @@ img{
 
   <div
     class="container"
-    style="border-top:1px solid #333;margin-top:25px;padding-top:18px;color:#777"
+    style="
+      border-top:1px solid #333;
+      margin-top:25px;
+      padding-top:18px;
+      color:#777
+    "
   >
-    © 2026 Haroa Eats. All rights reserved.
+
+    © 2026 Haroa Eats.
+    All rights reserved.
+
   </div>
 
 </footer>
+
 
 
 <script>
@@ -1640,13 +2125,13 @@ let restaurantsData = [];
 let cart = [];
 
 
-/* =========================
+/* =====================================================
    API
-========================= */
+===================================================== */
 
-async function api(url, options = {}) {
+async function api(url, options = {}){
 
-  const response = await fetch(url, {
+  const response = await fetch(url,{
 
     headers:{
       "Content-Type":"application/json"
@@ -1660,9 +2145,13 @@ async function api(url, options = {}) {
   let data = {};
 
   try{
+
     data = await response.json();
+
   }catch(e){
+
     data = {};
+
   }
 
 
@@ -1680,9 +2169,10 @@ async function api(url, options = {}) {
 }
 
 
-/* =========================
+
+/* =====================================================
    LOAD RESTAURANTS
-========================= */
+===================================================== */
 
 async function loadRestaurants(){
 
@@ -1697,19 +2187,27 @@ async function loadRestaurants(){
 
   }catch(error){
 
-    document.getElementById(
-      "restaurantGrid"
-    ).innerHTML =
-      `<p>${escapeHtml(error.message)}</p>`;
+    const grid =
+      document.getElementById(
+        "restaurantGrid"
+      );
+
+    if(grid){
+
+      grid.innerHTML =
+        `<p>${escapeHtml(error.message)}</p>`;
+
+    }
 
   }
 
 }
 
 
-/* =========================
-   RESTAURANT CARDS
-========================= */
+
+/* =====================================================
+   RENDER RESTAURANTS
+===================================================== */
 
 function renderRestaurants(){
 
@@ -1718,6 +2216,9 @@ function renderRestaurants(){
       "restaurantGrid"
     );
 
+  if(!grid) return;
+
+
   const search =
     document.getElementById(
       "searchInput"
@@ -1725,9 +2226,13 @@ function renderRestaurants(){
 
 
   const query =
-    (search ? search.value : "")
-      .toLowerCase()
-      .trim();
+    (
+      search
+      ? search.value
+      : ""
+    )
+    .toLowerCase()
+    .trim();
 
 
   const filtered =
@@ -1735,18 +2240,22 @@ function renderRestaurants(){
 
       const menuText =
         Array.isArray(r.menu)
-          ? r.menu
-              .map(m => m.name || "")
-              .join(" ")
-          : "";
+        ? r.menu
+            .map(m => m.name || "")
+            .join(" ")
+        : "";
 
 
       const text = [
 
         r.name || "",
+
         r.area || "",
+
         r.category || "",
+
         r.type || "",
+
         menuText
 
       ].join(" ");
@@ -1773,6 +2282,7 @@ function renderRestaurants(){
 
 
   grid.innerHTML =
+
     filtered.map((r,index) => `
 
       <div class="restaurantCard">
@@ -1796,12 +2306,10 @@ function renderRestaurants(){
 
 
           <div class="area">
-
             📍
             ${escapeHtml(
               r.area || ""
             )}
-
           </div>
 
 
@@ -1835,9 +2343,7 @@ function renderRestaurants(){
 
           <button
             class="menuBtn"
-            onclick="showRestaurantMenu(
-              ${Number(r.id)}
-            )"
+            onclick="showRestaurantMenu(${Number(r.id)})"
           >
             View Menu
           </button>
@@ -1847,15 +2353,18 @@ function renderRestaurants(){
       </div>
 
     `).join("")
+
     ||
+
     "<p>No restaurant found.</p>";
 
 }
 
 
-/* =========================
+
+/* =====================================================
    POPULAR FOODS
-========================= */
+===================================================== */
 
 function renderPopularFoods(){
 
@@ -1863,6 +2372,9 @@ function renderPopularFoods(){
     document.getElementById(
       "foodGrid"
     );
+
+  if(!grid) return;
+
 
   const foods = [];
 
@@ -1891,6 +2403,7 @@ function renderPopularFoods(){
 
 
   grid.innerHTML =
+
     foods.slice(0,6).map(m => `
 
       <div class="menuCard">
@@ -1945,32 +2458,37 @@ function renderPopularFoods(){
 }
 
 
-/* =========================
+
+/* =====================================================
    RESTAURANT MENU
-========================= */
+===================================================== */
 
 function showRestaurantMenu(id){
 
   const restaurant =
     restaurantsData.find(
-      r => Number(r.id) === Number(id)
+      r =>
+        Number(r.id) === Number(id)
     );
 
 
-  if(!restaurant)
-    return;
+  if(!restaurant) return;
 
 
   hideAll();
 
 
   document
-    .getElementById("customerDashboard")
+    .getElementById(
+      "customerDashboard"
+    )
     .classList.add("active");
 
 
   document
-    .getElementById("customerOrders")
+    .getElementById(
+      "customerOrders"
+    )
     .innerHTML = `
 
       <div class="dashboardTitle">
@@ -2050,11 +2568,12 @@ function showRestaurantMenu(id){
 
             </div>
 
-          `).join("")}
+          `)
+          .join("")}
 
       </div>
 
-    `;
+  `;
 
 
   window.scrollTo({
@@ -2065,9 +2584,10 @@ function showRestaurantMenu(id){
 }
 
 
-/* =========================
+
+/* =====================================================
    HAMBURGER MENU
-========================= */
+===================================================== */
 
 function toggleSideMenu(force){
 
@@ -2083,11 +2603,14 @@ function toggleSideMenu(force){
 
 
   const shouldOpen =
+
     typeof force === "boolean"
-      ? force
-      : !menu.classList.contains(
-          "open"
-        );
+
+    ? force
+
+    : !menu.classList.contains(
+        "open"
+      );
 
 
   menu.classList.toggle(
@@ -2104,15 +2627,16 @@ function toggleSideMenu(force){
 
   document.body.style.overflow =
     shouldOpen
-      ? "hidden"
-      : "";
+    ? "hidden"
+    : "";
 
 }
 
 
-/* =========================
-   CATEGORY MENU
-========================= */
+
+/* =====================================================
+   CATEGORY
+===================================================== */
 
 function showCategory(category){
 
@@ -2161,29 +2685,39 @@ function showCategory(category){
 
   }else{
 
-    if(search)
+    if(search){
+
       search.value = "";
+
+    }
 
     renderRestaurants();
 
   }
 
 
-  document
-    .getElementById(
+  const grid =
+    document.getElementById(
       "restaurantGrid"
-    )
-    .scrollIntoView({
+    );
+
+
+  if(grid){
+
+    grid.scrollIntoView({
       behavior:"smooth",
       block:"start"
     });
 
+  }
+
 }
 
 
-/* =========================
+
+/* =====================================================
    CATEGORY HELPER
-========================= */
+===================================================== */
 
 function renderRestaurantList(list){
 
@@ -2204,9 +2738,10 @@ function renderRestaurantList(list){
 }
 
 
-/* =========================
+
+/* =====================================================
    CART
-========================= */
+===================================================== */
 
 function addToCart(
   restaurantId,
@@ -2232,9 +2767,13 @@ function addToCart(
     cart.push({
 
       restaurantId,
+
       menuId,
+
       name,
+
       price,
+
       qty:1
 
     });
@@ -2247,35 +2786,42 @@ function addToCart(
 }
 
 
-/* =========================
+
+/* =====================================================
    DRAW CART
-========================= */
+===================================================== */
 
 function drawCart(){
 
-  document.getElementById(
-    "cartCount"
-  ).textContent =
-    cart.reduce(
-      (sum,x) =>
-        sum + x.qty,
-      0
-    );
+  document
+    .getElementById(
+      "cartCount"
+    )
+    .textContent =
+      cart.reduce(
+        (sum,x) =>
+          sum + x.qty,
+        0
+      );
 
 
   const total =
     cart.reduce(
       (sum,x) =>
-        sum +
-        (x.price * x.qty),
+        sum + (
+          x.price *
+          x.qty
+        ),
       0
     );
 
 
-  document.getElementById(
-    "cartTotal"
-  ).textContent =
-    total;
+  document
+    .getElementById(
+      "cartTotal"
+    )
+    .textContent =
+      total;
 
 
   const box =
@@ -2295,6 +2841,7 @@ function drawCart(){
 
 
   box.innerHTML =
+
     cart.map((x,i) => `
 
       <div class="cartItem">
@@ -2302,15 +2849,15 @@ function drawCart(){
         <div>
 
           <b>
-            ${escapeHtml(
-              x.name
-            )}
+            ${escapeHtml(x.name)}
           </b>
 
           <br>
 
           <small>
-            ₹${x.price} × ${x.qty}
+            ₹${x.price}
+            ×
+            ${x.qty}
           </small>
 
         </div>
@@ -2338,53 +2885,59 @@ function drawCart(){
 }
 
 
-/* =========================
+
+/* =====================================================
    REMOVE CART
-========================= */
+===================================================== */
 
 function removeCart(index){
 
-  cart.splice(
-    index,
-    1
-  );
+  cart.splice(index,1);
 
   drawCart();
 
 }
 
 
-/* =========================
+
+/* =====================================================
    OPEN CART
-========================= */
+===================================================== */
 
 function openCart(){
 
   document
-    .getElementById("cartModal")
+    .getElementById(
+      "cartModal"
+    )
     .classList.add("show");
+
 
   drawCart();
 
 }
 
 
-/* =========================
+
+/* =====================================================
    CLOSE CART
-========================= */
+===================================================== */
 
 function closeCart(){
 
   document
-    .getElementById("cartModal")
+    .getElementById(
+      "cartModal"
+    )
     .classList.remove("show");
 
 }
 
 
-/* =========================
+
+/* =====================================================
    CHECKOUT
-========================= */
+===================================================== */
 
 async function checkout(){
 
@@ -2412,7 +2965,10 @@ async function checkout(){
   }
 
 
-  if(me.user.role !== "customer"){
+  if(
+    me.user.role !==
+    "customer"
+  ){
 
     alert(
       "Customer account দিয়ে order করুন"
@@ -2425,7 +2981,9 @@ async function checkout(){
 
   const address =
     document
-      .getElementById("address")
+      .getElementById(
+        "address"
+      )
       .value
       .trim();
 
@@ -2468,6 +3026,7 @@ async function checkout(){
       await api(
         "/api/orders",
         {
+
           method:"POST",
 
           body:JSON.stringify({
@@ -2529,14 +3088,17 @@ async function checkout(){
 }
 
 
-/* =========================
+
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 function openLogin(){
 
   document
-    .getElementById("loginModal")
+    .getElementById(
+      "loginModal"
+    )
     .classList.add("show");
 
 }
@@ -2545,24 +3107,35 @@ function openLogin(){
 function closeLogin(){
 
   document
-    .getElementById("loginModal")
+    .getElementById(
+      "loginModal"
+    )
     .classList.remove("show");
 
 }
 
 
+
+/* =====================================================
+   LOGIN USER
+===================================================== */
+
 async function loginUser(){
 
   const phone =
     document
-      .getElementById("loginPhone")
+      .getElementById(
+        "loginPhone"
+      )
       .value
       .trim();
 
 
   const password =
     document
-      .getElementById("loginPassword")
+      .getElementById(
+        "loginPassword"
+      )
       .value;
 
 
@@ -2633,20 +3206,21 @@ async function loginUser(){
       )
       .innerHTML =
 
-      `<span style="color:red">
-        ${escapeHtml(
-          error.message
-        )}
-      </span>`;
+        `<span style="color:red">
+          ${escapeHtml(
+            error.message
+          )}
+        </span>`;
 
   }
 
 }
 
 
-/* =========================
+
+/* =====================================================
    USER BUTTON
-========================= */
+===================================================== */
 
 async function updateUserButton(){
 
@@ -2679,15 +3253,15 @@ async function updateUserButton(){
 
     }
 
-
   }catch(e){}
 
 }
 
 
-/* =========================
+
+/* =====================================================
    CUSTOMER ORDERS
-========================= */
+===================================================== */
 
 async function showCustomerOrders(){
 
@@ -2766,6 +3340,7 @@ async function showCustomerOrders(){
 
 
     box.innerHTML =
+
       orders.map(o => `
 
         <div class="orderCard">
@@ -2801,11 +3376,10 @@ async function showCustomerOrders(){
           <p>
 
             ${(o.items || [])
-              .map(
-                i =>
-                  `${escapeHtml(
-                    i.name || ""
-                  )} × ${i.qty}`
+              .map(i =>
+                `${escapeHtml(
+                  i.name || ""
+                )} × ${i.qty}`
               )
               .join(", ")}
 
@@ -2839,20 +3413,21 @@ async function showCustomerOrders(){
       )
       .innerHTML =
 
-      `<p>
-        ${escapeHtml(
-          error.message
-        )}
-      </p>`;
+        `<p>
+          ${escapeHtml(
+            error.message
+          )}
+        </p>`;
 
   }
 
 }
 
 
-/* =========================
+
+/* =====================================================
    RIDER
-========================= */
+===================================================== */
 
 async function showRider(){
 
@@ -2874,7 +3449,8 @@ async function showRider(){
 
     if(
       !me.user ||
-      me.user.role !== "rider"
+      me.user.role !==
+      "rider"
     ){
 
       openLogin();
@@ -2901,7 +3477,8 @@ async function showRider(){
 
     const available =
       orders.filter(
-        o => !o.delivery_id
+        o =>
+          !o.delivery_id
       );
 
 
@@ -2917,9 +3494,9 @@ async function showRider(){
       orders.filter(
         o =>
           o.delivery_id ===
-            me.user.id &&
+          me.user.id &&
           o.status ===
-            "Delivered"
+          "Delivered"
       );
 
 
@@ -2964,6 +3541,7 @@ async function showRider(){
 
 
     box.innerHTML =
+
       orders.map(o => `
 
         <div class="deliveryCard">
@@ -3025,11 +3603,9 @@ async function showRider(){
             <br>
 
             <span class="status">
-
               ${escapeHtml(
                 o.status || ""
               )}
-
             </span>
 
           </div>
@@ -3042,13 +3618,9 @@ async function showRider(){
 
               <button
                 class="actionBtn"
-                onclick="claimOrder(
-                  ${o.id}
-                )"
+                onclick="claimOrder(${o.id})"
               >
-
                 🏍️ Accept Order
-
               </button>
 
             `
@@ -3082,6 +3654,7 @@ async function showRider(){
             `
 
             : ""
+
           }
 
         </div>
@@ -3097,20 +3670,21 @@ async function showRider(){
       )
       .innerHTML =
 
-      `<p>
-        ${escapeHtml(
-          error.message
-        )}
-      </p>`;
+        `<p>
+          ${escapeHtml(
+            error.message
+          )}
+        </p>`;
 
   }
 
 }
 
 
-/* =========================
+
+/* =====================================================
    CLAIM ORDER
-========================= */
+===================================================== */
 
 async function claimOrder(id){
 
@@ -3145,9 +3719,10 @@ async function claimOrder(id){
 }
 
 
-/* =========================
+
+/* =====================================================
    UPDATE ORDER STATUS
-========================= */
+===================================================== */
 
 async function updateOrderStatus(
   id,
@@ -3186,9 +3761,10 @@ async function updateOrderStatus(
 }
 
 
-/* =========================
+
+/* =====================================================
    ADMIN
-========================= */
+===================================================== */
 
 async function showAdmin(){
 
@@ -3210,7 +3786,8 @@ async function showAdmin(){
 
     if(
       !me.user ||
-      me.user.role !== "admin"
+      me.user.role !==
+      "admin"
     ){
 
       openLogin();
@@ -3269,7 +3846,9 @@ async function showAdmin(){
 
 
     const orders =
-      await api("/api/orders");
+      await api(
+        "/api/orders"
+      );
 
 
     document
@@ -3278,89 +3857,93 @@ async function showAdmin(){
       )
       .innerHTML =
 
-      orders.map(o => `
+        orders.map(o => `
 
-        <div class="orderCard">
+          <div class="orderCard">
 
-          <div class="orderHeader">
+            <div class="orderHeader">
 
-            <div>
+              <div>
 
-              <h3>
-                Order #${o.id}
-              </h3>
+                <h3>
+                  Order #${o.id}
+                </h3>
 
-              <p>
+                <p>
+
+                  ${escapeHtml(
+                    o.customer ||
+                    "Customer"
+                  )}
+
+                  —
+
+                  ${escapeHtml(
+                    o.restaurant ||
+                    ""
+                  )}
+
+                </p>
+
+              </div>
+
+
+              <span class="status">
 
                 ${escapeHtml(
-                  o.customer ||
-                  "Customer"
+                  o.status ||
+                  ""
                 )}
 
-                —
-
-                ${escapeHtml(
-                  o.restaurant || ""
-                )}
-
-              </p>
+              </span>
 
             </div>
 
 
-            <span class="status">
+            <p>
+              ₹${o.total}
+            </p>
 
-              ${escapeHtml(
-                o.status || ""
-              )}
 
-            </span>
+            <button
+              class="actionBtn"
+              onclick="adminStatus(
+                ${o.id},
+                'Preparing'
+              )"
+            >
+              Preparing
+            </button>
+
+
+            <button
+              class="actionBtn"
+              onclick="adminStatus(
+                ${o.id},
+                'Picked up'
+              )"
+            >
+              Picked Up
+            </button>
+
+
+            <button
+              class="actionBtn green"
+              onclick="adminStatus(
+                ${o.id},
+                'Delivered'
+              )"
+            >
+              Delivered
+            </button>
 
           </div>
 
+        `).join("")
 
-          <p>
-            ₹${o.total}
-          </p>
+        ||
 
-
-          <button
-            class="actionBtn"
-            onclick="adminStatus(
-              ${o.id},
-              'Preparing'
-            )"
-          >
-            Preparing
-          </button>
-
-
-          <button
-            class="actionBtn"
-            onclick="adminStatus(
-              ${o.id},
-              'Picked up'
-            )"
-          >
-            Picked Up
-          </button>
-
-
-          <button
-            class="actionBtn green"
-            onclick="adminStatus(
-              ${o.id},
-              'Delivered'
-            )"
-          >
-            Delivered
-          </button>
-
-        </div>
-
-      `).join("")
-      ||
-      "<p>No orders.</p>";
+        "<p>No orders.</p>";
 
 
   }catch(error){
@@ -3371,20 +3954,21 @@ async function showAdmin(){
       )
       .innerHTML =
 
-      `<p>
-        ${escapeHtml(
-          error.message
-        )}
-      </p>`;
+        `<p>
+          ${escapeHtml(
+            error.message
+          )}
+        </p>`;
 
   }
 
 }
 
 
-/* =========================
+
+/* =====================================================
    ADMIN STATUS
-========================= */
+===================================================== */
 
 async function adminStatus(
   id,
@@ -3423,9 +4007,10 @@ async function adminStatus(
 }
 
 
-/* =========================
+
+/* =====================================================
    NAVIGATION
-========================= */
+===================================================== */
 
 function hideAll(){
 
@@ -3466,6 +4051,7 @@ function hideAll(){
 }
 
 
+
 function showHome(){
 
   hideAll();
@@ -3488,6 +4074,7 @@ function showHome(){
   });
 
 }
+
 
 
 function showRestaurants(){
@@ -3520,9 +4107,10 @@ function showRestaurants(){
 }
 
 
-/* =========================
+
+/* =====================================================
    ESCAPE HELPERS
-========================= */
+===================================================== */
 
 function escapeHtml(text){
 
@@ -3556,6 +4144,7 @@ function escapeHtml(text){
 }
 
 
+
 function escapeJs(text){
 
   return String(text)
@@ -3578,9 +4167,10 @@ function escapeJs(text){
 }
 
 
-/* =========================
+
+/* =====================================================
    LOGOUT
-========================= */
+===================================================== */
 
 async function logoutUser(){
 
@@ -3604,15 +4194,19 @@ async function logoutUser(){
 }
 
 
-/* =========================
-   ESC CLOSE
-========================= */
+
+/* =====================================================
+   ESC KEY
+===================================================== */
 
 document.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "Escape"){
+    if(
+      event.key ===
+      "Escape"
+    ){
 
       toggleSideMenu(false);
 
@@ -3626,9 +4220,10 @@ document.addEventListener(
 );
 
 
-/* =========================
+
+/* =====================================================
    START
-========================= */
+===================================================== */
 
 loadRestaurants();
 
@@ -3637,6 +4232,7 @@ updateUserButton();
 drawCart();
 
 </script>
+
 
 </body>
 </html>
