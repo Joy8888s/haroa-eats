@@ -531,24 +531,44 @@ footer ul{padding:0;list-style:none}
   <div class="hero">
     <div class="container heroInner">
 
-      <div class="heroText">
-        <h1>খাবার <span>ঘরে বসেই</span></h1>
+ <div class="heroText">
 
-        <p>
-          Haroa-এর সেরা restaurant থেকে আপনার পছন্দের
-          খাবার দ্রুত বাড়ি পৌঁছে যাবে 😍
-        </p>
-
-        <div class="searchBox">
-          <input
+    <div class="searchBox">
+        <input
             id="searchInput"
             placeholder="Restaurant বা খাবার খুঁজুন..."
             oninput="renderRestaurants()"
-          >
-          <button onclick="renderRestaurants()">খুঁজুন</button>
+        >
+        <button onclick="renderRestaurants()">খুঁজুন</button>
+    </div>
+
+    <div class="categoryMenu">
+
+        <div class="categoryItem" onclick="showCategory('Food')">
+            <span>🍔 Food</span>
+            <span>➡️</span>
         </div>
 
-        <div class="heroFeatures">
+        <div class="categoryItem" onclick="showCategory('Grocery')">
+            <span>🛒 Grocery</span>
+            <span>➡️</span>
+        </div>
+
+        <div class="categoryItem" onclick="showCategory('Beverages')">
+            <span>🥤 Beverages</span>
+            <span>➡️</span>
+        </div>
+
+        <div class="categoryItem" onclick="showCategory('Drinks')">
+            <span>🍹 Drinks</span>
+            <span>➡️</span>
+        </div>
+
+    </div>
+
+</div>
+  
+<div class="heroFeatures">
 
           <div class="feature">
             <div class="featureIcon">🏍️</div>
