@@ -29,11 +29,11 @@ app.use(express.static(path.join(__dirname, "public")));
 ========================= */
 
 const MSG91_WIDGET_ID =
-  process.env.MSG91_WIDGET_ID ||561269T9lS7SYNHb6a81f929P1
+  process.env.MSG91_WIDGET_ID ||
   "366870715254333435383332";
 
 const MSG91_WIDGET_TOKEN =
-  process.env.MSG91_WIDGET_TOKEN || "";
+  process.env.MSG91_WIDGET_TOKEN ||561269T9lS7SYNHb6a81f929P1 "";
 
 const MSG91_AUTHKEY =
   process.env.MSG91_AUTHKEY || "";
