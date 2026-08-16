@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="bn">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
 
 <title>Haroa Eats — Local Food Delivery</title>
 
@@ -15,11 +21,12 @@
 :root{
   --red:#e21d25;
   --red-dark:#c9151d;
-  --white:#ffffff;
+  --white:#fff;
   --black:#171717;
   --muted:#777;
   --light:#f7f7f7;
-  --border:#eeeeee;
+  --border:#eee;
+  --green:#16834b;
 }
 
 html{
@@ -28,7 +35,10 @@ html{
 
 body{
   margin:0;
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-family:
+    Arial,
+    "Noto Sans Bengali",
+    sans-serif;
   background:#f7f7f8;
   color:#191919;
 }
@@ -40,26 +50,31 @@ textarea{
 }
 
 button{
-  cursor:pointer;
   border:0;
+  cursor:pointer;
 }
 
 img{
   max-width:100%;
 }
 
-
-/* =====================================================
+/* =========================
    HEADER
-===================================================== */
+========================= */
 
 header{
   position:sticky;
   top:0;
   z-index:100;
-  background:linear-gradient(135deg,#d91620,#ef2b32);
+  background:
+    linear-gradient(
+      135deg,
+      #d91620,
+      #ef2b32
+    );
   color:#fff;
-  box-shadow:0 4px 18px rgba(0,0,0,.20);
+  box-shadow:
+    0 4px 18px rgba(0,0,0,.20);
 }
 
 .headerTop{
@@ -69,14 +84,19 @@ header{
   min-height:82px;
 
   display:grid;
-  grid-template-columns:auto auto minmax(300px,1fr) auto;
+
+  grid-template-columns:
+    auto
+    auto
+    minmax(300px,1fr)
+    auto;
+
   align-items:center;
 
   gap:18px;
 }
 
-
-/* Hamburger */
+/* HAMBURGER */
 
 .hamburgerBtn{
   width:52px;
@@ -89,13 +109,14 @@ header{
   background:rgba(255,255,255,.14);
   color:#fff;
 
-  border:1px solid rgba(255,255,255,.35);
+  border:
+    1px solid
+    rgba(255,255,255,.35);
+
   border-radius:12px;
 
   font-size:28px;
   font-weight:700;
-
-  transition:.2s;
 }
 
 .hamburgerBtn:hover{
@@ -103,14 +124,12 @@ header{
   color:var(--red);
 }
 
-
-/* Logo */
+/* LOGO */
 
 .logo{
   display:flex;
   align-items:center;
   gap:10px;
-
   white-space:nowrap;
 }
 
@@ -134,12 +153,12 @@ header{
   opacity:.9;
 }
 
-
-/* Header Search */
+/* SEARCH */
 
 .headerSearch{
   width:100%;
   max-width:680px;
+
   justify-self:center;
 
   display:flex;
@@ -150,7 +169,9 @@ header{
 
   padding:5px;
 
-  box-shadow:0 5px 20px rgba(0,0,0,.15);
+  box-shadow:
+    0 5px 20px
+    rgba(0,0,0,.15);
 }
 
 .headerSearchIcon{
@@ -161,7 +182,6 @@ header{
 
 .headerSearch input{
   flex:1;
-
   min-width:0;
 
   border:0;
@@ -194,8 +214,7 @@ header{
   background:var(--red-dark);
 }
 
-
-/* Right side */
+/* RIGHT */
 
 .headerRight{
   display:flex;
@@ -205,19 +224,16 @@ header{
 
 .locationBtn{
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.45);
+
+  border:
+    1px solid
+    rgba(255,255,255,.45);
 
   color:#fff;
 
   padding:12px 16px;
 
   border-radius:10px;
-
-  white-space:nowrap;
-}
-
-.locationBtn:hover{
-  background:rgba(255,255,255,.18);
 }
 
 .cartBtn{
@@ -229,8 +245,6 @@ header{
   border-radius:10px;
 
   font-weight:800;
-
-  white-space:nowrap;
 }
 
 .userBtn{
@@ -246,11 +260,12 @@ header{
   font-size:18px;
 }
 
-
-/* Navigation row */
+/* NAVIGATION */
 
 .navRow{
-  border-top:1px solid rgba(255,255,255,.18);
+  border-top:
+    1px solid
+    rgba(255,255,255,.18);
 }
 
 .navLinks{
@@ -278,158 +293,81 @@ header{
 }
 
 .navLinks button:hover{
-  background:rgba(255,255,255,.14);
+  background:
+    rgba(255,255,255,.14);
 }
 
+/* =========================
+   HOME
+========================= */
 
-/* =====================================================
-   SIDE MENU
-===================================================== */
-
-.menuBackdrop{
-  position:fixed;
-  inset:0;
-
-  background:rgba(0,0,0,.55);
-
-  z-index:500;
-
-  display:none;
+#homePage{
+  min-height:500px;
 }
 
-.menuBackdrop.show{
-  display:block;
+/*
+   Hero image এবং hero text
+   intentionally removed.
+*/
+
+.homeBanner{
+  background:
+    linear-gradient(
+      135deg,
+      #fff,
+      #fff4f4
+    );
+
+  padding:70px 0;
+
+  border-bottom:
+    1px solid #eee;
 }
 
-.sideMenu{
-  position:fixed;
-
-  top:0;
-  left:-340px;
-
-  width:320px;
-  max-width:88vw;
-  height:100vh;
-
-  background:#fff;
-
-  z-index:600;
-
-  box-shadow:8px 0 30px rgba(0,0,0,.25);
-
-  transition:left .28s ease;
-
-  overflow-y:auto;
-}
-
-.sideMenu.open{
-  left:0;
-}
-
-.sideMenuHeader{
-  min-height:80px;
-
-  padding:18px 20px;
+.homeBannerInner{
+  width:min(1180px,92%);
+  margin:auto;
 
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  background:linear-gradient(135deg,#d91620,#ef2b32);
-
-  color:#fff;
-}
-
-.sideMenuHeader strong{
-  font-size:23px;
-}
-
-.sideMenuClose{
-  width:40px;
-  height:40px;
-
-  border-radius:9px;
-
-  background:rgba(255,255,255,.15);
-  color:#fff;
-
-  font-size:21px;
-}
-
-.sideMenuClose:hover{
-  background:#fff;
-  color:var(--red);
-}
-
-.menuItem{
-  display:flex;
+  justify-content:center;
   align-items:center;
 
-  gap:12px;
+  text-align:center;
+}
 
-  padding:19px 20px;
+.homeBanner h1{
+  margin:0;
 
-  border-bottom:1px solid #eee;
+  font-size:
+    clamp(30px,5vw,50px);
 
   color:#222;
-
-  font-size:18px;
-  font-weight:700;
-
-  transition:.15s;
 }
 
-.menuItem:hover{
-  background:#fff2f2;
+.homeBanner h1 span{
   color:var(--red);
 }
 
-.menuLabel{
-  flex:1;
+.homeBanner p{
+  color:#777;
+  font-size:17px;
 }
 
-
-/* =====================================================
-   HERO
-===================================================== */
-
-
-
-.heroContent h1 span{
-  color:#ff626b;
-}
-
-.heroDescription{
-  max-width:600px;
-
-  margin:22px 0 0;
-
-  color:#fff;
-
-  font-size:19px;
-
-  line-height:1.7;
-
-  text-shadow:0 2px 10px rgba(0,0,0,.7);
-}
-
-
-/* =====================================================
-   SECTIONS
-===================================================== */
-
-section{
-  padding:55px 0;
-}
+/* =========================
+   CONTAINER
+========================= */
 
 .container{
   width:min(1180px,92%);
   margin:auto;
 }
 
+section{
+  padding:55px 0;
+}
+
 .sectionHead{
   display:flex;
-
   justify-content:space-between;
   align-items:center;
 
@@ -440,27 +378,24 @@ section{
 
 .sectionHead h2{
   margin:0;
-
   font-size:30px;
 }
 
 .viewAll{
   background:none;
-
   color:var(--red);
-
   font-weight:800;
 }
 
-
-/* =====================================================
+/* =========================
    RESTAURANTS
-===================================================== */
+========================= */
 
 .restaurantGrid{
   display:grid;
 
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:
+    repeat(4,1fr);
 
   gap:20px;
 }
@@ -472,7 +407,9 @@ section{
 
   overflow:hidden;
 
-  box-shadow:0 4px 18px rgba(0,0,0,.08);
+  box-shadow:
+    0 4px 18px
+    rgba(0,0,0,.08);
 
   transition:.2s;
 }
@@ -480,7 +417,9 @@ section{
 .restaurantCard:hover{
   transform:translateY(-4px);
 
-  box-shadow:0 10px 28px rgba(0,0,0,.14);
+  box-shadow:
+    0 10px 28px
+    rgba(0,0,0,.14);
 }
 
 .restaurantImg{
@@ -498,19 +437,16 @@ section{
 
 .restaurantBody h3{
   margin:0 0 7px;
-
   font-size:20px;
 }
 
 .area{
   color:#777;
-
   font-size:14px;
 }
 
 .ratingRow{
   display:flex;
-
   justify-content:space-between;
   align-items:center;
 
@@ -527,7 +463,6 @@ section{
 
 .time{
   background:#e9f8ef;
-
   color:#147a43;
 
   padding:6px 9px;
@@ -535,7 +470,6 @@ section{
   border-radius:8px;
 
   font-size:12px;
-
   font-weight:700;
 }
 
@@ -545,7 +479,6 @@ section{
   margin-top:14px;
 
   background:var(--red);
-
   color:#fff;
 
   padding:11px;
@@ -559,15 +492,15 @@ section{
   background:var(--red-dark);
 }
 
-
-/* =====================================================
-   FOODS
-===================================================== */
+/* =========================
+   FOOD
+========================= */
 
 .menuGrid{
   display:grid;
 
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:
+    repeat(3,1fr);
 
   gap:18px;
 }
@@ -579,12 +512,13 @@ section{
 
   border-radius:15px;
 
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
+  box-shadow:
+    0 3px 15px
+    rgba(0,0,0,.08);
 }
 
 .menuTop{
   display:flex;
-
   justify-content:space-between;
 
   gap:10px;
@@ -596,13 +530,11 @@ section{
 
 .price{
   color:var(--red);
-
   font-weight:800;
 }
 
 .addBtn{
   background:#fff0f1;
-
   color:var(--red);
 
   padding:9px 14px;
@@ -612,14 +544,12 @@ section{
   font-weight:800;
 }
 
-
-/* =====================================================
+/* =========================
    DASHBOARDS
-===================================================== */
+========================= */
 
 .dashboard{
   display:none;
-
   padding:40px 0;
 }
 
@@ -645,7 +575,8 @@ section{
 .statsGrid{
   display:grid;
 
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:
+    repeat(4,1fr);
 
   gap:17px;
 
@@ -659,7 +590,9 @@ section{
 
   border-radius:15px;
 
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
+  box-shadow:
+    0 3px 15px
+    rgba(0,0,0,.08);
 }
 
 .statCard small{
@@ -668,7 +601,6 @@ section{
 
 .statCard h2{
   margin:8px 0 0;
-
   font-size:30px;
 }
 
@@ -681,14 +613,14 @@ section{
 
   margin-bottom:14px;
 
-  box-shadow:0 3px 14px rgba(0,0,0,.08);
+  box-shadow:
+    0 3px 14px
+    rgba(0,0,0,.08);
 }
 
 .orderHeader{
   display:flex;
-
   justify-content:space-between;
-
   gap:10px;
 }
 
@@ -698,17 +630,14 @@ section{
   border-radius:20px;
 
   background:#fff0f1;
-
   color:var(--red);
 
   font-size:12px;
-
   font-weight:800;
 }
 
 .actionBtn{
   background:var(--red);
-
   color:#fff;
 
   padding:9px 13px;
@@ -720,16 +649,17 @@ section{
   margin:4px;
 }
 
-.actionBtn.dark{
-  background:#222;
-}
-
 .actionBtn.green{
-  background:#16834b;
+  background:var(--green);
 }
 
 .riderHero{
-  background:linear-gradient(135deg,#1c1c1c,#343434);
+  background:
+    linear-gradient(
+      135deg,
+      #1c1c1c,
+      #343434
+    );
 
   color:#fff;
 
@@ -746,16 +676,7 @@ section{
 
 .riderHero p{
   margin:0;
-
   color:#ccc;
-}
-
-.deliveryGrid{
-  display:grid;
-
-  grid-template-columns:repeat(3,1fr);
-
-  gap:18px;
 }
 
 .deliveryCard{
@@ -765,27 +686,136 @@ section{
 
   padding:20px;
 
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
-}
+  box-shadow:
+    0 3px 15px
+    rgba(0,0,0,.08);
 
-.deliveryCard h3{
-  margin-top:0;
+  margin-bottom:15px;
 }
 
 .deliveryInfo{
   padding:10px 0;
 
-  border-bottom:1px solid #eee;
+  border-bottom:
+    1px solid #eee;
 }
 
+/* =========================
+   SIDE MENU
+========================= */
 
-/* =====================================================
-   MODALS / CART
-===================================================== */
+.menuBackdrop{
+  position:fixed;
+  inset:0;
+
+  background:rgba(0,0,0,.55);
+
+  z-index:500;
+
+  display:none;
+}
+
+.menuBackdrop.show{
+  display:block;
+}
+
+.sideMenu{
+  position:fixed;
+
+  top:0;
+  left:-340px;
+
+  width:320px;
+  max-width:88vw;
+
+  height:100vh;
+
+  background:#fff;
+
+  z-index:600;
+
+  box-shadow:
+    8px 0 30px
+    rgba(0,0,0,.25);
+
+  transition:left .28s ease;
+
+  overflow-y:auto;
+}
+
+.sideMenu.open{
+  left:0;
+}
+
+.sideMenuHeader{
+  min-height:80px;
+
+  padding:18px 20px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d91620,
+      #ef2b32
+    );
+
+  color:#fff;
+}
+
+.sideMenuHeader strong{
+  font-size:23px;
+}
+
+.sideMenuClose{
+  width:40px;
+  height:40px;
+
+  border-radius:9px;
+
+  background:
+    rgba(255,255,255,.15);
+
+  color:#fff;
+
+  font-size:21px;
+}
+
+.menuItem{
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+
+  padding:19px 20px;
+
+  border-bottom:
+    1px solid #eee;
+
+  color:#222;
+
+  font-size:18px;
+  font-weight:700;
+}
+
+.menuItem:hover{
+  background:#fff2f2;
+  color:var(--red);
+}
+
+.menuLabel{
+  flex:1;
+}
+
+/* =========================
+   MODALS
+========================= */
 
 .modal{
   position:fixed;
-
   inset:0;
 
   background:rgba(0,0,0,.60);
@@ -810,14 +840,14 @@ section{
 
   background:#fff;
 
-  border-radius:22px 22px 0 0;
+  border-radius:
+    22px 22px 0 0;
 
   padding:25px;
 }
 
 .sheetInner{
   max-width:650px;
-
   margin:auto;
 }
 
@@ -825,7 +855,6 @@ section{
   float:right;
 
   background:#222;
-
   color:#fff;
 
   padding:9px 13px;
@@ -836,7 +865,8 @@ section{
 .formInput{
   width:100%;
 
-  border:1px solid #ddd;
+  border:
+    1px solid #ddd;
 
   padding:13px;
 
@@ -851,7 +881,6 @@ section{
   width:100%;
 
   background:var(--red);
-
   color:#fff;
 
   padding:13px;
@@ -863,7 +892,6 @@ section{
 
 .secondary{
   background:#eee;
-
   color:#222;
 
   padding:11px 15px;
@@ -892,7 +920,8 @@ section{
 
   padding:14px 0;
 
-  border-bottom:1px solid #eee;
+  border-bottom:
+    1px solid #eee;
 }
 
 .cartTotal{
@@ -907,10 +936,9 @@ section{
   margin:18px 0;
 }
 
-
-/* =====================================================
+/* =========================
    FOOTER
-===================================================== */
+========================= */
 
 footer{
   background:#171717;
@@ -925,7 +953,8 @@ footer{
 .footerGrid{
   display:grid;
 
-  grid-template-columns:2fr 1fr 1fr;
+  grid-template-columns:
+    2fr 1fr 1fr;
 
   gap:30px;
 }
@@ -937,25 +966,23 @@ footer h3{
 footer p,
 footer li{
   color:#bbb;
-
   line-height:1.7;
 }
 
 footer ul{
   padding:0;
-
   list-style:none;
 }
 
-
-/* =====================================================
-   TABLET
-===================================================== */
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:1050px){
 
   .headerTop{
-    grid-template-columns:auto auto 1fr auto;
+    grid-template-columns:
+      auto auto 1fr auto;
 
     gap:12px;
   }
@@ -969,55 +996,29 @@ footer ul{
   }
 
   .restaurantGrid{
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:
+      repeat(2,1fr);
   }
 
   .statsGrid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .deliveryGrid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .hero{
-    min-height:580px;
-  }
-
-  .heroContent{
-    min-height:580px;
+    grid-template-columns:
+      repeat(2,1fr);
   }
 }
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
 
 @media(max-width:700px){
 
   .headerTop{
-    width:94%;
-
-    grid-template-columns:auto 1fr auto;
+    grid-template-columns:
+      auto 1fr auto;
 
     min-height:72px;
-
-    gap:9px;
   }
 
   .hamburgerBtn{
     width:45px;
     height:45px;
 
-    font-size:24px;
-  }
-
-  .logo{
-    gap:6px;
-  }
-
-  .logoIcon{
     font-size:24px;
   }
 
@@ -1040,27 +1041,11 @@ footer ul{
 
   .headerSearch input{
     padding:12px 8px;
-
     font-size:14px;
   }
 
   .headerSearch button{
     padding:11px 14px;
-  }
-
-  .headerRight{
-    gap:5px;
-  }
-
-  .cartBtn{
-    padding:10px 11px;
-
-    font-size:14px;
-  }
-
-  .userBtn{
-    width:40px;
-    height:40px;
   }
 
   .navRow{
@@ -1069,43 +1054,16 @@ footer ul{
 
   .navLinks{
     width:max-content;
-
     min-height:48px;
   }
 
   .navLinks button{
     padding:9px 13px;
-
     font-size:14px;
-  }
-
-  .hero{
-    min-height:560px;
-  }
-
-  .heroContent{
-    width:92%;
-
-    min-height:560px;
-
-    padding:90px 0 50px;
-  }
-
-  .heroSmall{
-    font-size:16px;
-  }
-
-  .heroContent h1{
-    font-size:42px;
-  }
-
-  .heroDescription{
-    font-size:16px;
   }
 
   .restaurantGrid,
   .menuGrid,
-  .deliveryGrid,
   .statsGrid{
     grid-template-columns:1fr;
   }
@@ -1118,64 +1076,35 @@ footer ul{
     padding:35px 0;
   }
 
-}
-
-
-/* =====================================================
-   VERY SMALL MOBILE
-===================================================== */
-
-@media(max-width:430px){
-
-  .logoText{
-    font-size:17px;
+  .homeBanner{
+    padding:45px 0;
   }
 
-  .headerTop{
-    grid-template-columns:auto 1fr auto;
+  .homeBanner h1{
+    font-size:32px;
   }
-
-  .heroContent h1{
-    font-size:36px;
-  }
-
-  .hero{
-    min-height:500px;
-  }
-
-  .heroContent{
-    min-height:500px;
-  }
-
 }
 
 </style>
-</head>
 
+</head>
 
 <body>
 
-
-<!-- =====================================================
+<!-- =========================
      HEADER
-===================================================== -->
+========================= -->
 
 <header>
 
   <div class="headerTop">
 
-    <!-- HAMBURGER -->
-
     <button
       class="hamburgerBtn"
-      aria-label="Open menu"
       onclick="toggleSideMenu()"
     >
       ☰
     </button>
-
-
-    <!-- LOGO -->
 
     <div class="logo">
 
@@ -1184,17 +1113,16 @@ footer ul{
       </div>
 
       <div class="logoText">
+
         Haroa Eats
 
         <small>
           Haroa-এর local food delivery
         </small>
+
       </div>
 
     </div>
-
-
-    <!-- SEARCH -->
 
     <div class="headerSearch">
 
@@ -1203,8 +1131,8 @@ footer ul{
       </span>
 
       <input
-        type="text"
         id="searchInput"
+        type="text"
         placeholder="Search for restaurant or food..."
         oninput="renderRestaurants()"
       >
@@ -1214,9 +1142,6 @@ footer ul{
       </button>
 
     </div>
-
-
-    <!-- RIGHT -->
 
     <div class="headerRight">
 
@@ -1234,8 +1159,8 @@ footer ul{
 
       <button
         class="userBtn"
-        onclick="openLogin()"
         id="userBtn"
+        onclick="openLogin()"
       >
         J
       </button>
@@ -1243,9 +1168,6 @@ footer ul{
     </div>
 
   </div>
-
-
-  <!-- NAVIGATION -->
 
   <div class="navRow">
 
@@ -1278,10 +1200,9 @@ footer ul{
 </header>
 
 
-
-<!-- =====================================================
-     SIDE MENU BACKDROP
-===================================================== -->
+<!-- =========================
+     SIDE MENU
+========================= -->
 
 <div
   id="menuBackdrop"
@@ -1289,16 +1210,9 @@ footer ul{
   onclick="toggleSideMenu(false)"
 ></div>
 
-
-
-<!-- =====================================================
-     SIDE MENU
-===================================================== -->
-
 <aside
   id="sideMenu"
   class="sideMenu"
-  aria-label="Category menu"
 >
 
   <div class="sideMenuHeader">
@@ -1316,96 +1230,77 @@ footer ul{
 
   </div>
 
-
   <div
     class="menuItem"
     onclick="showCategory('Food')"
   >
-
     <span>🍔</span>
-
-    <span class="menuLabel">
-      Food
-    </span>
-
-    <span>
-      ➡️
-    </span>
-
+    <span class="menuLabel">Food</span>
+    <span>➡️</span>
   </div>
-
 
   <div
     class="menuItem"
     onclick="showCategory('Grocery')"
   >
-
     <span>🛒</span>
-
-    <span class="menuLabel">
-      Grocery
-    </span>
-
-    <span>
-      ➡️
-    </span>
-
+    <span class="menuLabel">Grocery</span>
+    <span>➡️</span>
   </div>
-
 
   <div
     class="menuItem"
     onclick="showCategory('Beverages')"
   >
-
     <span>🥤</span>
-
-    <span class="menuLabel">
-      Beverages
-    </span>
-
-    <span>
-      ➡️
-    </span>
-
+    <span class="menuLabel">Beverages</span>
+    <span>➡️</span>
   </div>
-
 
   <div
     class="menuItem"
     onclick="showCategory('Drinks')"
   >
-
     <span>🍹</span>
-
-    <span class="menuLabel">
-      Drinks
-    </span>
-
-    <span>
-      ➡️
-    </span>
-
+    <span class="menuLabel">Drinks</span>
+    <span>➡️</span>
   </div>
 
 </aside>
 
 
-
-<!-- =====================================================
+<!-- =========================
      HOME
-===================================================== -->
+========================= -->
 
 <div id="homePage">
 
+  <!-- HERO IMAGE + HERO TEXT REMOVED -->
 
-  <!-- HERO -->
+  <section class="homeBanner">
+
+    <div class="homeBannerInner">
+
+      <div>
+
+        <h1>
+          Haroa Eats
+          <span>Food Delivery</span>
+        </h1>
+
+        <p>
+          Haroa-এর সেরা restaurant থেকে
+          আপনার পছন্দের খাবার অর্ডার করুন।
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
 
 
-
-
-
-  <!-- POPULAR RESTAURANTS -->
+  <!-- RESTAURANTS -->
 
   <section>
 
@@ -1426,16 +1321,11 @@ footer ul{
 
       </div>
 
-
       <div
         id="restaurantGrid"
         class="restaurantGrid"
       >
-
-        <p>
-          Loading restaurants...
-        </p>
-
+        Loading restaurants...
       </div>
 
     </div>
@@ -1443,8 +1333,7 @@ footer ul{
   </section>
 
 
-
-  <!-- POPULAR FOODS -->
+  <!-- FOODS -->
 
   <section style="background:#fff">
 
@@ -1458,7 +1347,6 @@ footer ul{
 
       </div>
 
-
       <div
         id="foodGrid"
         class="menuGrid"
@@ -1468,14 +1356,12 @@ footer ul{
 
   </section>
 
-
 </div>
 
 
-
-<!-- =====================================================
-     CUSTOMER ORDERS
-===================================================== -->
+<!-- =========================
+     CUSTOMER DASHBOARD
+========================= -->
 
 <div
   id="customerDashboard"
@@ -1507,7 +1393,6 @@ footer ul{
 
     </div>
 
-
     <div id="customerOrders">
       Loading...
     </div>
@@ -1517,10 +1402,9 @@ footer ul{
 </div>
 
 
-
-<!-- =====================================================
+<!-- =========================
      RIDER DASHBOARD
-===================================================== -->
+========================= -->
 
 <div
   id="riderDashboard"
@@ -1541,11 +1425,9 @@ footer ul{
 
     </div>
 
-
     <div class="statsGrid">
 
       <div class="statCard">
-
         <small>
           Available Orders
         </small>
@@ -1553,12 +1435,9 @@ footer ul{
         <h2 id="availableCount">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           My Deliveries
         </small>
@@ -1566,12 +1445,9 @@ footer ul{
         <h2 id="myDeliveryCount">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           Completed
         </small>
@@ -1579,12 +1455,9 @@ footer ul{
         <h2 id="completedCount">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           Today's Earnings
         </small>
@@ -1592,16 +1465,13 @@ footer ul{
         <h2>
           ₹0
         </h2>
-
       </div>
 
     </div>
 
-
     <h2>
       Available Orders
     </h2>
-
 
     <div id="riderOrders">
       Loading orders...
@@ -1612,10 +1482,9 @@ footer ul{
 </div>
 
 
-
-<!-- =====================================================
-     ADMIN DASHBOARD
-===================================================== -->
+<!-- =========================
+     ADMIN
+========================= -->
 
 <div
   id="adminDashboard"
@@ -1647,11 +1516,9 @@ footer ul{
 
     </div>
 
-
     <div class="statsGrid">
 
       <div class="statCard">
-
         <small>
           Restaurants
         </small>
@@ -1659,12 +1526,9 @@ footer ul{
         <h2 id="statRestaurants">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           Customers
         </small>
@@ -1672,12 +1536,9 @@ footer ul{
         <h2 id="statCustomers">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           Riders
         </small>
@@ -1685,12 +1546,9 @@ footer ul{
         <h2 id="statRiders">
           0
         </h2>
-
       </div>
 
-
       <div class="statCard">
-
         <small>
           Total Orders
         </small>
@@ -1698,16 +1556,11 @@ footer ul{
         <h2 id="statOrders">
           0
         </h2>
-
       </div>
 
     </div>
 
-
-    <div
-      class="statCard"
-      style="margin-bottom:25px"
-    >
+    <div class="statCard">
 
       <small>
         Total Revenue
@@ -1719,11 +1572,9 @@ footer ul{
 
     </div>
 
-
     <h2>
       Recent Orders
     </h2>
-
 
     <div id="adminOrders">
       Loading...
@@ -1734,10 +1585,9 @@ footer ul{
 </div>
 
 
-
-<!-- =====================================================
-     CART MODAL
-===================================================== -->
+<!-- =========================
+     CART
+========================= -->
 
 <div
   id="cartModal"
@@ -1759,9 +1609,7 @@ footer ul{
         🛒 Your Cart
       </h2>
 
-
       <div id="cartItems"></div>
-
 
       <div class="cartTotal">
 
@@ -1775,7 +1623,6 @@ footer ul{
 
       </div>
 
-
       <textarea
         id="address"
         class="formInput"
@@ -1783,14 +1630,12 @@ footer ul{
         placeholder="Delivery address লিখুন..."
       ></textarea>
 
-
       <button
         class="primary"
         onclick="checkout()"
       >
         Confirm Order
       </button>
-
 
       <div id="checkoutMessage"></div>
 
@@ -1801,10 +1646,9 @@ footer ul{
 </div>
 
 
-
-<!-- =====================================================
-     LOGIN MODAL
-===================================================== -->
+<!-- =========================
+     LOGIN
+========================= -->
 
 <div
   id="loginModal"
@@ -1822,23 +1666,20 @@ footer ul{
         Close
       </button>
 
-
       <h2>
         Login
       </h2>
-
 
       <p style="color:#777">
         Haroa Eats account-এ login করুন
       </p>
 
-
       <input
         id="loginPhone"
         class="formInput"
         placeholder="Mobile number"
+        inputmode="numeric"
       >
-
 
       <input
         id="loginPassword"
@@ -1847,7 +1688,6 @@ footer ul{
         placeholder="Password"
       >
 
-
       <button
         class="primary"
         onclick="loginUser()"
@@ -1855,41 +1695,26 @@ footer ul{
         Login
       </button>
 
+      <button
+        class="secondary"
+        style="width:100%;margin-top:10px"
+        onclick="showRegister()"
+      >
+        Create new account
+      </button>
 
       <p id="loginMessage"></p>
 
-
       <div class="notice">
-
-        <b>
-          Demo Admin
-        </b>
-
-        <br>
-
-        Mobile: 9999999999
-
-        <br>
-
+        <b>Demo Admin</b><br>
+        Mobile: 9999999999<br>
         Password: admin123
-
       </div>
 
-
       <div class="notice">
-
-        <b>
-          Demo Rider
-        </b>
-
-        <br>
-
-        Mobile: 8888888888
-
-        <br>
-
+        <b>Demo Rider</b><br>
+        Mobile: 8888888888<br>
         Password: rider123
-
       </div>
 
     </div>
@@ -1899,10 +1724,81 @@ footer ul{
 </div>
 
 
+<!-- =========================
+     REGISTER
+========================= -->
 
-<!-- =====================================================
+<div
+  id="registerModal"
+  class="modal"
+>
+
+  <div class="sheet">
+
+    <div class="sheetInner">
+
+      <button
+        class="closeBtn"
+        onclick="closeRegister()"
+      >
+        Close
+      </button>
+
+      <h2>
+        Create Account
+      </h2>
+
+      <p style="color:#777">
+        নতুন Haroa Eats account তৈরি করুন
+      </p>
+
+      <input
+        id="registerName"
+        class="formInput"
+        placeholder="Your name"
+      >
+
+      <input
+        id="registerPhone"
+        class="formInput"
+        placeholder="Mobile number"
+        inputmode="numeric"
+      >
+
+      <input
+        id="registerPassword"
+        class="formInput"
+        type="password"
+        placeholder="Password"
+      >
+
+      <button
+        class="primary"
+        onclick="registerUser()"
+      >
+        Sign Up
+      </button>
+
+      <button
+        class="secondary"
+        style="width:100%;margin-top:10px"
+        onclick="openLoginFromRegister()"
+      >
+        Already have an account?
+      </button>
+
+      <p id="registerMessage"></p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
      FOOTER
-===================================================== -->
+========================= -->
 
 <footer>
 
@@ -1921,7 +1817,6 @@ footer ul{
 
     </div>
 
-
     <div>
 
       <h3>
@@ -1929,27 +1824,13 @@ footer ul{
       </h3>
 
       <ul>
-
-        <li>
-          Home
-        </li>
-
-        <li>
-          Restaurants
-        </li>
-
-        <li>
-          My Orders
-        </li>
-
-        <li>
-          Track Order
-        </li>
-
+        <li>Home</li>
+        <li>Restaurants</li>
+        <li>My Orders</li>
+        <li>Track Order</li>
       </ul>
 
     </div>
-
 
     <div>
 
@@ -1969,7 +1850,6 @@ footer ul{
 
   </div>
 
-
   <div
     class="container"
     style="
@@ -1979,14 +1859,11 @@ footer ul{
       color:#777
     "
   >
-
     © 2026 Haroa Eats.
     All rights reserved.
-
   </div>
 
 </footer>
-
 
 
 <script>
@@ -1994,55 +1871,40 @@ footer ul{
 let restaurantsData = [];
 let cart = [];
 
-
-/* =====================================================
+/* =========================
    API
-===================================================== */
+========================= */
 
 async function api(url, options = {}){
 
   const response = await fetch(url,{
-
     headers:{
       "Content-Type":"application/json"
     },
-
     ...options
-
   });
-
 
   let data = {};
 
   try{
-
     data = await response.json();
-
   }catch(e){
-
     data = {};
-
   }
-
 
   if(!response.ok){
-
     throw new Error(
-      data.error || "Something went wrong"
+      data.error ||
+      "Something went wrong"
     );
-
   }
 
-
   return data;
-
 }
 
-
-
-/* =====================================================
+/* =========================
    LOAD RESTAURANTS
-===================================================== */
+========================= */
 
 async function loadRestaurants(){
 
@@ -2052,32 +1914,21 @@ async function loadRestaurants(){
       await api("/api/restaurants");
 
     renderRestaurants();
-
     renderPopularFoods();
 
   }catch(error){
 
-    const grid =
-      document.getElementById(
-        "restaurantGrid"
-      );
-
-    if(grid){
-
-      grid.innerHTML =
-        `<p>${escapeHtml(error.message)}</p>`;
-
-    }
+    document.getElementById(
+      "restaurantGrid"
+    ).innerHTML =
+      `<p>${escapeHtml(error.message)}</p>`;
 
   }
-
 }
 
-
-
-/* =====================================================
-   RENDER RESTAURANTS
-===================================================== */
+/* =========================
+   RESTAURANTS
+========================= */
 
 function renderRestaurants(){
 
@@ -2088,55 +1939,37 @@ function renderRestaurants(){
 
   if(!grid) return;
 
-
   const search =
     document.getElementById(
       "searchInput"
     );
 
-
   const query =
-    (
-      search
-      ? search.value
-      : ""
-    )
+    (search?.value || "")
     .toLowerCase()
     .trim();
-
 
   const filtered =
     restaurantsData.filter(r => {
 
       const menuText =
         Array.isArray(r.menu)
-        ? r.menu
-            .map(m => m.name || "")
-            .join(" ")
-        : "";
-
+          ? r.menu
+              .map(m => m.name || "")
+              .join(" ")
+          : "";
 
       const text = [
-
         r.name || "",
-
         r.area || "",
-
-        r.category || "",
-
-        r.type || "",
-
         menuText
-
       ].join(" ");
-
 
       return text
         .toLowerCase()
         .includes(query);
 
     });
-
 
   const images = [
 
@@ -2150,9 +1983,7 @@ function renderRestaurants(){
 
   ];
 
-
   grid.innerHTML =
-
     filtered.map((r,index) => `
 
       <div class="restaurantCard">
@@ -2160,56 +1991,35 @@ function renderRestaurants(){
         <img
           class="restaurantImg"
           src="${images[index % images.length]}"
-          alt="${escapeHtml(
-            r.name || "Restaurant"
-          )}"
+          alt="${escapeHtml(r.name)}"
         >
-
 
         <div class="restaurantBody">
 
           <h3>
-            ${escapeHtml(
-              r.name || "Restaurant"
-            )}
+            ${escapeHtml(r.name)}
           </h3>
 
-
           <div class="area">
-            📍
-            ${escapeHtml(
-              r.area || ""
-            )}
+            📍 ${escapeHtml(r.area)}
           </div>
-
 
           <div class="ratingRow">
 
             <div class="rating">
-
-              <span>
-                ★
-              </span>
-
+              <span>★</span>
               4.${index + 2}
-
               <small style="color:#888">
                 (100+)
               </small>
-
             </div>
 
-
             <div class="time">
-
-              ${25 + index * 5}-
-              ${35 + index * 5}
+              ${25 + index * 5}-${35 + index * 5}
               min
-
             </div>
 
           </div>
-
 
           <button
             class="menuBtn"
@@ -2224,17 +2034,12 @@ function renderRestaurants(){
 
     `).join("")
 
-    ||
-
-    "<p>No restaurant found.</p>";
-
+    || "<p>No restaurant found.</p>";
 }
 
-
-
-/* =====================================================
+/* =========================
    POPULAR FOODS
-===================================================== */
+========================= */
 
 function renderPopularFoods(){
 
@@ -2245,35 +2050,23 @@ function renderPopularFoods(){
 
   if(!grid) return;
 
-
   const foods = [];
-
 
   restaurantsData.forEach(r => {
 
-    if(!Array.isArray(r.menu))
-      return;
-
-
-    r.menu.forEach(m => {
+    (r.menu || []).forEach(m => {
 
       foods.push({
-
         ...m,
-
         restaurantId:r.id,
-
         restaurant:r.name
-
       });
 
     });
 
   });
 
-
   grid.innerHTML =
-
     foods.slice(0,6).map(m => `
 
       <div class="menuCard">
@@ -2283,30 +2076,20 @@ function renderPopularFoods(){
           <div>
 
             <h3>
-              ${escapeHtml(
-                m.name || ""
-              )}
+              ${escapeHtml(m.name)}
             </h3>
 
             <small style="color:#777">
-
-              ${escapeHtml(
-                m.restaurant || ""
-              )}
-
+              ${escapeHtml(m.restaurant)}
             </small>
 
           </div>
 
-
           <div class="price">
-
-            ₹${Number(m.price) || 0}
-
+            ₹${Number(m.price)}
           </div>
 
         </div>
-
 
         <button
           class="addBtn"
@@ -2314,8 +2097,8 @@ function renderPopularFoods(){
           onclick="addToCart(
             ${Number(m.restaurantId)},
             ${Number(m.id)},
-            '${escapeJs(m.name || "")}',
-            ${Number(m.price) || 0}
+            '${escapeJs(m.name)}',
+            ${Number(m.price)}
           )"
         >
           + Add to Cart
@@ -2324,41 +2107,29 @@ function renderPopularFoods(){
       </div>
 
     `).join("");
-
 }
 
-
-
-/* =====================================================
+/* =========================
    RESTAURANT MENU
-===================================================== */
+========================= */
 
 function showRestaurantMenu(id){
 
   const restaurant =
     restaurantsData.find(
-      r =>
-        Number(r.id) === Number(id)
+      r => Number(r.id) === Number(id)
     );
-
 
   if(!restaurant) return;
 
-
   hideAll();
 
-
   document
-    .getElementById(
-      "customerDashboard"
-    )
+    .getElementById("customerDashboard")
     .classList.add("active");
 
-
   document
-    .getElementById(
-      "customerOrders"
-    )
+    .getElementById("customerOrders")
     .innerHTML = `
 
       <div class="dashboardTitle">
@@ -2366,20 +2137,14 @@ function showRestaurantMenu(id){
         <div>
 
           <h1>
-            ${escapeHtml(
-              restaurant.name || ""
-            )}
+            ${escapeHtml(restaurant.name)}
           </h1>
 
           <p>
-            📍
-            ${escapeHtml(
-              restaurant.area || ""
-            )}
+            📍 ${escapeHtml(restaurant.area)}
           </p>
 
         </div>
-
 
         <button
           class="secondary"
@@ -2389,7 +2154,6 @@ function showRestaurantMenu(id){
         </button>
 
       </div>
-
 
       <div class="menuGrid">
 
@@ -2403,9 +2167,7 @@ function showRestaurantMenu(id){
                 <div>
 
                   <h3>
-                    ${escapeHtml(
-                      m.name || ""
-                    )}
+                    ${escapeHtml(m.name)}
                   </h3>
 
                   <small>
@@ -2414,23 +2176,19 @@ function showRestaurantMenu(id){
 
                 </div>
 
-
                 <div class="price">
-
-                  ₹${Number(m.price) || 0}
-
+                  ₹${Number(m.price)}
                 </div>
 
               </div>
-
 
               <button
                 class="menuBtn"
                 onclick="addToCart(
                   ${Number(restaurant.id)},
                   ${Number(m.id)},
-                  '${escapeJs(m.name || "")}',
-                  ${Number(m.price) || 0}
+                  '${escapeJs(m.name)}',
+                  ${Number(m.price)}
                 )"
               >
                 Add to Cart
@@ -2438,26 +2196,21 @@ function showRestaurantMenu(id){
 
             </div>
 
-          `)
-          .join("")}
+          `).join("")}
 
       </div>
 
   `;
 
-
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
-
 }
 
-
-
-/* =====================================================
-   HAMBURGER MENU
-===================================================== */
+/* =========================
+   SIDE MENU
+========================= */
 
 function toggleSideMenu(force){
 
@@ -2471,147 +2224,47 @@ function toggleSideMenu(force){
       "menuBackdrop"
     );
 
-
-  const shouldOpen =
-
+  const open =
     typeof force === "boolean"
+      ? force
+      : !menu.classList.contains("open");
 
-    ? force
-
-    : !menu.classList.contains(
-        "open"
-      );
-
-
-  menu.classList.toggle(
-    "open",
-    shouldOpen
-  );
-
-
-  backdrop.classList.toggle(
-    "show",
-    shouldOpen
-  );
-
+  menu.classList.toggle("open",open);
+  backdrop.classList.toggle("show",open);
 
   document.body.style.overflow =
-    shouldOpen
-    ? "hidden"
-    : "";
+    open ? "hidden" : "";
 
 }
-
-
-
-/* =====================================================
-   CATEGORY
-===================================================== */
 
 function showCategory(category){
 
   toggleSideMenu(false);
-
 
   const search =
     document.getElementById(
       "searchInput"
     );
 
+  if(search){
 
-  const hasCategoryData =
-    restaurantsData.some(r =>
-      String(
-        r.category ||
-        r.type ||
-        ""
-      ).trim() !== ""
-    );
-
-
-  if(hasCategoryData){
-
-    const filtered =
-      restaurantsData.filter(r => {
-
-        const value =
-          String(
-            r.category ||
-            r.type ||
-            ""
-          ).toLowerCase();
-
-
-        return value.includes(
-          category.toLowerCase()
-        );
-
-      });
-
-
-    renderRestaurantList(
-      filtered
-    );
-
-  }else{
-
-    if(search){
-
-      search.value = "";
-
-    }
-
-    renderRestaurants();
+    search.value = "";
 
   }
-
-
-  const grid =
-    document.getElementById(
-      "restaurantGrid"
-    );
-
-
-  if(grid){
-
-    grid.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
-  }
-
-}
-
-
-
-/* =====================================================
-   CATEGORY HELPER
-===================================================== */
-
-function renderRestaurantList(list){
-
-  const original =
-    restaurantsData;
-
-
-  restaurantsData =
-    list;
-
 
   renderRestaurants();
 
-
-  restaurantsData =
-    original;
+  document
+    .getElementById("restaurantGrid")
+    ?.scrollIntoView({
+      behavior:"smooth"
+    });
 
 }
 
-
-
-/* =====================================================
+/* =========================
    CART
-===================================================== */
+========================= */
 
 function addToCart(
   restaurantId,
@@ -2627,7 +2280,6 @@ function addToCart(
         Number(menuId)
     );
 
-
   if(existing){
 
     existing.qty++;
@@ -2635,70 +2287,44 @@ function addToCart(
   }else{
 
     cart.push({
-
       restaurantId,
-
       menuId,
-
       name,
-
       price,
-
       qty:1
-
     });
 
   }
-
 
   drawCart();
 
 }
 
-
-
-/* =====================================================
-   DRAW CART
-===================================================== */
-
 function drawCart(){
 
-  document
-    .getElementById(
-      "cartCount"
-    )
-    .textContent =
-      cart.reduce(
-        (sum,x) =>
-          sum + x.qty,
-        0
-      );
-
+  document.getElementById(
+    "cartCount"
+  ).textContent =
+    cart.reduce(
+      (sum,x) => sum + x.qty,
+      0
+    );
 
   const total =
     cart.reduce(
       (sum,x) =>
-        sum + (
-          x.price *
-          x.qty
-        ),
+        sum + x.price * x.qty,
       0
     );
 
-
-  document
-    .getElementById(
-      "cartTotal"
-    )
-    .textContent =
-      total;
-
+  document.getElementById(
+    "cartTotal"
+  ).textContent = total;
 
   const box =
     document.getElementById(
       "cartItems"
     );
-
 
   if(!cart.length){
 
@@ -2706,12 +2332,9 @@ function drawCart(){
       "<p>Your cart is empty.</p>";
 
     return;
-
   }
 
-
   box.innerHTML =
-
     cart.map((x,i) => `
 
       <div class="cartItem">
@@ -2725,13 +2348,10 @@ function drawCart(){
           <br>
 
           <small>
-            ₹${x.price}
-            ×
-            ${x.qty}
+            ₹${x.price} × ${x.qty}
           </small>
 
         </div>
-
 
         <div>
 
@@ -2754,12 +2374,6 @@ function drawCart(){
 
 }
 
-
-
-/* =====================================================
-   REMOVE CART
-===================================================== */
-
 function removeCart(index){
 
   cart.splice(index,1);
@@ -2768,77 +2382,49 @@ function removeCart(index){
 
 }
 
-
-
-/* =====================================================
-   OPEN CART
-===================================================== */
-
 function openCart(){
 
   document
-    .getElementById(
-      "cartModal"
-    )
+    .getElementById("cartModal")
     .classList.add("show");
-
 
   drawCart();
 
 }
 
-
-
-/* =====================================================
-   CLOSE CART
-===================================================== */
-
 function closeCart(){
 
   document
-    .getElementById(
-      "cartModal"
-    )
+    .getElementById("cartModal")
     .classList.remove("show");
 
 }
 
-
-
-/* =====================================================
+/* =========================
    CHECKOUT
-===================================================== */
+========================= */
 
 async function checkout(){
 
   if(!cart.length){
 
     alert("Cart খালি");
-
     return;
 
   }
-
 
   const me =
     await api("/api/me");
 
-
   if(!me.user){
 
     closeCart();
-
     openLogin();
-
     return;
 
   }
 
-
-  if(
-    me.user.role !==
-    "customer"
-  ){
+  if(me.user.role !== "customer"){
 
     alert(
       "Customer account দিয়ে order করুন"
@@ -2848,15 +2434,11 @@ async function checkout(){
 
   }
 
-
   const address =
     document
-      .getElementById(
-        "address"
-      )
+      .getElementById("address")
       .value
       .trim();
-
 
   if(!address){
 
@@ -2868,10 +2450,8 @@ async function checkout(){
 
   }
 
-
   const restaurantId =
     cart[0].restaurantId;
-
 
   if(
     cart.some(
@@ -2889,125 +2469,90 @@ async function checkout(){
 
   }
 
-
   try{
 
     const result =
       await api(
         "/api/orders",
         {
-
           method:"POST",
 
           body:JSON.stringify({
-
             restaurantId,
-
             address,
 
             items:
               cart.map(x => ({
-
                 menuId:x.menuId,
-
                 qty:x.qty
-
               }))
-
           })
-
         }
       );
 
+    document.getElementById(
+      "checkoutMessage"
+    ).innerHTML = `
 
-    document
-      .getElementById(
-        "checkoutMessage"
-      )
-      .innerHTML = `
+      <div class="notice">
 
-        <div class="notice">
+        ✅ Order successfully placed!
 
-          ✅ Order successfully placed!
+        <br>
 
-          <br>
+        Order ID:
+        <b>
+          #${result.orderId}
+        </b>
 
-          Order ID:
-          <b>
-            #${result.orderId}
-          </b>
+      </div>
 
-        </div>
-
-      `;
-
+    `;
 
     cart = [];
 
     drawCart();
 
-
   }catch(error){
 
-    alert(
-      error.message
-    );
+    alert(error.message);
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    LOGIN
-===================================================== */
+========================= */
 
 function openLogin(){
 
   document
-    .getElementById(
-      "loginModal"
-    )
+    .getElementById("loginModal")
     .classList.add("show");
 
 }
 
-
 function closeLogin(){
 
   document
-    .getElementById(
-      "loginModal"
-    )
+    .getElementById("loginModal")
     .classList.remove("show");
 
 }
-
-
-
-/* =====================================================
-   LOGIN USER
-===================================================== */
 
 async function loginUser(){
 
   const phone =
     document
-      .getElementById(
-        "loginPhone"
-      )
+      .getElementById("loginPhone")
       .value
       .trim();
 
-
   const password =
     document
-      .getElementById(
-        "loginPassword"
-      )
+      .getElementById("loginPassword")
       .value;
-
 
   try{
 
@@ -3015,35 +2560,25 @@ async function loginUser(){
       await api(
         "/api/login",
         {
-
           method:"POST",
 
           body:JSON.stringify({
-
             phone,
-
             password
-
           })
-
         }
       );
 
-
-    document
-      .getElementById(
-        "loginMessage"
-      )
-      .innerHTML =
-        "✅ Login successful";
-
+    document.getElementById(
+      "loginMessage"
+    ).innerHTML =
+      "✅ Login successful";
 
     setTimeout(() => {
 
       closeLogin();
 
       updateUserButton();
-
 
       if(
         result.user.role ===
@@ -3067,30 +2602,114 @@ async function loginUser(){
 
     },500);
 
-
   }catch(error){
 
-    document
-      .getElementById(
-        "loginMessage"
-      )
-      .innerHTML =
-
-        `<span style="color:red">
-          ${escapeHtml(
-            error.message
-          )}
-        </span>`;
+    document.getElementById(
+      "loginMessage"
+    ).innerHTML =
+      `<span style="color:red">
+        ${escapeHtml(error.message)}
+      </span>`;
 
   }
 
 }
 
+/* =========================
+   REGISTER
+========================= */
 
+function showRegister(){
 
-/* =====================================================
+  closeLogin();
+
+  document
+    .getElementById("registerModal")
+    .classList.add("show");
+
+}
+
+function closeRegister(){
+
+  document
+    .getElementById("registerModal")
+    .classList.remove("show");
+
+}
+
+function openLoginFromRegister(){
+
+  closeRegister();
+  openLogin();
+
+}
+
+async function registerUser(){
+
+  const name =
+    document
+      .getElementById("registerName")
+      .value
+      .trim();
+
+  const phone =
+    document
+      .getElementById("registerPhone")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("registerPassword")
+      .value;
+
+  try{
+
+    const result =
+      await api(
+        "/api/register",
+        {
+          method:"POST",
+
+          body:JSON.stringify({
+            name,
+            phone,
+            password
+          })
+        }
+      );
+
+    document.getElementById(
+      "registerMessage"
+    ).innerHTML =
+      "✅ Account created successfully";
+
+    setTimeout(() => {
+
+      closeRegister();
+
+      updateUserButton();
+
+      showHome();
+
+    },500);
+
+  }catch(error){
+
+    document.getElementById(
+      "registerMessage"
+    ).innerHTML =
+      `<span style="color:red">
+        ${escapeHtml(error.message)}
+      </span>`;
+
+  }
+
+}
+
+/* =========================
    USER BUTTON
-===================================================== */
+========================= */
 
 async function updateUserButton(){
 
@@ -3099,12 +2718,10 @@ async function updateUserButton(){
     const me =
       await api("/api/me");
 
-
     const btn =
       document.getElementById(
         "userBtn"
       );
-
 
     if(me.user){
 
@@ -3116,10 +2733,12 @@ async function updateUserButton(){
         .charAt(0)
         .toUpperCase();
 
+      btn.title =
+        me.user.name;
+
     }else{
 
-      btn.textContent =
-        "J";
+      btn.textContent = "J";
 
     }
 
@@ -3127,16 +2746,13 @@ async function updateUserButton(){
 
 }
 
-
-
-/* =====================================================
+/* =========================
    CUSTOMER ORDERS
-===================================================== */
+========================= */
 
 async function showCustomerOrders(){
 
   hideAll();
-
 
   document
     .getElementById(
@@ -3144,21 +2760,17 @@ async function showCustomerOrders(){
     )
     .classList.add("active");
 
-
   try{
 
     const me =
       await api("/api/me");
 
-
     if(!me.user){
 
       openLogin();
-
       return;
 
     }
-
 
     if(
       me.user.role !==
@@ -3170,21 +2782,17 @@ async function showCustomerOrders(){
       );
 
       showHome();
-
       return;
 
     }
 
-
     const orders =
       await api("/api/orders");
-
 
     const box =
       document.getElementById(
         "customerOrders"
       );
-
 
     if(!orders.length){
 
@@ -3208,9 +2816,7 @@ async function showCustomerOrders(){
 
     }
 
-
     box.innerHTML =
-
       orders.map(o => `
 
         <div class="orderCard">
@@ -3231,40 +2837,29 @@ async function showCustomerOrders(){
 
             </div>
 
-
             <span class="status">
-
               ${escapeHtml(
                 o.status || ""
               )}
-
             </span>
 
           </div>
 
-
           <p>
-
             ${(o.items || [])
-              .map(i =>
-                `${escapeHtml(
-                  i.name || ""
-                )} × ${i.qty}`
+              .map(
+                i =>
+                  `${escapeHtml(i.name)}
+                   × ${i.qty}`
               )
               .join(", ")}
-
           </p>
-
 
           <p>
-
-            📍
-            ${escapeHtml(
+            📍 ${escapeHtml(
               o.address || ""
             )}
-
           </p>
-
 
           <b>
             ₹${o.total}
@@ -3274,35 +2869,26 @@ async function showCustomerOrders(){
 
       `).join("");
 
-
   }catch(error){
 
-    document
-      .getElementById(
-        "customerOrders"
-      )
-      .innerHTML =
-
-        `<p>
-          ${escapeHtml(
-            error.message
-          )}
-        </p>`;
+    document.getElementById(
+      "customerOrders"
+    ).innerHTML =
+      `<p>${escapeHtml(
+        error.message
+      )}</p>`;
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    RIDER
-===================================================== */
+========================= */
 
 async function showRider(){
 
   hideAll();
-
 
   document
     .getElementById(
@@ -3310,95 +2896,70 @@ async function showRider(){
     )
     .classList.add("active");
 
-
   try{
 
     const me =
       await api("/api/me");
 
-
     if(
       !me.user ||
-      me.user.role !==
-      "rider"
+      me.user.role !== "rider"
     ){
 
       openLogin();
-
       return;
 
     }
 
-
-    document
-      .getElementById(
-        "riderWelcome"
-      )
-      .textContent =
-        `Welcome, ${
-          me.user.name ||
-          "Haroa Rider"
-        }!`;
-
+    document.getElementById(
+      "riderWelcome"
+    ).textContent =
+      `Welcome, ${
+        me.user.name ||
+        "Haroa Rider"
+      }!`;
 
     const orders =
       await api("/api/orders");
 
-
     const available =
       orders.filter(
-        o =>
-          !o.delivery_id
+        o => !o.delivery_id
       );
-
 
     const mine =
       orders.filter(
         o =>
-          o.delivery_id ===
-          me.user.id
+          Number(o.delivery_id) ===
+          Number(me.user.id)
       );
 
-
     const completed =
-      orders.filter(
+      mine.filter(
         o =>
-          o.delivery_id ===
-          me.user.id &&
           o.status ===
           "Delivered"
       );
 
+    document.getElementById(
+      "availableCount"
+    ).textContent =
+      available.length;
 
-    document
-      .getElementById(
-        "availableCount"
-      )
-      .textContent =
-        available.length;
+    document.getElementById(
+      "myDeliveryCount"
+    ).textContent =
+      mine.length;
 
-
-    document
-      .getElementById(
-        "myDeliveryCount"
-      )
-      .textContent =
-        mine.length;
-
-
-    document
-      .getElementById(
-        "completedCount"
-      )
-      .textContent =
-        completed.length;
-
+    document.getElementById(
+      "completedCount"
+    ).textContent =
+      completed.length;
 
     const box =
       document.getElementById(
         "riderOrders"
       );
-
 
     if(!orders.length){
 
@@ -3409,9 +2970,7 @@ async function showRider(){
 
     }
 
-
     box.innerHTML =
-
       orders.map(o => `
 
         <div class="deliveryCard">
@@ -3419,7 +2978,6 @@ async function showRider(){
           <h3>
             📦 Order #${o.id}
           </h3>
-
 
           <div class="deliveryInfo">
 
@@ -3435,7 +2993,6 @@ async function showRider(){
 
           </div>
 
-
           <div class="deliveryInfo">
 
             <b>
@@ -3450,7 +3007,6 @@ async function showRider(){
 
           </div>
 
-
           <div class="deliveryInfo">
 
             <b>
@@ -3462,7 +3018,6 @@ async function showRider(){
             ₹${o.total}
 
           </div>
-
 
           <div class="deliveryInfo">
 
@@ -3480,81 +3035,66 @@ async function showRider(){
 
           </div>
 
-
           ${
             !o.delivery_id
+              ? `
 
-            ? `
+                <button
+                  class="actionBtn"
+                  onclick="claimOrder(${o.id})"
+                >
+                  🏍️ Accept Order
+                </button>
 
-              <button
-                class="actionBtn"
-                onclick="claimOrder(${o.id})"
-              >
-                🏍️ Accept Order
-              </button>
+              `
+              : Number(o.delivery_id) ===
+                Number(me.user.id)
+              ? `
 
-            `
+                <button
+                  class="actionBtn"
+                  onclick="updateOrderStatus(
+                    ${o.id},
+                    'Picked up'
+                  )"
+                >
+                  Picked Up
+                </button>
 
-            : o.delivery_id ===
-              me.user.id
+                <button
+                  class="actionBtn green"
+                  onclick="updateOrderStatus(
+                    ${o.id},
+                    'Delivered'
+                  )"
+                >
+                  Delivered
+                </button>
 
-            ? `
-
-              <button
-                class="actionBtn"
-                onclick="updateOrderStatus(
-                  ${o.id},
-                  'Picked up'
-                )"
-              >
-                Picked Up
-              </button>
-
-
-              <button
-                class="actionBtn green"
-                onclick="updateOrderStatus(
-                  ${o.id},
-                  'Delivered'
-                )"
-              >
-                Delivered
-              </button>
-
-            `
-
-            : ""
-
+              `
+              : ""
           }
 
         </div>
 
       `).join("");
 
-
   }catch(error){
 
-    document
-      .getElementById(
-        "riderOrders"
-      )
-      .innerHTML =
-
-        `<p>
-          ${escapeHtml(
-            error.message
-          )}
-        </p>`;
+    document.getElementById(
+      "riderOrders"
+    ).innerHTML =
+      `<p>${escapeHtml(
+        error.message
+      )}</p>`;
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    CLAIM ORDER
-===================================================== */
+========================= */
 
 async function claimOrder(id){
 
@@ -3569,30 +3109,23 @@ async function claimOrder(id){
       }
     );
 
-
     alert(
       "Order accepted successfully!"
     );
 
-
     showRider();
-
 
   }catch(error){
 
-    alert(
-      error.message
-    );
+    alert(error.message);
 
   }
 
 }
 
-
-
-/* =====================================================
-   UPDATE ORDER STATUS
-===================================================== */
+/* =========================
+   UPDATE STATUS
+========================= */
 
 async function updateOrderStatus(
   id,
@@ -3606,40 +3139,31 @@ async function updateOrderStatus(
       id +
       "/status",
       {
-
         method:"PATCH",
 
         body:JSON.stringify({
           status
         })
-
       }
     );
 
-
     showRider();
-
 
   }catch(error){
 
-    alert(
-      error.message
-    );
+    alert(error.message);
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    ADMIN
-===================================================== */
+========================= */
 
 async function showAdmin(){
 
   hideAll();
-
 
   document
     .getElementById(
@@ -3647,198 +3171,147 @@ async function showAdmin(){
     )
     .classList.add("active");
 
-
   try{
 
     const me =
       await api("/api/me");
 
-
     if(
       !me.user ||
-      me.user.role !==
-      "admin"
+      me.user.role !== "admin"
     ){
 
       openLogin();
-
       return;
 
     }
-
 
     const stats =
       await api(
         "/api/admin/stats"
       );
 
+    document.getElementById(
+      "statRestaurants"
+    ).textContent =
+      stats.restaurants || 0;
 
-    document
-      .getElementById(
-        "statRestaurants"
-      )
-      .textContent =
-        stats.restaurants ?? 0;
+    document.getElementById(
+      "statCustomers"
+    ).textContent =
+      stats.customers || 0;
 
+    document.getElementById(
+      "statRiders"
+    ).textContent =
+      stats.riders || 0;
 
-    document
-      .getElementById(
-        "statCustomers"
-      )
-      .textContent =
-        stats.customers ?? 0;
+    document.getElementById(
+      "statOrders"
+    ).textContent =
+      stats.orders || 0;
 
-
-    document
-      .getElementById(
-        "statRiders"
-      )
-      .textContent =
-        stats.riders ||
-        stats.delivery ||
-        0;
-
-
-    document
-      .getElementById(
-        "statOrders"
-      )
-      .textContent =
-        stats.orders ?? 0;
-
-
-    document
-      .getElementById(
-        "statRevenue"
-      )
-      .textContent =
-        stats.revenue ?? 0;
-
+    document.getElementById(
+      "statRevenue"
+    ).textContent =
+      stats.revenue || 0;
 
     const orders =
-      await api(
-        "/api/orders"
-      );
+      await api("/api/orders");
 
+    document.getElementById(
+      "adminOrders"
+    ).innerHTML =
+      orders.map(o => `
 
-    document
-      .getElementById(
-        "adminOrders"
-      )
-      .innerHTML =
+        <div class="orderCard">
 
-        orders.map(o => `
+          <div class="orderHeader">
 
-          <div class="orderCard">
+            <div>
 
-            <div class="orderHeader">
+              <h3>
+                Order #${o.id}
+              </h3>
 
-              <div>
-
-                <h3>
-                  Order #${o.id}
-                </h3>
-
-                <p>
-
-                  ${escapeHtml(
-                    o.customer ||
-                    "Customer"
-                  )}
-
-                  —
-
-                  ${escapeHtml(
-                    o.restaurant ||
-                    ""
-                  )}
-
-                </p>
-
-              </div>
-
-
-              <span class="status">
-
+              <p>
                 ${escapeHtml(
-                  o.status ||
+                  o.customer ||
+                  "Customer"
+                )}
+                —
+                ${escapeHtml(
+                  o.restaurant ||
                   ""
                 )}
-
-              </span>
+              </p>
 
             </div>
 
-
-            <p>
-              ₹${o.total}
-            </p>
-
-
-            <button
-              class="actionBtn"
-              onclick="adminStatus(
-                ${o.id},
-                'Preparing'
-              )"
-            >
-              Preparing
-            </button>
-
-
-            <button
-              class="actionBtn"
-              onclick="adminStatus(
-                ${o.id},
-                'Picked up'
-              )"
-            >
-              Picked Up
-            </button>
-
-
-            <button
-              class="actionBtn green"
-              onclick="adminStatus(
-                ${o.id},
-                'Delivered'
-              )"
-            >
-              Delivered
-            </button>
+            <span class="status">
+              ${escapeHtml(
+                o.status || ""
+              )}
+            </span>
 
           </div>
 
-        `).join("")
+          <p>
+            ₹${o.total}
+          </p>
 
-        ||
+          <button
+            class="actionBtn"
+            onclick="adminStatus(
+              ${o.id},
+              'Preparing'
+            )"
+          >
+            Preparing
+          </button>
 
-        "<p>No orders.</p>";
+          <button
+            class="actionBtn"
+            onclick="adminStatus(
+              ${o.id},
+              'Picked up'
+            )"
+          >
+            Picked Up
+          </button>
 
+          <button
+            class="actionBtn green"
+            onclick="adminStatus(
+              ${o.id},
+              'Delivered'
+            )"
+          >
+            Delivered
+          </button>
+
+        </div>
+
+      `).join("")
+      ||
+      "<p>No orders.</p>";
 
   }catch(error){
 
-    document
-      .getElementById(
-        "adminOrders"
-      )
-      .innerHTML =
-
-        `<p>
-          ${escapeHtml(
-            error.message
-          )}
-        </p>`;
+    document.getElementById(
+      "adminOrders"
+    ).innerHTML =
+      `<p>${escapeHtml(
+        error.message
+      )}</p>`;
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    ADMIN STATUS
-===================================================== */
+========================= */
 
 async function adminStatus(
   id,
@@ -3852,257 +3325,140 @@ async function adminStatus(
       id +
       "/status",
       {
-
         method:"PATCH",
 
         body:JSON.stringify({
           status
         })
-
       }
     );
 
-
     showAdmin();
-
 
   }catch(error){
 
-    alert(
-      error.message
-    );
+    alert(error.message);
 
   }
 
 }
 
-
-
-/* =====================================================
+/* =========================
    NAVIGATION
-===================================================== */
+========================= */
 
 function hideAll(){
 
-  document
-    .getElementById(
-      "homePage"
-    )
-    .style.display =
-      "none";
-
+  document.getElementById(
+    "homePage"
+  ).style.display = "none";
 
   document
     .getElementById(
       "customerDashboard"
     )
-    .classList.remove(
-      "active"
-    );
-
+    .classList.remove("active");
 
   document
     .getElementById(
       "riderDashboard"
     )
-    .classList.remove(
-      "active"
-    );
-
+    .classList.remove("active");
 
   document
     .getElementById(
       "adminDashboard"
     )
-    .classList.remove(
-      "active"
-    );
+    .classList.remove("active");
 
 }
-
-
 
 function showHome(){
 
   hideAll();
 
-
-  document
-    .getElementById(
-      "homePage"
-    )
-    .style.display =
-      "block";
-
+  document.getElementById(
+    "homePage"
+  ).style.display = "block";
 
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
 
 }
-
-
 
 function showRestaurants(){
 
   showHome();
 
-
   setTimeout(() => {
 
-    const grid =
-      document.getElementById(
+    document
+      .getElementById(
         "restaurantGrid"
-      );
-
-
-    if(grid){
-
-      grid.scrollIntoView({
-
-        behavior:"smooth",
-
-        block:"start"
-
+      )
+      ?.scrollIntoView({
+        behavior:"smooth"
       });
 
-    }
-
-  },50);
+  },100);
 
 }
 
-
-
-/* =====================================================
-   ESCAPE HELPERS
-===================================================== */
+/* =========================
+   ESCAPE
+========================= */
 
 function escapeHtml(text){
 
-  return String(text)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+  return String(text || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
-
-
 
 function escapeJs(text){
 
-  return String(text)
-
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-
-    .replace(
-      /'/g,
-      "\\'"
-    )
-
-    .replace(
-      /\r?\n/g,
-      " "
-    );
+  return String(text || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\r?\n/g," ");
 
 }
 
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-async function logoutUser(){
-
-  try{
-
-    await api(
-      "/api/logout",
-      {
-        method:"POST"
-      }
-    );
-
-
-    showHome();
-
-    updateUserButton();
-
-
-  }catch(e){}
-
-}
-
-
-
-/* =====================================================
+/* =========================
    ESC KEY
-===================================================== */
+========================= */
 
 document.addEventListener(
   "keydown",
   event => {
 
-    if(
-      event.key ===
-      "Escape"
-    ){
+    if(event.key === "Escape"){
 
       toggleSideMenu(false);
-
       closeCart();
-
       closeLogin();
+      closeRegister();
 
     }
 
   }
 );
 
-
-
-/* =====================================================
+/* =========================
    START
-===================================================== */
+========================= */
 
 loadRestaurants();
-
 updateUserButton();
-
 drawCart();
 
 </script>
-
 
 </body>
 </html>
