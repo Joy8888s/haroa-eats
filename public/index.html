@@ -4,2317 +4,818 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Haroa Eats — Local Food Delivery</title>
-
 <style>
 *{box-sizing:border-box}
-
-:root{
-  --red:#e23744;
-  --dark:#181818;
-  --muted:#777;
-  --green:#16834b
-}
-
-body{
-  margin:0;
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  background:#f7f7f8;
-  color:#191919
-}
-
-button,input,textarea{
-  font:inherit
-}
-
-button{
-  cursor:pointer;
-  border:0
-}
-
-.container{
-  width:min(1180px,92%);
-  margin:auto
-}
-
-/* HEADER */
-
-header{
-  background:linear-gradient(135deg,#d91624,#ef3340);
-  color:#fff;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 3px 15px #0002
-}
-
-.navbar{
-  min-height:78px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:25px;
-  font-weight:800;
-  white-space:nowrap
-}
-
-.logoIcon{
-  font-size:30px
-}
-
-.logo small{
-  display:block;
-  font-size:11px;
-  font-weight:400;
-  opacity:.9
-}
-
-.navLinks{
-  display:flex;
-  gap:6px;
-  align-items:center
-}
-
-.navLinks button{
-  color:#fff;
-  background:transparent;
-  padding:11px 14px;
-  border-radius:9px;
-  font-weight:700
-}
-
-.navLinks button:hover{
-  background:#fff2
-}
-
-.navRight{
-  display:flex;
-  gap:9px;
-  align-items:center
-}
-
-.locationBtn{
-  background:#fff1;
-  border:1px solid #fff8;
-  color:#fff;
-  padding:11px 16px;
-  border-radius:10px
-}
-
-.cartBtn{
-  background:#fff;
-  color:var(--red);
-  padding:11px 15px;
-  border-radius:10px;
-  font-weight:800
-}
-
-.userBtn{
-  background:#ffca28;
-  color:#222;
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  font-weight:800
-}
-
-/* HERO */
-
-.hero{
-  background:
-    radial-gradient(
-      circle at 90% 20%,
-      #ffddd7 0,
-      transparent 35%
-    ),
-    linear-gradient(
-      135deg,
-      #fff,
-      #fff7f5
-    );
-  overflow:hidden
-}
-
-.heroInner{
-  min-height:460px;
-  display:flex;
-  align-items:center;
-  justify-content:center
-}
-
-.heroText{
-  width:100%;
-  max-width:850px;
-  text-align:center;
-  margin:auto;
-  padding:55px 0 45px
-}
-
-.heroText h1{
-  font-size:52px;
-  line-height:1.08;
-  margin:15px 0
-}
-
-.heroText h1 span{
-  color:var(--red)
-}
-
-.heroText p{
-  color:#666;
-  font-size:19px;
-  line-height:1.6;
-  max-width:650px;
-  margin:0 auto 25px
-}
-
-/* SEARCH */
-
-.searchBox{
-  display:flex;
-  background:#fff;
-  border-radius:14px;
-  padding:7px;
-  box-shadow:0 7px 30px #0001;
-  margin:0 auto;
-  max-width:700px
-}
-
-.searchBox input{
-  flex:1;
-  border:0;
-  outline:0;
-  padding:14px;
-  min-width:0
-}
-
-.searchBox button{
-  background:var(--red);
-  color:#fff;
-  padding:13px 25px;
-  border-radius:10px;
-  font-weight:800
-}
-
-/* HAMBURGER */
-
-.hamburgerBtn{
-  position:absolute;
-  top:20px;
-  left:20px;
-  z-index:1000;
-  width:48px;
-  height:48px;
-  border-radius:10px;
-  background:#fff;
-  color:#333;
-  font-size:25px;
-  box-shadow:0 4px 15px #0003
-}
-
-.sideMenu{
-  position:fixed;
-  top:0;
-  left:-320px;
-  width:300px;
-  height:100vh;
-  background:#fff;
-  z-index:2000;
-  box-shadow:5px 0 25px #0003;
-  transition:left .3s ease;
-  padding-top:20px
-}
-
-.sideMenu.active{
-  left:0
-}
-
-.sideMenuHeader{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:20px;
-  border-bottom:1px solid #eee
-}
-
-.sideMenuHeader span{
-  font-size:22px;
-  font-weight:800;
-  color:var(--red)
-}
-
-.sideMenuHeader button{
-  background:transparent;
-  font-size:22px
-}
-
-.menuItem{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:18px 22px;
-  font-size:18px;
-  font-weight:600;
-  border-bottom:1px solid #f1f1f1
-}
-
-.menuItem span:nth-child(2){
-  flex:1
-}
-
-.menuItem:hover{
-  background:#fff3f3;
-  color:var(--red)
-}
-
-/* SECTIONS */
-
-section{
-  padding:55px 0
-}
-
-.sectionHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:22px
-}
-
-.sectionHead h2{
-  margin:0;
-  font-size:30px
-}
-
-.viewAll{
-  color:var(--red);
-  background:none;
-  font-weight:800
-}
-
-/* RESTAURANTS */
-
-.restaurantGrid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px
-}
-
-.restaurantCard{
-  background:#fff;
-  border-radius:17px;
-  overflow:hidden;
-  box-shadow:0 4px 18px #0000000d;
-  transition:.2s
-}
-
-.restaurantCard:hover{
-  transform:translateY(-4px);
-  box-shadow:0 10px 28px #0002
-}
-
-.restaurantImg{
-  height:170px;
-  width:100%;
-  object-fit:cover;
-  display:block
-}
-
-.restaurantBody{
-  padding:16px
-}
-
-.restaurantBody h3{
-  margin:0 0 7px;
-  font-size:20px
-}
-
-.area{
-  color:#777;
-  font-size:14px
-}
-
-.ratingRow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:14px
-}
-
-.rating{
-  font-weight:700
-}
-
-.rating span{
-  color:#f6aa00
-}
-
-.time{
-  background:#e9f8ef;
-  color:#147a43;
-  padding:6px 9px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:700
-}
-
-.menuBtn{
-  width:100%;
-  margin-top:14px;
-  background:var(--red);
-  color:#fff;
-  padding:11px;
-  border-radius:9px;
-  font-weight:800
-}
-
-/* MENU */
-
-.menuGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px
-}
-
-.menuCard{
-  background:#fff;
-  padding:18px;
-  border-radius:15px;
-  box-shadow:0 3px 15px #0001
-}
-
-.menuTop{
-  display:flex;
-  justify-content:space-between;
-  gap:10px
-}
-
-.menuTop h3{
-  margin:0
-}
-
-.price{
-  color:var(--red);
-  font-weight:800
-}
-
-.addBtn{
-  background:#fff0f1;
-  color:var(--red);
-  padding:9px 14px;
-  border-radius:8px;
-  font-weight:800
-}
-
-/* DASHBOARD */
-
-.dashboard{
-  display:none;
-  padding:40px 0
-}
-
-.dashboard.active{
-  display:block
-}
-
-.dashboardTitle{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px
-}
-
-.dashboardTitle h1{
-  margin:0
-}
-
-.statsGrid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:17px;
-  margin-bottom:25px
-}
-
-.statCard{
-  background:#fff;
-  padding:22px;
-  border-radius:15px;
-  box-shadow:0 3px 15px #0001
-}
-
-.statCard small{
-  color:#777
-}
-
-.statCard h2{
-  margin:8px 0 0;
-  font-size:30px
-}
-
-.orderCard{
-  background:#fff;
-  padding:20px;
-  border-radius:15px;
-  margin-bottom:14px;
-  box-shadow:0 3px 14px #0001
-}
-
-.orderHeader{
-  display:flex;
-  justify-content:space-between;
-  gap:10px
-}
-
-.status{
-  padding:6px 10px;
-  border-radius:20px;
-  background:#fff0f1;
-  color:var(--red);
-  font-size:12px;
-  font-weight:800
-}
-
-.actionBtn{
-  background:var(--red);
-  color:#fff;
-  padding:9px 13px;
-  border-radius:8px;
-  font-weight:700;
-  margin:4px
-}
-
-.actionBtn.green{
-  background:var(--green)
-}
-
-/* RIDER */
-
-.riderHero{
-  background:linear-gradient(135deg,#1c1c1c,#343434);
-  color:#fff;
-  border-radius:18px;
-  padding:25px;
-  margin-bottom:22px
-}
-
-.riderHero h1{
-  margin:0 0 7px
-}
-
-.riderHero p{
-  margin:0;
-  color:#ccc
-}
-
-.deliveryGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px
-}
-
-.deliveryCard{
-  background:#fff;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 3px 15px #0001
-}
-
-.deliveryCard h3{
-  margin-top:0
-}
-
-.deliveryInfo{
-  padding:10px 0;
-  border-bottom:1px solid #eee
-}
-
-/* MODAL */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:#0009;
-  display:none;
-  align-items:flex-end;
-  z-index:100
-}
-
-.modal.show{
-  display:flex
-}
-
-.sheet{
-  width:100%;
-  max-height:92vh;
-  overflow:auto;
-  background:#fff;
-  border-radius:22px 22px 0 0;
-  padding:25px
-}
-
-.sheetInner{
-  max-width:650px;
-  margin:auto
-}
-
-.closeBtn{
-  float:right;
-  background:#222;
-  color:#fff;
-  padding:9px 13px;
-  border-radius:8px
-}
-
-.formInput{
-  width:100%;
-  border:1px solid #ddd;
-  padding:13px;
-  border-radius:9px;
-  margin:6px 0 13px;
-  outline:none
-}
-
-.primary{
-  width:100%;
-  background:var(--red);
-  color:#fff;
-  padding:13px;
-  border-radius:9px;
-  font-weight:800
-}
-
-.secondary{
-  background:#eee;
-  color:#222;
-  padding:11px 15px;
-  border-radius:9px;
-  font-weight:700
-}
-
-.notice{
-  padding:13px;
-  background:#fff8d7;
-  border-radius:9px;
-  margin-top:12px
-}
-
-/* OTP */
-
-.otpTitle{
-  text-align:center;
-  margin-bottom:8px
-}
-
-.otpSubtitle{
-  text-align:center;
-  color:#777;
-  margin-bottom:22px
-}
-
-.otpMode{
-  display:flex;
-  gap:8px;
-  margin-bottom:18px
-}
-
-.otpMode button{
-  flex:1;
-  padding:13px;
-  border-radius:9px;
-  background:#eee;
-  font-weight:800
-}
-
-.otpMode button.active{
-  background:var(--red);
-  color:#fff
-}
-
-.otpSection{
-  display:none
-}
-
-.otpSection.active{
-  display:block
-}
-
-.otpStatus{
-  text-align:center;
-  margin:12px 0;
-  min-height:22px
-}
-
-.otpVerifyBox{
-  display:none
-}
-
-.otpVerifyBox.show{
-  display:block
-}
-
-.captchaBox{
-  margin:10px auto;
-  min-height:20px
-}
-
-/* CART */
-
-.cartItem{
-  display:flex;
-  justify-content:space-between;
-  padding:14px 0;
-  border-bottom:1px solid #eee
-}
-
-.cartTotal{
-  display:flex;
-  justify-content:space-between;
-  font-size:21px;
-  font-weight:800;
-  margin:18px 0
-}
-
-/* FOOTER */
-
-footer{
-  background:#171717;
-  color:#fff;
-  padding:45px 0 25px;
-  margin-top:40px
-}
-
-.footerGrid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:30px
-}
-
-footer h3{
-  margin-top:0
-}
-
-footer p,
-footer li{
-  color:#bbb;
-  line-height:1.7
-}
-
-footer ul{
-  padding:0;
-  list-style:none
-}
-
-/* MOBILE */
-
-@media(max-width:950px){
-
-  .navLinks{
-    display:none
-  }
-
-  .restaurantGrid{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .statsGrid{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .deliveryGrid{
-    grid-template-columns:1fr 1fr
-  }
-
-}
-
-@media(max-width:600px){
-
-  .navbar{
-    min-height:68px
-  }
-
-  .logo{
-    font-size:20px
-  }
-
-  .locationBtn{
-    display:none
-  }
-
-  .heroText{
-    padding:65px 0 40px
-  }
-
-  .heroText h1{
-    font-size:39px
-  }
-
-  .heroText p{
-    font-size:16px
-  }
-
-  .searchBox{
-    width:100%
-  }
-
-  .searchBox button{
-    padding:12px 16px
-  }
-
-  .restaurantGrid,
-  .menuGrid,
-  .deliveryGrid,
-  .statsGrid{
-    grid-template-columns:1fr
-  }
-
-  .heroInner{
-    min-height:390px
-  }
-
-  section{
-    padding:35px 0
-  }
-
-  .footerGrid{
-    grid-template-columns:1fr
-  }
-
-}
+:root{--red:#e23744;--dark:#181818;--muted:#777;--green:#16834b}
+body{margin:0;font-family:Arial,"Noto Sans Bengali",sans-serif;background:#f7f7f8;color:#191919}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0}
+.container{width:min(1180px,92%);margin:auto}
+header{background:linear-gradient(135deg,#d91624,#ef3340);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 3px 15px #0002}
+.navbar{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:800;white-space:nowrap}.logoIcon{font-size:30px}.logo small{display:block;font-size:11px;font-weight:400;opacity:.9}
+.navLinks{display:flex;gap:6px;align-items:center}.navLinks button{color:#fff;background:transparent;padding:11px 14px;border-radius:9px;font-weight:700}.navLinks button:hover{background:#fff2}
+.navRight{display:flex;gap:9px;align-items:center}.locationBtn{background:#fff1;border:1px solid #fff8;color:#fff;padding:11px 16px;border-radius:10px}.cartBtn{background:#fff;color:var(--red);padding:11px 15px;border-radius:10px;font-weight:800}.userBtn{background:#ffca28;color:#222;width:40px;height:40px;border-radius:50%;font-weight:800}
+.hero{background:radial-gradient(circle at 90% 20%,#ffddd7 0,transparent 35%),linear-gradient(135deg,#fff,#fff7f5);overflow:hidden}.heroInner{min-height:460px;display:flex;align-items:center;justify-content:center}.heroText{width:100%;max-width:850px;text-align:center;margin:auto;padding:55px 0 45px}.heroText h1{font-size:52px;line-height:1.08;margin:15px 0}.heroText h1 span{color:var(--red)}.heroText p{color:#666;font-size:19px;line-height:1.6;max-width:650px;margin:0 auto 25px}
+.searchBox{display:flex;background:#fff;border-radius:14px;padding:7px;box-shadow:0 7px 30px #0001;margin:0 auto;max-width:700px}.searchBox input{flex:1;border:0;outline:0;padding:14px;min-width:0}.searchBox button{background:var(--red);color:#fff;padding:13px 25px;border-radius:10px;font-weight:800}
+.hamburgerBtn{position:absolute;top:20px;left:20px;z-index:1000;width:48px;height:48px;border-radius:10px;background:#fff;color:#333;font-size:25px;box-shadow:0 4px 15px #0003}.sideMenu{position:fixed;top:0;left:-320px;width:300px;height:100vh;background:#fff;z-index:2000;box-shadow:5px 0 25px #0003;transition:left .3s ease;padding-top:20px}.sideMenu.active{left:0}.sideMenuHeader{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid #eee}.sideMenuHeader span{font-size:22px;font-weight:800;color:var(--red)}.sideMenuHeader button{background:transparent;font-size:22px}.menuItem{display:flex;align-items:center;gap:12px;padding:18px 22px;font-size:18px;font-weight:600;border-bottom:1px solid #f1f1f1}.menuItem span:nth-child(2){flex:1}.menuItem:hover{background:#fff3f3;color:var(--red)}
+section{padding:55px 0}.sectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.sectionHead h2{margin:0;font-size:30px}.viewAll{color:var(--red);background:none;font-weight:800}
+.restaurantGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.restaurantCard{background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 4px 18px #0000000d;transition:.2s}.restaurantCard:hover{transform:translateY(-4px);box-shadow:0 10px 28px #0002}.restaurantImg{height:170px;width:100%;object-fit:cover;display:block}.restaurantBody{padding:16px}.restaurantBody h3{margin:0 0 7px;font-size:20px}.area{color:#777;font-size:14px}.ratingRow{display:flex;justify-content:space-between;align-items:center;margin-top:14px}.rating{font-weight:700}.rating span{color:#f6aa00}.time{background:#e9f8ef;color:#147a43;padding:6px 9px;border-radius:8px;font-size:12px;font-weight:700}.menuBtn{width:100%;margin-top:14px;background:var(--red);color:#fff;padding:11px;border-radius:9px;font-weight:800}
+.menuGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.menuCard{background:#fff;padding:18px;border-radius:15px;box-shadow:0 3px 15px #0001}.menuTop{display:flex;justify-content:space-between;gap:10px}.menuTop h3{margin:0}.price{color:var(--red);font-weight:800}.addBtn{background:#fff0f1;color:var(--red);padding:9px 14px;border-radius:8px;font-weight:800}
+.dashboard{display:none;padding:40px 0}.dashboard.active{display:block}.dashboardTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.dashboardTitle h1{margin:0}.statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:25px}.statCard{background:#fff;padding:22px;border-radius:15px;box-shadow:0 3px 15px #0001}.statCard small{color:#777}.statCard h2{margin:8px 0 0;font-size:30px}.orderCard{background:#fff;padding:20px;border-radius:15px;margin-bottom:14px;box-shadow:0 3px 14px #0001}.orderHeader{display:flex;justify-content:space-between;gap:10px}.status{padding:6px 10px;border-radius:20px;background:#fff0f1;color:var(--red);font-size:12px;font-weight:800}.actionBtn{background:var(--red);color:#fff;padding:9px 13px;border-radius:8px;font-weight:700;margin:4px}.actionBtn.green{background:var(--green)}
+.riderHero{background:linear-gradient(135deg,#1c1c1c,#343434);color:#fff;border-radius:18px;padding:25px;margin-bottom:22px}.riderHero h1{margin:0 0 7px}.riderHero p{margin:0;color:#ccc}.deliveryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.deliveryCard{background:#fff;border-radius:16px;padding:20px;box-shadow:0 3px 15px #0001}.deliveryCard h3{margin-top:0}.deliveryInfo{padding:10px 0;border-bottom:1px solid #eee}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;z-index:100}.modal.show{display:flex}.sheet{width:100%;max-height:92vh;overflow:auto;background:#fff;border-radius:22px 22px 0 0;padding:25px}.sheetInner{max-width:650px;margin:auto}.closeBtn{float:right;background:#222;color:#fff;padding:9px 13px;border-radius:8px}.formInput{width:100%;border:1px solid #ddd;padding:13px;border-radius:9px;margin:6px 0 13px;outline:none}.primary{width:100%;background:var(--red);color:#fff;padding:13px;border-radius:9px;font-weight:800}.secondary{background:#eee;color:#222;padding:11px 15px;border-radius:9px;font-weight:700}.notice{padding:13px;background:#fff8d7;border-radius:9px;margin-top:12px}
+.otpTitle{text-align:center;margin-bottom:8px}.otpSubtitle{text-align:center;color:#777;margin-bottom:22px}.otpMode{display:flex;gap:8px;margin-bottom:18px}.otpMode button{flex:1;padding:13px;border-radius:9px;background:#eee;font-weight:800}.otpMode button.active{background:var(--red);color:#fff}.otpSection{display:none}.otpSection.active{display:block}.otpStatus{text-align:center;margin:12px 0;min-height:22px}.otpVerifyBox{display:none}.otpVerifyBox.show{display:block}.captchaBox{margin:10px auto;min-height:20px}
+.cartItem{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #eee}.cartTotal{display:flex;justify-content:space-between;font-size:21px;font-weight:800;margin:18px 0}
+footer{background:#171717;color:#fff;padding:45px 0 25px;margin-top:40px}.footerGrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}footer h3{margin-top:0}footer p,footer li{color:#bbb;line-height:1.7}footer ul{padding:0;list-style:none}
+@media(max-width:950px){.navLinks{display:none}.restaurantGrid{grid-template-columns:repeat(2,1fr)}.statsGrid{grid-template-columns:repeat(2,1fr)}.deliveryGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.navbar{min-height:68px}.logo{font-size:20px}.locationBtn{display:none}.heroText{padding:65px 0 40px}.heroText h1{font-size:39px}.heroText p{font-size:16px}.searchBox{width:100%}.searchBox button{padding:12px 16px}.restaurantGrid,.menuGrid,.deliveryGrid,.statsGrid{grid-template-columns:1fr}.heroInner{min-height:390px}section{padding:35px 0}.footerGrid{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 
 <header>
+  <div class="container navbar">
+    <div class="logo">
+      <div class="logoIcon">🍴</div>
+      <div>Haroa Eats<small>Haroa-এর local food delivery</small></div>
+    </div>
 
-<div class="container navbar">
+    <div class="navLinks">
+      <button onclick="showHome()">Home</button>
+      <button onclick="showRestaurants()">Restaurants</button>
+      <button onclick="showCustomerOrders()">My Orders</button>
+      <button onclick="showRider()">Rider</button>
+      <button onclick="showAdmin()">Admin</button>
+    </div>
 
-<div class="logo">
-
-<div class="logoIcon">
-🍴
-</div>
-
-<div>
-Haroa Eats
-<small>
-Haroa-এর local food delivery
-</small>
-</div>
-
-</div>
-
-
-<div class="navLinks">
-
-<button onclick="showHome()">
-Home
-</button>
-
-<button onclick="showRestaurants()">
-Restaurants
-</button>
-
-<button onclick="showCustomerOrders()">
-My Orders
-</button>
-
-<button onclick="showRider()">
-Rider
-</button>
-
-<button onclick="showAdmin()">
-Admin
-</button>
-
-</div>
-
-
-<div class="navRight">
-
-<button class="locationBtn">
-📍 Haroa
-</button>
-
-<button
-class="cartBtn"
-onclick="openCart()"
->
-🛒
-<span id="cartCount">0</span>
-</button>
-
-<button
-class="userBtn"
-onclick="openLogin()"
-id="userBtn"
->
-J
-</button>
-
-</div>
-
-</div>
-
+    <div class="navRight">
+      <button class="locationBtn">📍 Haroa</button>
+      <button class="cartBtn" onclick="openCart()">🛒 <span id="cartCount">0</span></button>
+      <button class="userBtn" onclick="openLogin()" id="userBtn">J</button>
+    </div>
+  </div>
 </header>
 
-
 <div id="homePage">
+  <div class="hero">
 
-<div class="hero">
+    <button class="hamburgerBtn" onclick="toggleSideMenu()">☰</button>
 
-<button
-class="hamburgerBtn"
-onclick="toggleSideMenu()"
->
-☰
-</button>
+    <div id="sideMenu" class="sideMenu">
+      <div class="sideMenuHeader">
+        <span>Haroa Eats</span>
+        <button onclick="toggleSideMenu()">✕</button>
+      </div>
 
+      <div class="menuItem" onclick="showCategory('Food')">
+        🍔 <span>Food</span><span>➡️</span>
+      </div>
 
-<div
-id="sideMenu"
-class="sideMenu"
->
+      <div class="menuItem" onclick="showCategory('Grocery')">
+        🛒 <span>Grocery</span><span>➡️</span>
+      </div>
 
-<div class="sideMenuHeader">
+      <div class="menuItem" onclick="showCategory('Beverages')">
+        🥤 <span>Beverages</span><span>➡️</span>
+      </div>
 
-<span>
-Haroa Eats
-</span>
+      <div class="menuItem" onclick="showCategory('Drinks')">
+        🍹 <span>Drinks</span><span>➡️</span>
+      </div>
+    </div>
 
-<button
-onclick="toggleSideMenu()"
->
-✕
-</button>
+    <div class="container heroInner">
+      <div class="heroText">
 
+        <div class="searchBox">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Restaurant বা খাবার খুঁজুন..."
+            oninput="renderRestaurants()"
+          >
+          <button onclick="renderRestaurants()">খুঁজুন</button>
+        </div>
+
+        <h1>খাবার <span>ঘরে বসেই</span></h1>
+
+        <p>
+          Haroa-এর সেরা restaurant থেকে আপনার পছন্দের খাবার
+          দ্রুত বাড়ি পৌঁছে যাবে 😍
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Popular Restaurants</h2>
+        <button class="viewAll" onclick="showRestaurants()">View all →</button>
+      </div>
+
+      <div id="restaurantGrid" class="restaurantGrid">
+        <p>Loading restaurants...</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff">
+    <div class="container">
+      <div class="sectionHead">
+        <h2>Popular Foods</h2>
+      </div>
+
+      <div id="foodGrid" class="menuGrid"></div>
+    </div>
+  </section>
 </div>
 
+<div id="customerDashboard" class="dashboard">
+  <div class="container">
 
-<div
-class="menuItem"
-onclick="showCategory('Food')"
->
-🍔
-<span>Food</span>
-<span>➡️</span>
+    <div class="dashboardTitle">
+      <div>
+        <h1>My Orders</h1>
+        <p style="color:#777">
+          আপনার সব order এখানে দেখতে পারবেন
+        </p>
+      </div>
+
+      <button class="secondary" onclick="showHome()">← Home</button>
+    </div>
+
+    <div id="customerOrders">Loading...</div>
+  </div>
 </div>
 
+<div id="riderDashboard" class="dashboard">
+  <div class="container">
 
-<div
-class="menuItem"
-onclick="showCategory('Grocery')"
->
-🛒
-<span>Grocery</span>
-<span>➡️</span>
+    <div class="riderHero">
+      <h1>🏍️ Rider Dashboard</h1>
+      <p id="riderWelcome">Welcome, Rider!</p>
+    </div>
+
+    <div class="statsGrid">
+
+      <div class="statCard">
+        <small>Available Orders</small>
+        <h2 id="availableCount">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>My Deliveries</small>
+        <h2 id="myDeliveryCount">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>Completed</small>
+        <h2 id="completedCount">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>Today's Earnings</small>
+        <h2>₹0</h2>
+      </div>
+
+    </div>
+
+    <h2>Available Orders</h2>
+
+    <div id="riderOrders">Loading orders...</div>
+
+  </div>
 </div>
 
+<div id="adminDashboard" class="dashboard">
+  <div class="container">
 
-<div
-class="menuItem"
-onclick="showCategory('Beverages')"
->
-🥤
-<span>Beverages</span>
-<span>➡️</span>
+    <div class="dashboardTitle">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p style="color:#777">
+          Haroa Eats management panel
+        </p>
+      </div>
+
+      <button class="secondary" onclick="showHome()">← Website</button>
+    </div>
+
+    <div class="statsGrid">
+
+      <div class="statCard">
+        <small>Restaurants</small>
+        <h2 id="statRestaurants">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>Customers</small>
+        <h2 id="statCustomers">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>Riders</small>
+        <h2 id="statRiders">0</h2>
+      </div>
+
+      <div class="statCard">
+        <small>Total Orders</small>
+        <h2 id="statOrders">0</h2>
+      </div>
+
+    </div>
+
+    <div class="statCard" style="margin-bottom:25px">
+      <small>Total Revenue</small>
+      <h2>₹<span id="statRevenue">0</span></h2>
+    </div>
+
+    <h2>Recent Orders</h2>
+
+    <div id="adminOrders">Loading...</div>
+
+  </div>
 </div>
 
+<div id="cartModal" class="modal">
+  <div class="sheet">
+    <div class="sheetInner">
 
-<div
-class="menuItem"
-onclick="showCategory('Drinks')"
->
-🍹
-<span>Drinks</span>
-<span>➡️</span>
+      <button class="closeBtn" onclick="closeCart()">Close</button>
+
+      <h2>🛒 Your Cart</h2>
+
+      <div id="cartItems"></div>
+
+      <div class="cartTotal">
+        <span>Total</span>
+        <span>₹<span id="cartTotal">0</span></span>
+      </div>
+
+      <textarea
+        id="address"
+        class="formInput"
+        rows="4"
+        placeholder="Delivery address লিখুন..."
+      ></textarea>
+
+      <button class="primary" onclick="checkout()">
+        Confirm Order
+      </button>
+
+      <div id="checkoutMessage"></div>
+
+    </div>
+  </div>
 </div>
 
+<div id="loginModal" class="modal">
+  <div class="sheet">
+    <div class="sheetInner">
+
+      <button class="closeBtn" onclick="closeLogin()">Close</button>
+
+      <h2 class="otpTitle">Login / Register</h2>
+
+      <p class="otpSubtitle">
+        OTP দিয়ে Haroa Eats-এ login করুন
+      </p>
+
+      <div class="otpMode">
+
+        <button
+          id="otpLoginTab"
+          class="active"
+          onclick="switchLoginMode('login')"
+        >
+          OTP Login
+        </button>
+
+        <button
+          id="otpSignupTab"
+          onclick="switchLoginMode('signup')"
+        >
+          OTP Signup
+        </button>
+
+        <button
+          id="staffTab"
+          onclick="switchLoginMode('staff')"
+        >
+          Staff Login
+        </button>
+
+      </div>
+
+      <div id="captchaContainer" class="captchaBox"></div>
+
+      <div id="otpLoginSection" class="otpSection active">
+
+        <input
+          id="otpLoginPhone"
+          class="formInput"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="10 digit mobile number"
+        >
+
+        <button class="primary" onclick="sendOtp('login')">
+          Send OTP
+        </button>
+
+        <div id="otpLoginVerifyBox" class="otpVerifyBox">
+
+          <input
+            id="otpLoginCode"
+            class="formInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Enter OTP"
+          >
+
+          <button
+            class="primary"
+            onclick="verifyOtpCode('login')"
+          >
+            Verify OTP
+          </button>
+
+          <button
+            class="secondary"
+            style="margin-top:10px;width:100%;"
+            onclick="resendOtp('login')"
+          >
+            Resend OTP
+          </button>
+
+        </div>
+
+        <p id="otpLoginStatus" class="otpStatus"></p>
+
+      </div>
+
+      <div id="otpSignupSection" class="otpSection">
+
+        <input
+          id="otpSignupName"
+          class="formInput"
+          type="text"
+          placeholder="Your name"
+        >
+
+        <input
+          id="otpSignupPhone"
+          class="formInput"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="10 digit mobile number"
+        >
+
+        <button class="primary" onclick="sendOtp('signup')">
+          Send OTP
+        </button>
+
+        <div id="otpSignupVerifyBox" class="otpVerifyBox">
+
+          <input
+            id="otpSignupCode"
+            class="formInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Enter OTP"
+          >
+
+          <button
+            class="primary"
+            onclick="verifyOtpCode('signup')"
+          >
+            Verify & Create Account
+          </button>
+
+          <button
+            class="secondary"
+            style="margin-top:10px;width:100%;"
+            onclick="resendOtp('signup')"
+          >
+            Resend OTP
+          </button>
+
+        </div>
+
+        <p id="otpSignupStatus" class="otpStatus"></p>
+
+      </div>
+
+      <div id="staffSection" class="otpSection">
+
+        <input
+          id="staffPhone"
+          class="formInput"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="Admin/Rider mobile number"
+        >
+
+        <input
+          id="staffPassword"
+          class="formInput"
+          type="password"
+          placeholder="Password"
+        >
+
+        <button class="primary" onclick="staffLogin()">
+          Login
+        </button>
+
+        <p id="staffStatus" class="otpStatus"></p>
+
+        <div class="notice">
+          <b>Demo Admin</b><br>
+          9999999999 / admin123
+          <br><br>
+          <b>Demo Rider</b><br>
+          8888888888 / rider123
+        </div>
+
+      </div>
+
+      <p
+        style="color:#777;text-align:center;font-size:13px;margin-top:18px"
+      >
+        Customer OTP verification MSG91 Widget-এর মাধ্যমে হবে।
+      </p>
+
+    </div>
+  </div>
 </div>
-
-
-<div class="container heroInner">
-
-<div class="heroText">
-
-<div class="searchBox">
-
-<input
-id="searchInput"
-type="text"
-placeholder="Restaurant বা খাবার খুঁজুন..."
-oninput="renderRestaurants()"
->
-
-<button
-onclick="renderRestaurants()"
->
-খুঁজুন
-</button>
-
-</div>
-
-
-<h1>
-খাবার
-<span>
-ঘরে বসেই
-</span>
-</h1>
-
-
-<p>
-Haroa-এর সেরা restaurant থেকে
-আপনার পছন্দের খাবার দ্রুত বাড়ি পৌঁছে যাবে 😍
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-<section>
-
-<div class="container">
-
-<div class="sectionHead">
-
-<h2>
-Popular Restaurants
-</h2>
-
-<button
-class="viewAll"
-onclick="showRestaurants()"
->
-View all →
-</button>
-
-</div>
-
-
-<div
-id="restaurantGrid"
-class="restaurantGrid"
->
-<p>
-Loading restaurants...
-</p>
-</div>
-
-</div>
-
-</section>
-
-
-<section
-style="background:#fff"
->
-
-<div class="container">
-
-<div class="sectionHead">
-
-<h2>
-Popular Foods
-</h2>
-
-</div>
-
-
-<div
-id="foodGrid"
-class="menuGrid"
-></div>
-
-</div>
-
-</section>
-
-</div>
-
-
-<!-- CUSTOMER -->
-
-<div
-id="customerDashboard"
-class="dashboard"
->
-
-<div class="container">
-
-<div class="dashboardTitle">
-
-<div>
-
-<h1>
-My Orders
-</h1>
-
-<p style="color:#777">
-আপনার সব order এখানে দেখতে পারবেন
-</p>
-
-</div>
-
-<button
-class="secondary"
-onclick="showHome()"
->
-← Home
-</button>
-
-</div>
-
-
-<div id="customerOrders">
-Loading...
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RIDER -->
-
-<div
-id="riderDashboard"
-class="dashboard"
->
-
-<div class="container">
-
-<div class="riderHero">
-
-<h1>
-🏍️ Rider Dashboard
-</h1>
-
-<p id="riderWelcome">
-Welcome, Rider!
-</p>
-
-</div>
-
-
-<div class="statsGrid">
-
-<div class="statCard">
-<small>
-Available Orders
-</small>
-<h2 id="availableCount">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-My Deliveries
-</small>
-<h2 id="myDeliveryCount">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-Completed
-</small>
-<h2 id="completedCount">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-Today's Earnings
-</small>
-<h2>
-₹0
-</h2>
-</div>
-
-</div>
-
-
-<h2>
-Available Orders
-</h2>
-
-<div id="riderOrders">
-Loading orders...
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ADMIN -->
-
-<div
-id="adminDashboard"
-class="dashboard"
->
-
-<div class="container">
-
-<div class="dashboardTitle">
-
-<div>
-
-<h1>
-Admin Dashboard
-</h1>
-
-<p style="color:#777">
-Haroa Eats management panel
-</p>
-
-</div>
-
-<button
-class="secondary"
-onclick="showHome()"
->
-← Website
-</button>
-
-</div>
-
-
-<div class="statsGrid">
-
-<div class="statCard">
-<small>
-Restaurants
-</small>
-<h2 id="statRestaurants">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-Customers
-</small>
-<h2 id="statCustomers">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-Riders
-</small>
-<h2 id="statRiders">
-0
-</h2>
-</div>
-
-
-<div class="statCard">
-<small>
-Total Orders
-</small>
-<h2 id="statOrders">
-0
-</h2>
-</div>
-
-</div>
-
-
-<div
-class="statCard"
-style="margin-bottom:25px"
->
-
-<small>
-Total Revenue
-</small>
-
-<h2>
-₹
-<span id="statRevenue">
-0
-</span>
-</h2>
-
-</div>
-
-
-<h2>
-Recent Orders
-</h2>
-
-<div id="adminOrders">
-Loading...
-</div>
-
-</div>
-
-</div>
-
-
-<!-- CART -->
-
-<div
-id="cartModal"
-class="modal"
->
-
-<div class="sheet">
-
-<div class="sheetInner">
-
-<button
-class="closeBtn"
-onclick="closeCart()"
->
-Close
-</button>
-
-<h2>
-🛒 Your Cart
-</h2>
-
-<div id="cartItems">
-</div>
-
-<div class="cartTotal">
-
-<span>
-Total
-</span>
-
-<span>
-₹
-<span id="cartTotal">
-0
-</span>
-</span>
-
-</div>
-
-
-<textarea
-id="address"
-class="formInput"
-rows="4"
-placeholder="Delivery address লিখুন..."
-></textarea>
-
-
-<button
-class="primary"
-onclick="checkout()"
->
-Confirm Order
-</button>
-
-
-<div id="checkoutMessage">
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LOGIN -->
-
-<div
-id="loginModal"
-class="modal"
->
-
-<div class="sheet">
-
-<div class="sheetInner">
-
-<button
-class="closeBtn"
-onclick="closeLogin()"
->
-Close
-</button>
-
-
-<h2 class="otpTitle">
-Login / Register
-</h2>
-
-
-<p class="otpSubtitle">
-OTP দিয়ে Haroa Eats-এ login করুন
-</p>
-
-
-<div class="otpMode">
-
-<button
-id="otpLoginTab"
-class="active"
-onclick="switchLoginMode('login')"
->
-OTP Login
-</button>
-
-
-<button
-id="otpSignupTab"
-onclick="switchLoginMode('signup')"
->
-OTP Signup
-</button>
-
-
-<button
-id="staffTab"
-onclick="switchLoginMode('staff')"
->
-Staff Login
-</button>
-
-</div>
-
-
-<div
-id="captchaContainer"
-class="captchaBox"
-></div>
-
-
-<!-- OTP LOGIN -->
-
-<div
-id="otpLoginSection"
-class="otpSection active"
->
-
-<input
-id="otpLoginPhone"
-class="formInput"
-type="tel"
-inputmode="numeric"
-maxlength="10"
-placeholder="10 digit mobile number"
->
-
-
-<button
-class="primary"
-onclick="sendOtp('login')"
->
-Send OTP
-</button>
-
-
-<div
-id="otpLoginVerifyBox"
-class="otpVerifyBox"
->
-
-<input
-id="otpLoginCode"
-class="formInput"
-type="text"
-inputmode="numeric"
-maxlength="6"
-placeholder="Enter OTP"
->
-
-
-<button
-class="primary"
-onclick="verifyOtpCode('login')"
->
-Verify OTP
-</button>
-
-
-<button
-class="secondary"
-style="margin-top:10px;width:100%;"
-onclick="resendOtp('login')"
->
-Resend OTP
-</button>
-
-</div>
-
-
-<p
-id="otpLoginStatus"
-class="otpStatus"
-></p>
-
-</div>
-
-
-<!-- OTP SIGNUP -->
-
-<div
-id="otpSignupSection"
-class="otpSection"
->
-
-<input
-id="otpSignupName"
-class="formInput"
-type="text"
-placeholder="Your name"
->
-
-
-<input
-id="otpSignupPhone"
-class="formInput"
-type="tel"
-inputmode="numeric"
-maxlength="10"
-placeholder="10 digit mobile number"
->
-
-
-<button
-class="primary"
-onclick="sendOtp('signup')"
->
-Send OTP
-</button>
-
-
-<div
-id="otpSignupVerifyBox"
-class="otpVerifyBox"
->
-
-<input
-id="otpSignupCode"
-class="formInput"
-type="text"
-inputmode="numeric"
-maxlength="6"
-placeholder="Enter OTP"
->
-
-
-<button
-class="primary"
-onclick="verifyOtpCode('signup')"
->
-Verify & Create Account
-</button>
-
-
-<button
-class="secondary"
-style="margin-top:10px;width:100%;"
-onclick="resendOtp('signup')"
->
-Resend OTP
-</button>
-
-</div>
-
-
-<p
-id="otpSignupStatus"
-class="otpStatus"
-></p>
-
-</div>
-
-
-<!-- STAFF -->
-
-<div
-id="staffSection"
-class="otpSection"
->
-
-<input
-id="staffPhone"
-class="formInput"
-type="tel"
-inputmode="numeric"
-maxlength="10"
-placeholder="Admin/Rider mobile number"
->
-
-
-<input
-id="staffPassword"
-class="formInput"
-type="password"
-placeholder="Password"
->
-
-
-<button
-class="primary"
-onclick="staffLogin()"
->
-Login
-</button>
-
-
-<p
-id="staffStatus"
-class="otpStatus"
-></p>
-
-
-<div class="notice">
-
-<b>
-Demo Admin
-</b>
-
-<br>
-
-9999999999 / admin123
-
-<br><br>
-
-<b>
-Demo Rider
-</b>
-
-<br>
-
-8888888888 / rider123
-
-</div>
-
-</div>
-
-
-<p
-style="
-color:#777;
-text-align:center;
-font-size:13px;
-margin-top:18px
-"
->
-Customer OTP verification MSG91 Widget-এর মাধ্যমে হবে।
-</p>
-
-</div>
-
-</div>
-
-</div>
-
 
 <footer>
+  <div class="container footerGrid">
 
-<div class="container footerGrid">
+    <div>
+      <h3>🍴 Haroa Eats</h3>
+      <p>
+        Haroa-এর local food delivery platform।
+        আপনার পছন্দের খাবার সহজে order করুন।
+      </p>
+    </div>
 
-<div>
+    <div>
+      <h3>Quick Links</h3>
+      <ul>
+        <li>Home</li>
+        <li>Restaurants</li>
+        <li>My Orders</li>
+        <li>Track Order</li>
+      </ul>
+    </div>
 
-<h3>
-🍴 Haroa Eats
-</h3>
+    <div>
+      <h3>Contact</h3>
+      <p>📍 Haroa, West Bengal</p>
+      <p>🍴 Haroa Eats</p>
+    </div>
 
-<p>
-Haroa-এর local food delivery platform।
-আপনার পছন্দের খাবার সহজে order করুন।
-</p>
+  </div>
 
-</div>
-
-
-<div>
-
-<h3>
-Quick Links
-</h3>
-
-<ul>
-
-<li>
-Home
-</li>
-
-<li>
-Restaurants
-</li>
-
-<li>
-My Orders
-</li>
-
-<li>
-Track Order
-</li>
-
-</ul>
-
-</div>
-
-
-<div>
-
-<h3>
-Contact
-</h3>
-
-<p>
-📍 Haroa, West Bengal
-</p>
-
-<p>
-🍴 Haroa Eats
-</p>
-
-</div>
-
-</div>
-
-
-<div
-class="container"
-style="
-border-top:1px solid #333;
-margin-top:25px;
-padding-top:18px;
-color:#777
-"
->
-© 2026 Haroa Eats.
-All rights reserved.
-</div>
-
+  <div
+    class="container"
+    style="border-top:1px solid #333;margin-top:25px;padding-top:18px;color:#777"
+  >
+    © 2026 Haroa Eats. All rights reserved.
+  </div>
 </footer>
 
-
 <script>
+let restaurantsData=[];
+let cart=[];
+let msg91Ready=false;
+let msg91LoadPromise=null;
+let currentOtpRequest=null;
+let loginMode="login";
 
-let restaurantsData = [];
+async function api(url,options={}){
+  const response=await fetch(url,{
+    headers:{"Content-Type":"application/json"},
+    credentials:"same-origin",
+    ...options
+  });
 
-let cart = [];
-
-let msg91Ready = false;
-
-let msg91LoadPromise = null;
-
-let currentOtpRequest = null;
-
-let loginMode = "login";
-
-
-/* =====================================================
-   API
-   ===================================================== */
-
-async function api(
-  url,
-  options = {}
-){
-
-  const response =
-    await fetch(
-      url,
-      {
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
-
-        credentials:
-          "same-origin",
-
-        ...options
-      }
-    );
-
-
-  let data = {};
+  let data={};
 
   try{
-    data =
-      await response.json();
-  }
-  catch(e){}
-
+    data=await response.json();
+  }catch(e){}
 
   if(!response.ok){
-
-    throw new Error(
-      data.error ||
-      "Something went wrong"
-    );
-
+    throw new Error(data.error||"Something went wrong");
   }
-
 
   return data;
 }
 
-
-/* =====================================================
-   MSG91 CONFIG
-   ===================================================== */
-
-const configuration = {
-
+const configuration={
   widgetId:"",
-
   tokenAuth:"",
-
   identifier:"",
-
   exposeMethods:true,
+  captchaRenderId:"captchaContainer",
 
-  captchaRenderId:
-    "captchaContainer",
+  success:data=>{
+    console.log("MSG91 success:",data);
+  },
 
-  success:data =>
-    console.log(
-      "MSG91 success:",
-      data
-    ),
-
-  failure:error =>
-    console.error(
-      "MSG91 failure:",
-      error
-    )
-
+  failure:error=>{
+    console.error("MSG91 failure:",error);
+  }
 };
-
-
-/* =====================================================
-   LOAD MSG91
-   ===================================================== */
 
 async function loadMsg91(){
 
-  if(msg91Ready){
-    return true;
-  }
+  if(msg91Ready)return true;
 
+  if(msg91LoadPromise)return msg91LoadPromise;
 
-  if(msg91LoadPromise){
-    return msg91LoadPromise;
-  }
+  msg91LoadPromise=(async()=>{
 
+    try{
 
-  msg91LoadPromise =
-    (async()=>{
+      const response=await fetch("/api/otp/config",{
+        cache:"no-store",
+        credentials:"same-origin"
+      });
 
-      try{
+      const config=await response.json();
 
-        const response =
-          await fetch(
-            "/api/otp/config",
-            {
-              cache:"no-store",
-              credentials:
-                "same-origin"
-            }
-          );
+      if(!response.ok || !config.enabled){
+        throw new Error(
+          "MSG91 OTP configuration পাওয়া যায়নি।"
+        );
+      }
 
+      if(!config.widgetId || !config.tokenAuth){
+        throw new Error(
+          "MSG91 Widget ID বা Client Token missing।"
+        );
+      }
 
-        const cfg =
-          await response.json();
+      configuration.widgetId=config.widgetId;
+      configuration.tokenAuth=config.tokenAuth;
 
+      let script=document.querySelector(
+        'script[data-msg91-otp="1"]'
+      );
 
-        if(
-          !response.ok ||
-          !cfg.enabled
-        ){
+      if(!script){
 
-          throw new Error(
-            "MSG91 OTP configuration পাওয়া যায়নি। Render Environment Variables check করুন।"
-          );
+        script=document.createElement("script");
 
-        }
+        script.type="text/javascript";
 
+        script.dataset.msg91Otp="1";
 
-        configuration.widgetId =
-          cfg.widgetId;
+        script.src="https://verify.msg91.com/otp-provider.js";
 
+        await new Promise((resolve,reject)=>{
 
-        configuration.tokenAuth =
-          cfg.tokenAuth;
+          script.onload=resolve;
 
-
-        await new Promise(
-          (
-            resolve,
-            reject
-          )=>{
-
-            const existing =
-              document.querySelector(
-                'script[data-msg91-otp="1"]'
-              );
-
-
-            if(existing){
-
-              if(
-                typeof window.initSendOTP ===
-                "function"
-              ){
-
-                resolve();
-
-              }
-
-              else{
-
-                existing.addEventListener(
-                  "load",
-                  resolve,
-                  {once:true}
-                );
-
-              }
-
-              return;
-
-            }
-
-
-            const script =
-              document.createElement(
-                "script"
-              );
-
-
-            script.type =
-              "text/javascript";
-
-
-            script.dataset.msg91Otp =
-              "1";
-
-
-            script.src =
-              "https://verify.msg91.com/otp-provider.js";
-
-
-            script.onload =
-              ()=>resolve();
-
-
-            script.onerror =
-              ()=>reject(
-                new Error(
-                  "MSG91 OTP script load হয়নি।"
-                )
-              );
-
-
-            document.head.appendChild(
-              script
+          script.onerror=()=>{
+            reject(
+              new Error("MSG91 OTP SDK load হয়নি।")
             );
+          };
 
-          }
-        );
+          document.head.appendChild(script);
 
+        });
 
-        if(
-          typeof window.initSendOTP !==
-          "function"
-        ){
+      }else if(
+        typeof window.initSendOTP!=="function"
+      ){
 
-          throw new Error(
-            "MSG91 initSendOTP পাওয়া যায়নি।"
+        await new Promise((resolve,reject)=>{
+
+          const timer=setTimeout(
+            ()=>{
+              reject(
+                new Error("MSG91 OTP SDK load হয়নি।")
+              );
+            },
+            10000
           );
 
-        }
-
-
-        window.initSendOTP(
-          configuration
-        );
-
-
-        if(
-          typeof window.sendOtp !==
-          "function" ||
-          typeof window.verifyOtp !==
-          "function"
-        ){
-
-          throw new Error(
-            "MSG91 OTP methods পাওয়া যায়নি।"
+          script.addEventListener(
+            "load",
+            ()=>{
+              clearTimeout(timer);
+              resolve();
+            },
+            {once:true}
           );
 
-        }
-
-
-        msg91Ready =
-          true;
-
-
-        return true;
-
-
-      }
-      catch(error){
-
-        msg91Ready =
-          false;
-
-
-        console.error(
-          error
-        );
-
-
-        return false;
+        });
 
       }
 
-    })();
+      if(typeof window.initSendOTP!=="function"){
+        throw new Error(
+          "MSG91 initSendOTP পাওয়া যায়নি।"
+        );
+      }
 
+      if(!window.__haroaMsg91Initialized){
+
+        window.initSendOTP(configuration);
+
+        window.__haroaMsg91Initialized=true;
+      }
+
+      if(
+        typeof window.sendOtp!=="function" ||
+        typeof window.verifyOtp!=="function" ||
+        typeof window.retryOtp!=="function"
+      ){
+
+        throw new Error(
+          "MSG91 OTP methods পাওয়া যায়নি।"
+        );
+      }
+
+      msg91Ready=true;
+
+      console.log("MSG91 OTP Widget ready");
+
+      return true;
+
+    }catch(error){
+
+      msg91Ready=false;
+
+      console.error(
+        "MSG91 initialization error:",
+        error
+      );
+
+      return false;
+    }
+
+  })();
 
   try{
-
     return await msg91LoadPromise;
-
+  }finally{
+    msg91LoadPromise=null;
   }
-  finally{
-
-    msg91LoadPromise =
-      null;
-
-  }
-
 }
 
+function switchLoginMode(mode){
 
-/* =====================================================
-   LOGIN MODE
-   ===================================================== */
+  loginMode=mode;
 
-function switchLoginMode(
-  mode
-){
-
-  loginMode =
-    mode;
-
-
-  const sections = {
-
-    login:
-      "otpLoginSection",
-
-    signup:
-      "otpSignupSection",
-
-    staff:
-      "staffSection"
-
+  const sections={
+    login:"otpLoginSection",
+    signup:"otpSignupSection",
+    staff:"staffSection"
   };
 
-
-  Object.entries(
-    sections
-  ).forEach(
+  Object.entries(sections).forEach(
     ([key,id])=>{
-
       document
         .getElementById(id)
-        .classList.toggle(
-          "active",
-          key === mode
-        );
-
+        .classList
+        .toggle("active",key===mode);
     }
   );
 
+  document
+    .getElementById("otpLoginTab")
+    .classList
+    .toggle("active",mode==="login");
 
   document
-    .getElementById(
-      "otpLoginTab"
-    )
-    .classList.toggle(
-      "active",
-      mode === "login"
-    );
-
+    .getElementById("otpSignupTab")
+    .classList
+    .toggle("active",mode==="signup");
 
   document
-    .getElementById(
-      "otpSignupTab"
-    )
-    .classList.toggle(
-      "active",
-      mode === "signup"
-    );
+    .getElementById("staffTab")
+    .classList
+    .toggle("active",mode==="staff");
 
-
-  document
-    .getElementById(
-      "staffTab"
-    )
-    .classList.toggle(
-      "active",
-      mode === "staff"
-    );
-
-
-  if(
-    mode !== "staff"
-  ){
-
+  if(mode!=="staff"){
     loadMsg91();
-
   }
-
 }
 
+function normalizePhone(value){
 
-/* =====================================================
-   PHONE
-   ===================================================== */
+  let p=String(value||"")
+    .replace(/\D/g,"");
 
-function normalizePhone(
-  value
-){
-
-  let phone =
-    String(
-      value || ""
-    ).replace(
-      /\D/g,
-      ""
-    );
-
+  if(p.length===10)return "91"+p;
 
   if(
-    phone.length === 10
+    p.length===12 &&
+    p.startsWith("91")
   ){
-
-    return "91" +
-      phone;
-
+    return p;
   }
-
-
-  if(
-    phone.length === 12 &&
-    phone.startsWith("91")
-  ){
-
-    return phone;
-
-  }
-
 
   return "";
-
 }
 
-
-function getPhone(
-  mode
-){
+function getPhone(mode){
 
   return normalizePhone(
     document
       .getElementById(
-        mode === "login"
-          ? "otpLoginPhone"
-          : "otpSignupPhone"
+        mode==="login"
+          ?"otpLoginPhone"
+          :"otpSignupPhone"
       )
       .value
   );
-
 }
 
+function getStatus(mode){
 
-function getStatus(
-  mode
-){
-
-  return document
-    .getElementById(
-      mode === "login"
-        ? "otpLoginStatus"
-        : "otpSignupStatus"
-    );
-
+  return document.getElementById(
+    mode==="login"
+      ?"otpLoginStatus"
+      :"otpSignupStatus"
+  );
 }
 
+function getVerifyBox(mode){
 
-function getVerifyBox(
-  mode
-){
-
-  return document
-    .getElementById(
-      mode === "login"
-        ? "otpLoginVerifyBox"
-        : "otpSignupVerifyBox"
-    );
-
+  return document.getElementById(
+    mode==="login"
+      ?"otpLoginVerifyBox"
+      :"otpSignupVerifyBox"
+  );
 }
 
-
-/* =====================================================
-   SEND OTP
-   ===================================================== */
-
-async function sendOtp(
-  mode
-){
-
-  const status =
-    getStatus(mode);
-
-
-  const verifyBox =
-    getVerifyBox(mode);
-
-
-  const phone =
-    getPhone(mode);
-
-
-  if(!phone){
-
-    status.innerHTML =
-      '<span style="color:red">সঠিক 10 digit mobile number দিন.</span>';
-
-    return;
-
-  }
-
-
-  status.textContent =
-    "OTP service চালু হচ্ছে...";
-
+function getReqId(data){
 
   if(
-    !await loadMsg91()
+    !data ||
+    typeof data!=="object"
   ){
-
-    status.innerHTML =
-      '<span style="color:red">MSG91 OTP service চালু হয়নি। Render Environment Variables check করুন।</span>';
-
-    return;
-
-  }
-
-
-  configuration.identifier =
-    phone;
-
-
-  status.textContent =
-    "OTP পাঠানো হচ্ছে...";
-
-
-  try{
-
-    window.sendOtp(
-
-      phone,
-
-      data => {
-
-        currentOtpRequest =
-          data?.reqId ||
-          data?.requestId ||
-          null;
-
-
-        verifyBox
-          .classList
-          .add("show");
-
-
-        status.innerHTML =
-          '<span style="color:#16834b">✅ OTP পাঠানো হয়েছে। OTP লিখুন.</span>';
-
-      },
-
-
-      error => {
-
-        console.error(
-          error
-        );
-
-
-        status.innerHTML =
-          '<span style="color:red">OTP পাঠানো যায়নি। MSG91 Widget settings check করুন.</span>';
-
-      }
-
-    );
-
-  }
-  catch(error){
-
-    status.innerHTML =
-      '<span style="color:red">OTP service error.</span>';
-
-  }
-
-}
-
-
-/* =====================================================
-   FIND ACCESS TOKEN
-   ===================================================== */
-
-function findAccessToken(
-  data
-){
-
-  if(!data){
     return null;
   }
 
-
-  if(
-    typeof data ===
-    "string" &&
-    data.length > 20
+  for(
+    const key of [
+      "reqId",
+      "reqID",
+      "requestId",
+      "requestID"
+    ]
   ){
 
+    if(
+      typeof data[key]==="string" &&
+      data[key]
+    ){
+      return data[key];
+    }
+
+  }
+
+  for(
+    const value of Object.values(data)
+  ){
+
+    const found=getReqId(value);
+
+    if(found)return found;
+  }
+
+  return null;
+}
+
+function findAccessToken(data){
+
+  if(!data)return null;
+
+  if(
+    typeof data==="string" &&
+    data.length>20
+  ){
     return data;
-
   }
 
-
-  if(
-    typeof data !==
-    "object"
-  ){
-
+  if(typeof data!=="object"){
     return null;
-
   }
-
 
   for(
     const key of [
@@ -2326,98 +827,122 @@ function findAccessToken(
   ){
 
     if(
-      typeof data[key] ===
-      "string" &&
+      typeof data[key]==="string" &&
       data[key]
     ){
-
       return data[key];
-
     }
 
   }
-
 
   for(
-    const value of
-    Object.values(data)
+    const value of Object.values(data)
   ){
 
-    const found =
-      findAccessToken(
-        value
-      );
+    const found=findAccessToken(value);
 
-
-    if(found){
-      return found;
-    }
-
+    if(found)return found;
   }
 
-
   return null;
-
 }
 
+async function sendOtp(mode){
 
-/* =====================================================
-   VERIFY OTP
-   ===================================================== */
+  const status=getStatus(mode);
 
-async function verifyOtpCode(
-  mode
-){
+  const verifyBox=getVerifyBox(mode);
 
-  const input =
-    document.getElementById(
-      mode === "login"
-        ? "otpLoginCode"
-        : "otpSignupCode"
+  const phone=getPhone(mode);
+
+  if(!phone){
+
+    status.innerHTML=
+      '<span style="color:red">সঠিক 10 digit mobile number দিন.</span>';
+
+    return;
+  }
+
+  status.textContent=
+    "OTP service চালু হচ্ছে...";
+
+  if(!await loadMsg91()){
+
+    status.innerHTML=
+      '<span style="color:red">MSG91 OTP service চালু হয়নি। MSG91 SDK বা Widget configuration check করুন।</span>';
+
+    return;
+  }
+
+  configuration.identifier=phone;
+
+  status.textContent=
+    "OTP পাঠানো হচ্ছে...";
+
+  try{
+
+    window.sendOtp(
+      phone,
+
+      data=>{
+
+        currentOtpRequest=getReqId(data);
+
+        verifyBox.classList.add("show");
+
+        status.innerHTML=
+          '<span style="color:#16834b">✅ OTP পাঠানো হয়েছে। OTP লিখুন.</span>';
+      },
+
+      error=>{
+
+        console.error(error);
+
+        status.innerHTML=
+          '<span style="color:red">OTP পাঠানো যায়নি। MSG91 Widget settings check করুন.</span>';
+      }
     );
 
+  }catch(error){
 
-  const status =
-    getStatus(mode);
+    console.error(error);
 
+    status.innerHTML=
+      '<span style="color:red">OTP service error.</span>';
+  }
+}
 
-  const code =
-    String(
-      input.value ||
-      ""
-    ).replace(
-      /\D/g,
-      ""
-    );
+async function verifyOtpCode(mode){
 
+  const input=document.getElementById(
+    mode==="login"
+      ?"otpLoginCode"
+      :"otpSignupCode"
+  );
 
-  if(
-    code.length < 4
-  ){
+  const status=getStatus(mode);
 
-    status.innerHTML =
+  const code=String(input.value||"")
+    .replace(/\D/g,"");
+
+  if(code.length<4){
+
+    status.innerHTML=
       '<span style="color:red">OTP লিখুন.</span>';
 
     return;
-
   }
 
+  if(!await loadMsg91()){
 
-  if(
-    !await loadMsg91()
-  ){
-
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:red">OTP service ready নয়.</span>';
 
     return;
-
   }
 
-
-  status.textContent =
+  status.textContent=
     "OTP verify করা হচ্ছে...";
-
 
   try{
 
@@ -2425,93 +950,61 @@ async function verifyOtpCode(
 
       code,
 
-      async data => {
+      async data=>{
 
-        const accessToken =
-          findAccessToken(
-            data
-          );
-
+        const accessToken=
+          findAccessToken(data);
 
         if(!accessToken){
 
-          status.innerHTML =
+          status.innerHTML=
             '<span style="color:red">MSG91 access token পাওয়া যায়নি.</span>';
 
           return;
-
         }
-
 
         await completeOtpLogin(
           mode,
           accessToken
         );
-
       },
 
+      error=>{
 
-      error => {
+        console.error(error);
 
-        console.error(
-          error
-        );
-
-
-        status.innerHTML =
+        status.innerHTML=
           '<span style="color:red">ভুল OTP অথবা OTP expired.</span>';
-
       },
-
 
       currentOtpRequest
-
     );
 
-  }
-  catch(error){
+  }catch(error){
 
-    console.error(
-      error
-    );
+    console.error(error);
 
-
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:red">OTP verification failed.</span>';
-
   }
-
 }
 
+function resendOtp(mode){
 
-/* =====================================================
-   RESEND
-   ===================================================== */
-
-function resendOtp(
-  mode
-){
-
-  const status =
-    getStatus(mode);
-
+  const status=getStatus(mode);
 
   if(
-    typeof window.retryOtp !==
-    "function"
+    typeof window.retryOtp!=="function"
   ){
 
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:red">Resend service ready নয়.</span>';
 
     return;
-
   }
 
-
-  status.textContent =
+  status.textContent=
     "OTP আবার পাঠানো হচ্ছে...";
-
 
   try{
 
@@ -2519,314 +1012,211 @@ function resendOtp(
 
       null,
 
-      data => {
+      data=>{
 
-        currentOtpRequest =
+        currentOtpRequest=
           data?.reqId ||
           data?.requestId ||
           currentOtpRequest;
 
-
-        status.innerHTML =
+        status.innerHTML=
           '<span style="color:#16834b">✅ OTP আবার পাঠানো হয়েছে.</span>';
-
       },
 
+      error=>{
 
-      error => {
+        console.error(error);
 
-        console.error(
-          error
-        );
-
-
-        status.innerHTML =
+        status.innerHTML=
           '<span style="color:red">OTP resend করা যায়নি.</span>';
-
       },
-
 
       currentOtpRequest
-
     );
 
-  }
-  catch(error){
+  }catch(error){
 
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:red">OTP resend error.</span>';
-
   }
-
 }
-
-
-/* =====================================================
-   COMPLETE OTP LOGIN / SIGNUP
-   ===================================================== */
 
 async function completeOtpLogin(
   mode,
   accessToken
 ){
 
-  const status =
-    getStatus(mode);
+  const status=getStatus(mode);
 
+  const name=
+    mode==="signup"
+      ?document.getElementById(
+        "otpSignupName"
+      ).value.trim()
+      :"";
 
-  const name =
-    mode === "signup"
-      ? document
-          .getElementById(
-            "otpSignupName"
-          )
-          .value
-          .trim()
-      : "";
-
-
-  const phone =
-    getPhone(mode);
-
+  const phone=getPhone(mode);
 
   if(
-    mode === "signup" &&
+    mode==="signup" &&
     !name
   ){
 
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:red">নাম দিন.</span>';
 
     return;
-
   }
-
 
   try{
 
-    const result =
-      await api(
-        "/api/otp/verify",
-        {
-          method:"POST",
+    const result=await api(
+      "/api/otp/verify",
+      {
+        method:"POST",
 
-          body:
-            JSON.stringify({
-              mode,
-              name,
-              phone,
-              accessToken
-            })
-        }
-      );
+        body:JSON.stringify({
+          mode,
+          name,
+          phone,
+          accessToken
+        })
+      }
+    );
 
-
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:#16834b">✅ Login successful</span>';
-
 
     setTimeout(
       ()=>{
-
         closeLogin();
 
         updateUserButton();
 
-
         if(
-          result.user?.role ===
-          "rider"
+          result.user?.role==="rider"
         ){
-
           showRider();
-
-        }
-
-        else if(
-          result.user?.role ===
-          "admin"
+        }else if(
+          result.user?.role==="admin"
         ){
-
           showAdmin();
-
-        }
-
-        else{
-
+        }else{
           showHome();
-
         }
-
       },
       500
     );
 
+  }catch(error){
 
-  }
-  catch(error){
-
-    status.innerHTML =
-      '<span style="color:red">' +
-      escapeHtml(
-        error.message
-      ) +
+    status.innerHTML=
+      '<span style="color:red">'+
+      escapeHtml(error.message)+
       '</span>';
-
   }
-
 }
-
-
-/* =====================================================
-   STAFF LOGIN
-   ===================================================== */
 
 async function staffLogin(){
 
-  const status =
+  const status=
     document.getElementById(
       "staffStatus"
     );
 
-
   try{
 
-    const result =
-      await api(
-        "/api/login",
-        {
-          method:"POST",
+    const result=await api(
+      "/api/login",
+      {
+        method:"POST",
 
-          body:
-            JSON.stringify({
+        body:JSON.stringify({
+          phone:
+            document
+              .getElementById(
+                "staffPhone"
+              )
+              .value
+              .trim(),
 
-              phone:
-                document
-                  .getElementById(
-                    "staffPhone"
-                  )
-                  .value
-                  .trim(),
+          password:
+            document
+              .getElementById(
+                "staffPassword"
+              )
+              .value
+        })
+      }
+    );
 
-              password:
-                document
-                  .getElementById(
-                    "staffPassword"
-                  )
-                  .value
-
-            })
-        }
-      );
-
-
-    status.innerHTML =
+    status.innerHTML=
       '<span style="color:#16834b">✅ Login successful</span>';
-
 
     setTimeout(
       ()=>{
-
         closeLogin();
 
         updateUserButton();
 
-
         if(
-          result.user.role ===
-          "rider"
+          result.user.role==="rider"
         ){
-
           showRider();
-
-        }
-
-        else if(
-          result.user.role ===
-          "admin"
+        }else if(
+          result.user.role==="admin"
         ){
-
           showAdmin();
-
-        }
-
-        else{
-
+        }else{
           showHome();
-
         }
-
       },
       400
     );
 
+  }catch(error){
 
-  }
-  catch(error){
-
-    status.innerHTML =
-      '<span style="color:red">' +
-      escapeHtml(
-        error.message
-      ) +
+    status.innerHTML=
+      '<span style="color:red">'+
+      escapeHtml(error.message)+
       '</span>';
-
   }
-
 }
-
-
-/* =====================================================
-   RESTAURANTS
-   ===================================================== */
 
 async function loadRestaurants(){
 
   try{
 
-    restaurantsData =
-      await api(
-        "/api/restaurants"
-      );
-
+    restaurantsData=
+      await api("/api/restaurants");
 
     renderRestaurants();
 
     renderPopularFoods();
 
-  }
-  catch(error){
+  }catch(error){
 
     document
       .getElementById(
         "restaurantGrid"
       )
-      .innerHTML =
-      '<p>' +
-      escapeHtml(
-        error.message
-      ) +
-      '</p>';
-
+      .innerHTML=
+        '<p>'+
+        escapeHtml(error.message)+
+        '</p>';
   }
-
 }
-
 
 function renderRestaurants(){
 
-  const grid =
+  const grid=
     document.getElementById(
       "restaurantGrid"
     );
 
+  if(!grid)return;
 
-  if(!grid){
-    return;
-  }
-
-
-  const query =
+  const query=
     (
       document
         .getElementById(
@@ -2835,30 +1225,25 @@ function renderRestaurants(){
         ?.value ||
       ""
     )
-      .toLowerCase()
-      .trim();
+    .toLowerCase()
+    .trim();
 
-
-  const filtered =
+  const filtered=
     restaurantsData.filter(
-      r =>
+      r=>
         [
           r.name,
           r.area,
-          (r.menu || [])
-            .map(
-              m =>
-                m.name
-            )
+          (r.menu||[])
+            .map(m=>m.name)
             .join(" ")
         ]
-          .join(" ")
-          .toLowerCase()
-          .includes(query)
+        .join(" ")
+        .toLowerCase()
+        .includes(query)
     );
 
-
-  const images = [
+  const images=[
 
     "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80",
 
@@ -2870,280 +1255,207 @@ function renderRestaurants(){
 
   ];
 
+  grid.innerHTML=
+    filtered.map(
+      (r,i)=>
+        `<div class="restaurantCard">
 
-  grid.innerHTML =
-    filtered
-      .map(
-        (r,i) => `
+          <img
+            class="restaurantImg"
+            src="${images[i%images.length]}"
+            alt="${escapeHtml(r.name)}"
+          >
 
-<div class="restaurantCard">
+          <div class="restaurantBody">
 
-<img
-class="restaurantImg"
-src="${images[i % images.length]}"
-alt="${escapeHtml(r.name)}"
->
+            <h3>${escapeHtml(r.name)}</h3>
 
-<div class="restaurantBody">
+            <div class="area">
+              📍 ${escapeHtml(r.area)}
+            </div>
 
-<h3>
-${escapeHtml(r.name)}
-</h3>
+            <div class="ratingRow">
 
-<div class="area">
-📍 ${escapeHtml(r.area)}
-</div>
+              <div class="rating">
+                <span>★</span>
+                4.${i+2}
+                <small style="color:#888">
+                  (100+)
+                </small>
+              </div>
 
-<div class="ratingRow">
+              <div class="time">
+                ${25+i*5}-${35+i*5} min
+              </div>
 
-<div class="rating">
-<span>★</span>
-4.${i+2}
-<small style="color:#888">
-(100+)
-</small>
-</div>
+            </div>
 
-<div class="time">
-${25+i*5}-${35+i*5} min
-</div>
+            <button
+              class="menuBtn"
+              onclick="showRestaurantMenu(${Number(r.id)})"
+            >
+              View Menu
+            </button>
 
-</div>
-
-<button
-class="menuBtn"
-onclick="showRestaurantMenu(${Number(r.id)})"
->
-View Menu
-</button>
-
-</div>
-
-</div>
-
-`
-      )
-      .join("")
-    ||
+          </div>
+        </div>`
+    ).join("") ||
     "<p>No restaurant found.</p>";
-
 }
-
 
 function renderPopularFoods(){
 
-  const grid =
+  const grid=
     document.getElementById(
       "foodGrid"
     );
 
+  if(!grid)return;
 
-  if(!grid){
-    return;
-  }
-
-
-  const foods = [];
-
+  const foods=[];
 
   restaurantsData.forEach(
-    r =>
-      (r.menu || [])
-        .forEach(
-          m =>
-            foods.push({
-              ...m,
-              restaurantId:
-                r.id,
-              restaurant:
-                r.name
-            })
-        )
+    r=>
+      (r.menu||[]).forEach(
+        m=>
+          foods.push({
+            ...m,
+            restaurantId:r.id,
+            restaurant:r.name
+          })
+      )
   );
 
-
-  grid.innerHTML =
+  grid.innerHTML=
     foods
       .slice(0,6)
       .map(
-        m => `
+        m=>
+          `<div class="menuCard">
 
-<div class="menuCard">
+            <div class="menuTop">
 
-<div class="menuTop">
+              <div>
+                <h3>
+                  ${escapeHtml(m.name)}
+                </h3>
 
-<div>
+                <small style="color:#777">
+                  ${escapeHtml(m.restaurant)}
+                </small>
+              </div>
 
-<h3>
-${escapeHtml(m.name)}
-</h3>
+              <div class="price">
+                ₹${m.price}
+              </div>
 
-<small style="color:#777">
-${escapeHtml(m.restaurant)}
-</small>
+            </div>
 
-</div>
+            <button
+              class="addBtn"
+              style="margin-top:15px"
+              onclick="addToCart(
+                ${Number(m.restaurantId)},
+                ${Number(m.id)},
+                '${escapeJs(m.name)}',
+                ${Number(m.price)}
+              )"
+            >
+              + Add to Cart
+            </button>
 
-<div class="price">
-₹${m.price}
-</div>
-
-</div>
-
-
-<button
-class="addBtn"
-style="margin-top:15px"
-onclick="addToCart(
-${Number(m.restaurantId)},
-${Number(m.id)},
-'${escapeJs(m.name)}',
-${Number(m.price)}
-)"
->
-+ Add to Cart
-</button>
-
-</div>
-
-`
+          </div>`
       )
       .join("");
-
 }
 
+function showRestaurantMenu(id){
 
-/* =====================================================
-   RESTAURANT MENU
-   ===================================================== */
-
-function showRestaurantMenu(
-  id
-){
-
-  const restaurant =
+  const r=
     restaurantsData.find(
-      r =>
-        Number(r.id) ===
-        Number(id)
+      x=>Number(x.id)===Number(id)
     );
 
-
-  if(!restaurant){
-    return;
-  }
-
+  if(!r)return;
 
   hideAll();
-
 
   document
     .getElementById(
       "customerDashboard"
     )
-    .classList.add(
-      "active"
-    );
-
+    .classList
+    .add("active");
 
   document
     .getElementById(
       "customerOrders"
     )
-    .innerHTML = `
+    .innerHTML=
+      `<div class="dashboardTitle">
 
-<div class="dashboardTitle">
+        <div>
+          <h1>
+            ${escapeHtml(r.name)}
+          </h1>
 
-<div>
+          <p>
+            📍 ${escapeHtml(r.area)}
+          </p>
+        </div>
 
-<h1>
-${escapeHtml(
-  restaurant.name
-)}
-</h1>
+        <button
+          class="secondary"
+          onclick="showHome()"
+        >
+          ← Back
+        </button>
 
-<p>
-📍
-${escapeHtml(
-  restaurant.area
-)}
-</p>
+      </div>
 
-</div>
+      <div class="menuGrid">
 
+        ${(r.menu||[])
+          .map(
+            m=>
+              `<div class="menuCard">
 
-<button
-class="secondary"
-onclick="showHome()"
->
-← Back
-</button>
+                <div class="menuTop">
 
-</div>
+                  <div>
+                    <h3>
+                      ${escapeHtml(m.name)}
+                    </h3>
 
+                    <small>
+                      Fresh & delicious
+                    </small>
+                  </div>
 
-<div class="menuGrid">
+                  <div class="price">
+                    ₹${m.price}
+                  </div>
 
-${
-  (restaurant.menu || [])
-    .map(
-      menu => `
+                </div>
 
-<div class="menuCard">
+                <button
+                  class="menuBtn"
+                  onclick="addToCart(
+                    ${Number(r.id)},
+                    ${Number(m.id)},
+                    '${escapeJs(m.name)}',
+                    ${Number(m.price)}
+                  )"
+                >
+                  Add to Cart
+                </button>
 
-<div class="menuTop">
+              </div>`
+          )
+          .join("")}
 
-<div>
-
-<h3>
-${escapeHtml(
-  menu.name
-)}
-</h3>
-
-<small>
-Fresh & delicious
-</small>
-
-</div>
-
-
-<div class="price">
-₹${menu.price}
-</div>
-
-</div>
-
-
-<button
-class="menuBtn"
-onclick="addToCart(
-${Number(restaurant.id)},
-${Number(menu.id)},
-'${escapeJs(menu.name)}',
-${Number(menu.price)}
-)"
->
-Add to Cart
-</button>
-
-</div>
-
-`
-    )
-    .join("")
+      </div>`;
 }
-
-</div>
-
-`;
-
-}
-
-
-/* =====================================================
-   CART
-   ===================================================== */
 
 function addToCart(
   restaurantId,
@@ -3152,49 +1464,29 @@ function addToCart(
   price
 ){
 
-  const existing =
+  const existing=
     cart.find(
-      x =>
-        Number(x.menuId) ===
-        Number(menuId)
+      x=>Number(x.menuId)===Number(menuId)
     );
-
 
   if(existing){
 
     existing.qty++;
 
-  }
-  else{
+  }else{
 
     cart.push({
-
-      restaurantId:
-        Number(
-          restaurantId
-        ),
-
-      menuId:
-        Number(
-          menuId
-        ),
-
+      restaurantId:Number(restaurantId),
+      menuId:Number(menuId),
       name,
-
-      price:
-        Number(price),
-
+      price:Number(price),
       qty:1
-
     });
 
   }
 
-
   drawCart();
-
 }
-
 
 function drawCart(){
 
@@ -3202,105 +1494,78 @@ function drawCart(){
     .getElementById(
       "cartCount"
     )
-    .textContent =
-    cart.reduce(
-      (sum,x) =>
-        sum + x.qty,
-      0
-    );
-
+    .textContent=
+      cart.reduce(
+        (s,x)=>s+x.qty,
+        0
+      );
 
   document
     .getElementById(
       "cartTotal"
     )
-    .textContent =
-    cart.reduce(
-      (sum,x) =>
-        sum +
-        x.price *
-        x.qty,
-      0
-    );
+    .textContent=
+      cart.reduce(
+        (s,x)=>
+          s+x.price*x.qty,
+        0
+      );
 
-
-  const box =
+  const box=
     document.getElementById(
       "cartItems"
     );
 
-
   if(!cart.length){
 
-    box.innerHTML =
+    box.innerHTML=
       "<p>Your cart is empty.</p>";
 
     return;
-
   }
 
-
-  box.innerHTML =
+  box.innerHTML=
     cart
       .map(
-        (x,i) => `
+        (x,i)=>
+          `<div class="cartItem">
 
-<div class="cartItem">
+            <div>
+              <b>
+                ${escapeHtml(x.name)}
+              </b>
 
-<div>
+              <br>
 
-<b>
-${escapeHtml(x.name)}
-</b>
+              <small>
+                ₹${x.price} × ${x.qty}
+              </small>
+            </div>
 
-<br>
+            <div>
+              <b>
+                ₹${x.price*x.qty}
+              </b>
 
-<small>
-₹${x.price}
-×
-${x.qty}
-</small>
+              <button
+                class="secondary"
+                onclick="removeCart(${i})"
+              >
+                ×
+              </button>
+            </div>
 
-</div>
-
-
-<div>
-
-<b>
-₹${x.price*x.qty}
-</b>
-
-<button
-class="secondary"
-onclick="removeCart(${i})"
->
-×
-</button>
-
-</div>
-
-</div>
-
-`
+          </div>`
       )
       .join("");
-
 }
 
+function removeCart(i){
 
-function removeCart(
-  index
-){
-
-  cart.splice(
-    index,
-    1
-  );
+  cart.splice(i,1);
 
   drawCart();
-
 }
-
 
 function openCart(){
 
@@ -3308,14 +1573,11 @@ function openCart(){
     .getElementById(
       "cartModal"
     )
-    .classList.add(
-      "show"
-    );
+    .classList
+    .add("show");
 
   drawCart();
-
 }
-
 
 function closeCart(){
 
@@ -3323,35 +1585,21 @@ function closeCart(){
     .getElementById(
       "cartModal"
     )
-    .classList.remove(
-      "show"
-    );
-
+    .classList
+    .remove("show");
 }
-
-
-/* =====================================================
-   CHECKOUT
-   ===================================================== */
 
 async function checkout(){
 
   if(!cart.length){
 
-    alert(
-      "Cart খালি"
-    );
+    alert("Cart খালি");
 
     return;
-
   }
 
-
-  const me =
-    await api(
-      "/api/me"
-    );
-
+  const me=
+    await api("/api/me");
 
   if(!me.user){
 
@@ -3360,32 +1608,24 @@ async function checkout(){
     openLogin();
 
     return;
-
   }
 
-
-  if(
-    me.user.role !==
-    "customer"
-  ){
+  if(me.user.role!=="customer"){
 
     alert(
       "Customer account দিয়ে order করুন"
     );
 
     return;
-
   }
 
-
-  const address =
+  const address=
     document
       .getElementById(
         "address"
       )
       .value
       .trim();
-
 
   if(!address){
 
@@ -3394,19 +1634,14 @@ async function checkout(){
     );
 
     return;
-
   }
 
-
-  const restaurantId =
+  const restaurantId=
     cart[0].restaurantId;
-
 
   if(
     cart.some(
-      x =>
-        x.restaurantId !==
-        restaurantId
+      x=>x.restaurantId!==restaurantId
     )
   ){
 
@@ -3415,82 +1650,52 @@ async function checkout(){
     );
 
     return;
-
   }
-
 
   try{
 
-    const result =
+    const result=
       await api(
         "/api/orders",
         {
           method:"POST",
 
-          body:
-            JSON.stringify({
+          body:JSON.stringify({
+            restaurantId,
+            address,
 
-              restaurantId,
-
-              address,
-
-              items:
-                cart.map(
-                  x => ({
-                    menuId:
-                      x.menuId,
-
-                    qty:
-                      x.qty
-                  })
-                )
-
-            })
+            items:
+              cart.map(
+                x=>({
+                  menuId:x.menuId,
+                  qty:x.qty
+                })
+              )
+          })
         }
       );
-
 
     document
       .getElementById(
         "checkoutMessage"
       )
-      .innerHTML = `
+      .innerHTML=
+        `<div class="notice">
+          ✅ Order successfully placed!
+          <br>
+          Order ID:
+          <b>#${result.orderId}</b>
+        </div>`;
 
-<div class="notice">
-
-✅ Order successfully placed!
-
-<br>
-
-Order ID:
-<b>
-#${result.orderId}
-</b>
-
-</div>
-
-`;
-
-
-    cart = [];
+    cart=[];
 
     drawCart();
 
+  }catch(error){
+
+    alert(error.message);
   }
-  catch(error){
-
-    alert(
-      error.message
-    );
-
-  }
-
 }
-
-
-/* =====================================================
-   LOGIN
-   ===================================================== */
 
 function openLogin(){
 
@@ -3498,20 +1703,13 @@ function openLogin(){
     .getElementById(
       "loginModal"
     )
-    .classList.add(
-      "show"
-    );
+    .classList
+    .add("show");
 
-
-  switchLoginMode(
-    "login"
-  );
-
+  switchLoginMode("login");
 
   loadMsg91();
-
 }
-
 
 function closeLogin(){
 
@@ -3519,96 +1717,57 @@ function closeLogin(){
     .getElementById(
       "loginModal"
     )
-    .classList.remove(
-      "show"
-    );
-
+    .classList
+    .remove("show");
 }
-
-
-/* =====================================================
-   USER BUTTON
-   ===================================================== */
 
 async function updateUserButton(){
 
   try{
 
-    const me =
-      await api(
-        "/api/me"
-      );
+    const me=
+      await api("/api/me");
 
-
-    const button =
-      document.getElementById(
+    document
+      .getElementById(
         "userBtn"
-      );
-
-
-    if(me.user){
-
-      button.textContent =
-        (
-          me.user.name ||
-          "U"
-        )
+      )
+      .textContent=
+        me.user
+          ?(
+            me.user.name||"U"
+          )
           .charAt(0)
-          .toUpperCase();
+          .toUpperCase()
+          :"J";
 
-    }
-    else{
-
-      button.textContent =
-        "J";
-
-    }
-
-  }
-  catch(e){}
-
+  }catch(e){}
 }
-
-
-/* =====================================================
-   CUSTOMER ORDERS
-   ===================================================== */
 
 async function showCustomerOrders(){
 
   hideAll();
 
-
   document
     .getElementById(
       "customerDashboard"
     )
-    .classList.add(
-      "active"
-    );
-
+    .classList
+    .add("active");
 
   try{
 
-    const me =
-      await api(
-        "/api/me"
-      );
-
+    const me=
+      await api("/api/me");
 
     if(!me.user){
 
       openLogin();
 
       return;
-
     }
 
-
-    if(
-      me.user.role !==
-      "customer"
-    ){
+    if(me.user.role!=="customer"){
 
       alert(
         "Customer account required"
@@ -3617,449 +1776,299 @@ async function showCustomerOrders(){
       showHome();
 
       return;
-
     }
 
+    const orders=
+      await api("/api/orders");
 
-    const orders =
-      await api(
-        "/api/orders"
-      );
-
-
-    const box =
+    const box=
       document.getElementById(
         "customerOrders"
       );
 
-
     if(!orders.length){
 
-      box.innerHTML = `
-
-<div class="statCard">
-
-<h2>
-No orders yet
-</h2>
-
-<p>
-আপনার প্রথম order এখনই করুন।
-</p>
-
-</div>
-
-`;
+      box.innerHTML=
+        `<div class="statCard">
+          <h2>No orders yet</h2>
+          <p>
+            আপনার প্রথম order এখনই করুন।
+          </p>
+        </div>`;
 
       return;
-
     }
 
-
-    box.innerHTML =
+    box.innerHTML=
       orders
         .map(
-          order => `
+          o=>
+            `<div class="orderCard">
 
-<div class="orderCard">
+              <div class="orderHeader">
 
-<div class="orderHeader">
+                <div>
+                  <h3>
+                    Order #${o.id}
+                  </h3>
 
-<div>
+                  <p>
+                    ${escapeHtml(
+                      o.restaurant||""
+                    )}
+                  </p>
+                </div>
 
-<h3>
-Order #${order.id}
-</h3>
+                <span class="status">
+                  ${escapeHtml(
+                    o.status||""
+                  )}
+                </span>
 
-<p>
-${escapeHtml(
-  order.restaurant ||
-  ""
-)}
-</p>
+              </div>
 
-</div>
+              <p>
+                ${(o.items||[])
+                  .map(
+                    i=>
+                      escapeHtml(
+                        i.name||""
+                      )+
+                      " × "+
+                      i.qty
+                  )
+                  .join(", ")}
+              </p>
 
+              <p>
+                📍 ${escapeHtml(
+                  o.address||""
+                )}
+              </p>
 
-<span class="status">
-${escapeHtml(
-  order.status ||
-  ""
-)}
-</span>
+              <b>
+                ₹${o.total}
+              </b>
 
-</div>
-
-
-<p>
-
-${
-  (order.items || [])
-    .map(
-      item =>
-        escapeHtml(
-          item.name ||
-          ""
-        ) +
-        " × " +
-        item.qty
-    )
-    .join(", ")
-}
-
-</p>
-
-
-<p>
-📍
-${escapeHtml(
-  order.address ||
-  ""
-)}
-</p>
-
-
-<b>
-₹${order.total}
-</b>
-
-</div>
-
-`
+            </div>`
         )
         .join("");
 
-
-  }
-  catch(error){
+  }catch(error){
 
     document
       .getElementById(
         "customerOrders"
       )
-      .innerHTML =
-      "<p>" +
-      escapeHtml(
-        error.message
-      ) +
-      "</p>";
-
+      .innerHTML=
+        '<p>'+
+        escapeHtml(error.message)+
+        '</p>';
   }
-
 }
-
-
-/* =====================================================
-   RIDER
-   ===================================================== */
 
 async function showRider(){
 
   hideAll();
 
-
   document
     .getElementById(
       "riderDashboard"
     )
-    .classList.add(
-      "active"
-    );
-
+    .classList
+    .add("active");
 
   try{
 
-    const me =
-      await api(
-        "/api/me"
-      );
-
+    const me=
+      await api("/api/me");
 
     if(
       !me.user ||
-      me.user.role !==
-      "rider"
+      me.user.role!=="rider"
     ){
 
       openLogin();
 
       return;
-
     }
-
 
     document
       .getElementById(
         "riderWelcome"
       )
-      .textContent =
-      `Welcome, ${
-        me.user.name ||
-        "Haroa Rider"
-      }!`;
+      .textContent=
+        `Welcome, ${
+          me.user.name||"Haroa Rider"
+        }!`;
 
+    const orders=
+      await api("/api/orders");
 
-    const orders =
-      await api(
-        "/api/orders"
-      );
-
-
-    const available =
+    const available=
       orders.filter(
-        o =>
-          !o.delivery_id
+        o=>!o.delivery_id
       );
 
-
-    const mine =
+    const mine=
       orders.filter(
-        o =>
-          Number(
-            o.delivery_id
-          ) ===
-          Number(
-            me.user.id
-          )
+        o=>
+          Number(o.delivery_id)===
+          Number(me.user.id)
       );
 
-
-    const completed =
+    const completed=
       mine.filter(
-        o =>
-          o.status ===
-          "Delivered"
+        o=>o.status==="Delivered"
       );
-
 
     document
       .getElementById(
         "availableCount"
       )
-      .textContent =
-      available.length;
-
+      .textContent=
+        available.length;
 
     document
       .getElementById(
         "myDeliveryCount"
       )
-      .textContent =
-      mine.length;
-
+      .textContent=
+        mine.length;
 
     document
       .getElementById(
         "completedCount"
       )
-      .textContent =
-      completed.length;
-
-
-    document
-      .getElementById(
-        "riderOrders"
-      )
-      .innerHTML =
-      orders.length
-
-      ?
-
-      orders
-        .map(
-          order => `
-
-<div class="deliveryCard">
-
-<h3>
-📦 Order #${order.id}
-</h3>
-
-
-<div class="deliveryInfo">
-
-<b>
-Restaurant
-</b>
-
-<br>
-
-${escapeHtml(
-  order.restaurant ||
-  ""
-)}
-
-</div>
-
-
-<div class="deliveryInfo">
-
-<b>
-Address
-</b>
-
-<br>
-
-${escapeHtml(
-  order.address ||
-  ""
-)}
-
-</div>
-
-
-<div class="deliveryInfo">
-
-<b>
-Total
-</b>
-
-<br>
-
-₹${order.total}
-
-</div>
-
-
-<div class="deliveryInfo">
-
-<b>
-Status
-</b>
-
-<br>
-
-<span class="status">
-${escapeHtml(
-  order.status ||
-  ""
-)}
-</span>
-
-</div>
-
-
-${
-  !order.delivery_id
-
-  ?
-
-  `
-
-<button
-class="actionBtn"
-onclick="claimOrder(${order.id})"
->
-🏍️ Accept Order
-</button>
-
-`
-
-  :
-
-  Number(
-    order.delivery_id
-  ) ===
-  Number(
-    me.user.id
-  )
-
-  ?
-
-  `
-
-<button
-class="actionBtn"
-onclick="updateOrderStatus(
-${order.id},
-'Picked up'
-)"
->
-Picked Up
-</button>
-
-
-<button
-class="actionBtn green"
-onclick="updateOrderStatus(
-${order.id},
-'Delivered'
-)"
->
-Delivered
-</button>
-
-`
-
-  :
-
-  ""
-
-}
-
-</div>
-
-`
-        )
-        .join("")
-
-      :
-
-      "<p>No orders available.</p>";
-
-
-  }
-  catch(error){
+      .textContent=
+        completed.length;
 
     document
       .getElementById(
         "riderOrders"
       )
-      .innerHTML =
-      "<p>" +
-      escapeHtml(
-        error.message
-      ) +
-      "</p>";
+      .innerHTML=
+        orders.length
+          ?orders
+            .map(
+              o=>
+                `<div class="deliveryCard">
 
+                  <h3>
+                    📦 Order #${o.id}
+                  </h3>
+
+                  <div class="deliveryInfo">
+                    <b>Restaurant</b>
+                    <br>
+                    ${escapeHtml(
+                      o.restaurant||""
+                    )}
+                  </div>
+
+                  <div class="deliveryInfo">
+                    <b>Address</b>
+                    <br>
+                    ${escapeHtml(
+                      o.address||""
+                    )}
+                  </div>
+
+                  <div class="deliveryInfo">
+                    <b>Total</b>
+                    <br>
+                    ₹${o.total}
+                  </div>
+
+                  <div class="deliveryInfo">
+                    <b>Status</b>
+                    <br>
+
+                    <span class="status">
+                      ${escapeHtml(
+                        o.status||""
+                      )}
+                    </span>
+                  </div>
+
+                  ${
+                    !o.delivery_id
+                      ?`
+                        <button
+                          class="actionBtn"
+                          onclick="claimOrder(${o.id})"
+                        >
+                          🏍️ Accept Order
+                        </button>
+                      `
+                      :
+                    Number(o.delivery_id)===
+                    Number(me.user.id)
+                      ?`
+                        <button
+                          class="actionBtn"
+                          onclick="updateOrderStatus(
+                            ${o.id},
+                            'Picked up'
+                          )"
+                        >
+                          Picked Up
+                        </button>
+
+                        <button
+                          class="actionBtn green"
+                          onclick="updateOrderStatus(
+                            ${o.id},
+                            'Delivered'
+                          )"
+                        >
+                          Delivered
+                        </button>
+                      `
+                      :""
+                  }
+
+                </div>`
+            )
+            .join("")
+          :
+            "<p>No orders available.</p>";
+
+  }catch(error){
+
+    document
+      .getElementById(
+        "riderOrders"
+      )
+      .innerHTML=
+        '<p>'+
+        escapeHtml(error.message)+
+        '</p>';
   }
-
 }
 
-
-async function claimOrder(
-  id
-){
+async function claimOrder(id){
 
   try{
 
     await api(
-      "/api/delivery/claim/" +
-      id,
+      "/api/delivery/claim/"+id,
       {
         method:"POST"
       }
     );
 
-
     alert(
       "Order accepted successfully!"
     );
 
-
     showRider();
 
+  }catch(error){
+
+    alert(error.message);
   }
-  catch(error){
-
-    alert(
-      error.message
-    );
-
-  }
-
 }
-
 
 async function updateOrderStatus(
   id,
@@ -4069,240 +2078,182 @@ async function updateOrderStatus(
   try{
 
     await api(
-      "/api/orders/" +
-      id +
-      "/status",
+      "/api/orders/"+id+"/status",
       {
         method:"PATCH",
 
-        body:
-          JSON.stringify({
-            status
-          })
+        body:JSON.stringify({
+          status
+        })
       }
     );
 
-
     showRider();
 
+  }catch(error){
+
+    alert(error.message);
   }
-  catch(error){
-
-    alert(
-      error.message
-    );
-
-  }
-
 }
-
-
-/* =====================================================
-   ADMIN
-   ===================================================== */
 
 async function showAdmin(){
 
   hideAll();
 
-
   document
     .getElementById(
       "adminDashboard"
     )
-    .classList.add(
-      "active"
-    );
-
+    .classList
+    .add("active");
 
   try{
 
-    const me =
-      await api(
-        "/api/me"
-      );
-
+    const me=
+      await api("/api/me");
 
     if(
       !me.user ||
-      me.user.role !==
-      "admin"
+      me.user.role!=="admin"
     ){
 
       openLogin();
 
       return;
-
     }
 
-
-    const stats =
+    const stats=
       await api(
         "/api/admin/stats"
       );
-
 
     document
       .getElementById(
         "statRestaurants"
       )
-      .textContent =
-      stats.restaurants ||
-      0;
-
+      .textContent=
+        stats.restaurants||0;
 
     document
       .getElementById(
         "statCustomers"
       )
-      .textContent =
-      stats.customers ||
-      0;
-
+      .textContent=
+        stats.customers||0;
 
     document
       .getElementById(
         "statRiders"
       )
-      .textContent =
-      stats.riders ||
-      0;
-
+      .textContent=
+        stats.riders||0;
 
     document
       .getElementById(
         "statOrders"
       )
-      .textContent =
-      stats.orders ||
-      0;
-
+      .textContent=
+        stats.orders||0;
 
     document
       .getElementById(
         "statRevenue"
       )
-      .textContent =
-      stats.revenue ||
-      0;
+      .textContent=
+        stats.revenue||0;
 
-
-    const orders =
-      await api(
-        "/api/orders"
-      );
-
+    const orders=
+      await api("/api/orders");
 
     document
       .getElementById(
         "adminOrders"
       )
-      .innerHTML =
-      orders
-        .map(
-          order => `
+      .innerHTML=
+        orders
+          .map(
+            o=>
+              `<div class="orderCard">
 
-<div class="orderCard">
+                <div class="orderHeader">
 
-<div class="orderHeader">
+                  <div>
+                    <h3>
+                      Order #${o.id}
+                    </h3>
 
-<div>
+                    <p>
+                      ${escapeHtml(
+                        o.customer||
+                        "Customer"
+                      )}
+                      —
+                      ${escapeHtml(
+                        o.restaurant||
+                        ""
+                      )}
+                    </p>
+                  </div>
 
-<h3>
-Order #${order.id}
-</h3>
+                  <span class="status">
+                    ${escapeHtml(
+                      o.status||""
+                    )}
+                  </span>
 
-<p>
-${escapeHtml(
-  order.customer ||
-  "Customer"
-)}
-—
-${escapeHtml(
-  order.restaurant ||
-  ""
-)}
-</p>
+                </div>
 
-</div>
+                <p>
+                  ₹${o.total}
+                </p>
 
+                <button
+                  class="actionBtn"
+                  onclick="adminStatus(
+                    ${o.id},
+                    'Preparing'
+                  )"
+                >
+                  Preparing
+                </button>
 
-<span class="status">
-${escapeHtml(
-  order.status ||
-  ""
-)}
-</span>
+                <button
+                  class="actionBtn"
+                  onclick="adminStatus(
+                    ${o.id},
+                    'Picked up'
+                  )"
+                >
+                  Picked Up
+                </button>
 
-</div>
+                <button
+                  class="actionBtn green"
+                  onclick="adminStatus(
+                    ${o.id},
+                    'Delivered'
+                  )"
+                >
+                  Delivered
+                </button>
 
+              </div>`
+          )
+          .join("") ||
+        "<p>No orders.</p>";
 
-<p>
-₹${order.total}
-</p>
-
-
-<button
-class="actionBtn"
-onclick="adminStatus(
-${order.id},
-'Preparing'
-)"
->
-Preparing
-</button>
-
-
-<button
-class="actionBtn"
-onclick="adminStatus(
-${order.id},
-'Picked up'
-)"
->
-Picked Up
-</button>
-
-
-<button
-class="actionBtn green"
-onclick="adminStatus(
-${order.id},
-'Delivered'
-)"
->
-Delivered
-</button>
-
-</div>
-
-`
-        )
-        .join("")
-
-      ||
-
-      "<p>No orders.</p>";
-
-
-  }
-  catch(error){
+  }catch(error){
 
     document
       .getElementById(
         "adminOrders"
       )
-      .innerHTML =
-      "<p>" +
-      escapeHtml(
-        error.message
-      ) +
-      "</p>";
-
+      .innerHTML=
+        '<p>'+
+        escapeHtml(error.message)+
+        '</p>';
   }
-
 }
-
 
 async function adminStatus(
   id,
@@ -4312,37 +2263,23 @@ async function adminStatus(
   try{
 
     await api(
-      "/api/orders/" +
-      id +
-      "/status",
+      "/api/orders/"+id+"/status",
       {
         method:"PATCH",
 
-        body:
-          JSON.stringify({
-            status
-          })
+        body:JSON.stringify({
+          status
+        })
       }
     );
 
-
     showAdmin();
 
+  }catch(error){
+
+    alert(error.message);
   }
-  catch(error){
-
-    alert(
-      error.message
-    );
-
-  }
-
 }
-
-
-/* =====================================================
-   NAVIGATION
-   ===================================================== */
 
 function hideAll(){
 
@@ -4350,58 +2287,46 @@ function hideAll(){
     .getElementById(
       "homePage"
     )
-    .style.display =
-    "none";
-
+    .style
+    .display="none";
 
   [
     "customerDashboard",
     "riderDashboard",
     "adminDashboard"
   ]
-    .forEach(
-      id =>
-        document
-          .getElementById(
-            id
-          )
-          .classList
-          .remove(
-            "active"
-          )
-    );
-
+  .forEach(
+    id=>
+      document
+        .getElementById(id)
+        .classList
+        .remove("active")
+  );
 }
-
 
 function showHome(){
 
   hideAll();
 
-
   document
     .getElementById(
       "homePage"
     )
-    .style.display =
-    "block";
-
+    .style
+    .display="block";
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
-
 }
-
 
 function showRestaurants(){
 
   showHome();
 
-
   setTimeout(
-    () =>
+    ()=>
       document
         .getElementById(
           "restaurantGrid"
@@ -4412,13 +2337,7 @@ function showRestaurants(){
         }),
     100
   );
-
 }
-
-
-/* =====================================================
-   SIDE MENU
-   ===================================================== */
 
 function toggleSideMenu(){
 
@@ -4427,101 +2346,45 @@ function toggleSideMenu(){
       "sideMenu"
     )
     .classList
-    .toggle(
-      "active"
-    );
-
+    .toggle("active");
 }
 
-
-function showCategory(
-  category
-){
+function showCategory(category){
 
   toggleSideMenu();
 
   showHome();
 
-
-  const search =
+  const search=
     document.getElementById(
       "searchInput"
     );
 
-
   if(search){
 
-    search.value =
-      category;
+    search.value=category;
 
     renderRestaurants();
-
   }
-
 }
 
+function escapeHtml(text){
 
-/* =====================================================
-   ESCAPE
-   ===================================================== */
-
-function escapeHtml(
-  text
-){
-
-  return String(
-    text ?? ""
-  )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
+  return String(text??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
+function escapeJs(text){
 
-function escapeJs(
-  text
-){
-
-  return String(
-    text ?? ""
-  )
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-    .replace(
-      /'/g,
-      "\\'"
-    )
-    .replace(
-      /\r?\n/g,
-      "\\n"
-    );
-
+  return String(text??"")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\r?\n/g,"\\n");
 }
-
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
 
 async function logoutUser(){
 
@@ -4534,26 +2397,16 @@ async function logoutUser(){
       }
     );
 
-
     showHome();
 
     updateUserButton();
 
-  }
-  catch(e){}
-
+  }catch(e){}
 }
 
-
-/* =====================================================
-   START
-   ===================================================== */
-
 loadRestaurants();
-
 updateUserButton();
 
 </script>
-
 </body>
 </html>
