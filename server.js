@@ -3,1019 +3,715 @@ const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const Database = require("better-sqlite3");
 const path = require("path");
-const crypto = require("crypto");
 
 const app = express();
+const PORT = process.env.PORT || 10000;
 
-const db = new Database(
-  path.join(__dirname, "haroa_eats.db")
-);
-
-
-/* =====================================================
-   BASIC CONFIG
-===================================================== */
+app.set("trust proxy", 1);
 
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
-
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET ||
-      "change-this-secret",
-
-    resave:false,
-
-    saveUninitialized:false,
-
-    cookie:{
-      httpOnly:true,
-      sameSite:"lax",
-      secure:
-        process.env.NODE_ENV ===
-        "production",
-      maxAge:
-        7 *
-        24 *
-        60 *
-        60 *
-        1000
+    secret: process.env.SESSION_SECRET || "CHANGE_THIS_SECRET",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     }
   })
 );
 
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use(
-  express.static(
-    path.join(
-      __dirname,
-      "public"
-    )
-  )
+const db = new Database(
+  path.join(__dirname, "haroa_eats.db")
 );
-
-
-/* =====================================================
-   MSG91 CONFIG
-===================================================== */
-
-const MSG91_WIDGET_ID =
-  process.env.MSG91_WIDGET_ID ||
-  "366870715254333435383332";
-
-const MSG91_WIDGET_TOKEN =
-  process.env.MSG91_WIDGET_TOKEN ||
-  "";
-
-const MSG91_AUTHKEY =
-  process.env.MSG91_AUTHKEY ||
-  "";
-
 
 /* =====================================================
    DATABASE
 ===================================================== */
 
 db.exec(`
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  phone TEXT UNIQUE NOT NULL,
+  password TEXT,
+  role TEXT NOT NULL DEFAULT 'customer'
+);
 
-  CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS restaurants (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  area TEXT NOT NULL,
+  phone TEXT,
+  approved INTEGER DEFAULT 0
+);
 
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS menu (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  restaurant_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  price REAL NOT NULL,
+  available INTEGER DEFAULT 1
+);
 
-    name TEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS orders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  customer_id INTEGER NOT NULL,
+  restaurant_id INTEGER NOT NULL,
+  total REAL NOT NULL,
+  address TEXT NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  delivery_id INTEGER,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
 
-    phone TEXT UNIQUE NOT NULL,
-
-    password TEXT,
-
-    role TEXT NOT NULL
-      DEFAULT 'customer'
-
-  );
-
-
-  CREATE TABLE IF NOT EXISTS restaurants (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    name TEXT NOT NULL,
-
-    area TEXT NOT NULL,
-
-    phone TEXT,
-
-    approved INTEGER
-      DEFAULT 0
-
-  );
-
-
-  CREATE TABLE IF NOT EXISTS menu (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    restaurant_id INTEGER NOT NULL,
-
-    name TEXT NOT NULL,
-
-    price REAL NOT NULL,
-
-    available INTEGER
-      DEFAULT 1
-
-  );
-
-
-  CREATE TABLE IF NOT EXISTS orders (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    customer_id INTEGER NOT NULL,
-
-    restaurant_id INTEGER NOT NULL,
-
-    total REAL NOT NULL,
-
-    address TEXT NOT NULL,
-
-    status TEXT
-      DEFAULT 'Pending',
-
-    delivery_id INTEGER,
-
-    created_at TEXT
-      DEFAULT CURRENT_TIMESTAMP
-
-  );
-
-
-  CREATE TABLE IF NOT EXISTS order_items (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    order_id INTEGER NOT NULL,
-
-    menu_id INTEGER NOT NULL,
-
-    name TEXT NOT NULL,
-
-    price REAL NOT NULL,
-
-    qty INTEGER NOT NULL
-
-  );
-
+CREATE TABLE IF NOT EXISTS order_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id INTEGER NOT NULL,
+  menu_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  price REAL NOT NULL,
+  qty INTEGER NOT NULL
+);
 `);
 
-
 /* =====================================================
-   DEMO USERS + RESTAURANTS
+   ENVIRONMENT
 ===================================================== */
 
-function seed(){
+const MSG91_AUTHKEY =
+  process.env.MSG91_AUTHKEY || "";
 
-  const admin =
-    db.prepare(
+const MSG91_TEMPLATE_ID =
+  process.env.MSG91_TEMPLATE_ID || "";
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function normalizePhone(value) {
+  let phone = String(value || "")
+    .replace(/\D/g, "");
+
+  if (phone.startsWith("91") && phone.length === 12) {
+    phone = phone.substring(2);
+  }
+
+  if (phone.startsWith("0") && phone.length === 11) {
+    phone = phone.substring(1);
+  }
+
+  return phone;
+}
+
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).json({
+      error: "Login required"
+    });
+  }
+
+  next();
+}
+
+function requireRole(...roles) {
+  return (req, res, next) => {
+    if (
+      !req.session.user ||
+      !roles.includes(req.session.user.role)
+    ) {
+      return res.status(403).json({
+        error: "Access denied"
+      });
+    }
+
+    next();
+  };
+}
+
+async function msg91(url, options = {}) {
+  const response = await fetch(url, options);
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch (_) {}
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+      data.error ||
+      "MSG91 request failed"
+    );
+  }
+
+  const statusText = String(
+    data.message ||
+    data.type ||
+    data.status ||
+    ""
+  ).toLowerCase();
+
+  if (
+    data.success === false ||
+    data.type === "error" ||
+    statusText.includes("fail") ||
+    statusText.includes("invalid")
+  ) {
+    throw new Error(
+      data.message ||
+      "MSG91 request failed"
+    );
+  }
+
+  return data;
+}
+
+/* =====================================================
+   DEMO STAFF
+===================================================== */
+
+function seedStaff() {
+  const admin = db
+    .prepare(
       "SELECT id FROM users WHERE phone=?"
     )
     .get("9999999999");
 
+  if (!admin) {
+    db.prepare(`
+      INSERT INTO users
+      (name, phone, password, role)
+      VALUES (?, ?, ?, ?)
+    `).run(
+      "Haroa Eats Admin",
+      "9999999999",
+      bcrypt.hashSync("admin123", 10),
+      "admin"
+    );
+  }
 
-  const rider =
-    db.prepare(
+  const rider = db
+    .prepare(
       "SELECT id FROM users WHERE phone=?"
     )
     .get("8888888888");
 
-
-  if(!rider){
-
+  if (!rider) {
     db.prepare(`
-      INSERT INTO users(
-        name,
-        phone,
-        password,
-        role
-      )
-      VALUES(?,?,?,'rider')
-    `)
-    .run(
+      INSERT INTO users
+      (name, phone, password, role)
+      VALUES (?, ?, ?, ?)
+    `).run(
       "Haroa Rider",
       "8888888888",
-      bcrypt.hashSync(
-        "rider123",
-        10
-      )
+      bcrypt.hashSync("rider123", 10),
+      "rider"
     );
-
   }
+}
 
+seedStaff();
 
-  if(!admin){
+/* =====================================================
+   DEMO RESTAURANTS
+===================================================== */
 
-    db.prepare(`
-      INSERT INTO users(
-        name,
-        phone,
-        password,
-        role
-      )
-      VALUES(?,?,?,'admin')
-    `)
-    .run(
-      "Haroa Eats Admin",
-      "9999999999",
-      bcrypt.hashSync(
-        "admin123",
-        10
-      )
-    );
-
-  }
-
-
-  const count =
-    db.prepare(
+function seedRestaurants() {
+  const count = db
+    .prepare(
       "SELECT COUNT(*) AS c FROM restaurants"
     )
     .get().c;
 
+  if (count > 0) return;
 
-  if(count>0){
-    return;
-  }
+  const insertRestaurant = db.prepare(`
+    INSERT INTO restaurants
+    (name, area, phone, approved)
+    VALUES (?, ?, ?, 1)
+  `);
 
+  const r1 = insertRestaurant.run(
+    "Swagatam Restaurant",
+    "Haroa",
+    ""
+  ).lastInsertRowid;
 
-  const restaurant =
-    db.prepare(`
-      INSERT INTO restaurants(
-        name,
-        area,
-        phone,
-        approved
-      )
-      VALUES(?,?,?,1)
-    `);
+  const r2 = insertRestaurant.run(
+    "Fry Nation",
+    "Haroa",
+    ""
+  ).lastInsertRowid;
 
+  const r3 = insertRestaurant.run(
+    "A1 Haji Biryani",
+    "Haroa",
+    ""
+  ).lastInsertRowid;
 
-  const a =
-    restaurant.run(
-      "Swagatam Restaurant",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
-
-
-  const b =
-    restaurant.run(
-      "Fry Nation",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
-
-
-  const c =
-    restaurant.run(
-      "A1 Haji Biryani",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
-
-
-  const menu =
-    db.prepare(`
-      INSERT INTO menu(
-        restaurant_id,
-        name,
-        price
-      )
-      VALUES(?,?,?)
-    `);
-
+  const insertMenu = db.prepare(`
+    INSERT INTO menu
+    (restaurant_id, name, price, available)
+    VALUES (?, ?, ?, 1)
+  `);
 
   [
-    ["Chicken Biryani",160],
-    ["Egg Roll",70],
-    ["Chicken Roll",100],
-    ["Fried Rice",120]
-  ]
-  .forEach(
-    item =>
-      menu.run(
-        a,
-        ...item
-      )
-  );
+    [r1, "Chicken Biryani", 160],
+    [r1, "Egg Roll", 70],
+    [r1, "Chicken Roll", 100],
+    [r1, "Fried Rice", 120],
 
+    [r2, "Chicken Fry", 140],
+    [r2, "French Fries", 80],
+    [r2, "Chicken Burger", 130],
+    [r2, "Momo", 100],
 
-  [
-    ["Chicken Fry",140],
-    ["French Fries",80],
-    ["Chicken Burger",130],
-    ["Momo",100]
-  ]
-  .forEach(
-    item =>
-      menu.run(
-        b,
-        ...item
-      )
-  );
-
-
-  [
-    ["Chicken Biryani",150],
-    ["Mutton Biryani",220],
-    ["Chicken Chaap",140]
-  ]
-  .forEach(
-    item =>
-      menu.run(
-        c,
-        ...item
-      )
-  );
-
+    [r3, "Chicken Biryani", 150],
+    [r3, "Mutton Biryani", 220],
+    [r3, "Chicken Chaap", 140]
+  ].forEach(item => {
+    insertMenu.run(...item);
+  });
 }
 
-
-seed();
-
+seedRestaurants();
 
 /* =====================================================
-   AUTH HELPERS
+   OTP CONFIG
 ===================================================== */
 
-function auth(
-  req,
-  res,
-  next
-){
-
-  if(
-    !req.session.user
-  ){
-
-    return res
-      .status(401)
-      .json({
-        error:
-          "Login required"
-      });
-
-  }
-
-  next();
-
-}
-
-
-function role(...roles){
-
-  return function(
-    req,
-    res,
-    next
-  ){
-
-    if(
-      !req.session.user ||
-      !roles.includes(
-        req.session.user.role
+app.get("/api/otp/config", (req, res) => {
+  res.json({
+    enabled:
+      Boolean(
+        MSG91_AUTHKEY &&
+        MSG91_TEMPLATE_ID
       )
-    ){
-
-      return res
-        .status(403)
-        .json({
-          error:
-            "Not allowed"
-        });
-
-    }
-
-    next();
-
-  };
-
-}
-
+  });
+});
 
 /* =====================================================
-   PHONE HELPERS
+   SEND OTP
 ===================================================== */
 
-function normalizeIndianPhone(
-  value
-){
+app.post("/api/otp/send", async (req, res) => {
+  const phone = normalizePhone(
+    req.body.phone
+  );
 
-  let phone =
-    String(value || "")
-      .replace(
-        /\D/g,
-        ""
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    return res.status(400).json({
+      error:
+        "সঠিক 10 digit Indian mobile number দিন"
+    });
+  }
+
+  if (
+    !MSG91_AUTHKEY ||
+    !MSG91_TEMPLATE_ID
+  ) {
+    return res.status(500).json({
+      error:
+        "Render Environment-এ MSG91_AUTHKEY এবং MSG91_TEMPLATE_ID সেট করুন"
+    });
+  }
+
+  try {
+    const url =
+      new URL(
+        "https://control.msg91.com/api/v5/otp"
       );
 
-
-  if(
-    phone.startsWith("91") &&
-    phone.length===12
-  ){
-
-    phone=
-      phone.slice(2);
-
-  }
-
-
-  if(
-    phone.startsWith("0") &&
-    phone.length===11
-  ){
-
-    phone=
-      phone.slice(1);
-
-  }
-
-
-  return phone;
-
-}
-
-
-/* =====================================================
-   DEEP VALUE SEARCH
-===================================================== */
-
-function findValueDeep(
-  value,
-  keys
-){
-
-  if(
-    !value ||
-    typeof value!=="object"
-  ){
-
-    return null;
-
-  }
-
-
-  for(
-    const key of keys
-  ){
-
-    if(
-      Object.prototype.hasOwnProperty.call(
-        value,
-        key
-      ) &&
-      value[key] != null
-    ){
-
-      return value[key];
-
-    }
-
-  }
-
-
-  for(
-    const child of Object.values(value)
-  ){
-
-    if(
-      child &&
-      typeof child==="object"
-    ){
-
-      const found=
-        findValueDeep(
-          child,
-          keys
-        );
-
-
-      if(found!=null){
-
-        return found;
-
-      }
-
-    }
-
-  }
-
-
-  return null;
-
-}
-
-
-/* =====================================================
-   JWT PAYLOAD
-===================================================== */
-
-function decodeJwtPayload(
-  token
-){
-
-  try{
-
-    const parts=
-      String(token || "")
-        .split(".");
-
-
-    if(
-      parts.length!==3
-    ){
-
-      return {};
-
-    }
-
-
-    const payload=
-      parts[1]
-        .replace(
-          /-/g,
-          "+"
-        )
-        .replace(
-          /_/g,
-          "/"
-        );
-
-
-    return JSON.parse(
-      Buffer.from(
-        payload,
-        "base64"
-      ).toString(
-        "utf8"
-      )
+    url.searchParams.set(
+      "template_id",
+      MSG91_TEMPLATE_ID
     );
 
-  }catch(_){
-
-    return {};
-
-  }
-
-}
-
-
-/* =====================================================
-   EXTRACT PHONE FROM MSG91
-===================================================== */
-
-function extractMsg91Phone(
-  data
-){
-
-  const value=
-    findValueDeep(
-      data,
-      [
-        "mobile",
-        "mobile_number",
-        "phone",
-        "phone_number",
-        "identifier",
-        "number"
-      ]
+    url.searchParams.set(
+      "mobile",
+      "91" + phone
     );
 
-
-  return normalizeIndianPhone(
-    value
-  );
-
-}
-
-
-/* =====================================================
-   MSG91 ACCESS TOKEN VERIFY
-===================================================== */
-
-async function verifyMsg91AccessToken(
-  accessToken
-){
-
-  if(!MSG91_AUTHKEY){
-
-    throw new Error(
-      "MSG91_AUTHKEY is not configured on Render"
+    url.searchParams.set(
+      "authkey",
+      MSG91_AUTHKEY
     );
 
-  }
-
-
-  const response=
-    await fetch(
-      "https://control.msg91.com/api/v5/widget/verifyAccessToken",
+    const data = await msg91(
+      url.toString(),
       {
-        method:"POST",
-
-        headers:{
+        method: "POST",
+        headers: {
           "Content-Type":
             "application/json",
-
-          "Accept":
+          Accept:
             "application/json"
         },
-
-        body:
-          JSON.stringify({
-
-            authkey:
-              MSG91_AUTHKEY,
-
-            "access-token":
-              accessToken
-
-          })
+        body: JSON.stringify({})
       }
     );
 
+    req.session.pendingPhone = phone;
+    req.session.otpSentAt = Date.now();
 
-  let data={};
-
-
-  try{
-
-    data=
-      await response.json();
-
-  }catch(_){}
-
-
-  if(!response.ok){
-
-    throw new Error(
-      data.message ||
-      data.error ||
-      "MSG91 access-token verification failed"
-    );
-
-  }
-
-
-  const status=
-    String(
-      data.type ||
-      data.status ||
-      data.message ||
-      ""
-    )
-    .toLowerCase();
-
-
-  if(
-    data.success===false ||
-    status.includes("fail") ||
-    status.includes("invalid")
-  ){
-
-    throw new Error(
-      data.message ||
-      "OTP verification failed"
-    );
-
-  }
-
-
-  return data;
-
-}
-
-
-/* =====================================================
-   MSG91 CLIENT CONFIG
-===================================================== */
-
-app.get(
-  "/api/otp/config",
-  function(req,res){
-
-    const enabled=
-      Boolean(
-        MSG91_WIDGET_ID &&
-        MSG91_WIDGET_TOKEN
-      );
-
-
-    res.json({
-
-      enabled,
-
-      widgetId:
-        MSG91_WIDGET_ID ||
-        null,
-
-      tokenAuth:
-        MSG91_WIDGET_TOKEN ||
-        null
-
+    return res.json({
+      ok: true,
+      message:
+        data.message ||
+        "OTP sent successfully"
     });
 
+  } catch (error) {
+    console.error(
+      "MSG91 SEND OTP:",
+      error
+    );
+
+    return res.status(400).json({
+      error:
+        error.message ||
+        "OTP পাঠানো যায়নি"
+    });
+  }
+});
+
+/* =====================================================
+   RESEND OTP
+===================================================== */
+
+app.post(
+  "/api/otp/resend",
+  async (req, res) => {
+    const phone = normalizePhone(
+      req.body.phone
+    );
+
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({
+        error:
+          "সঠিক mobile number দিন"
+      });
+    }
+
+    if (!MSG91_AUTHKEY) {
+      return res.status(500).json({
+        error:
+          "MSG91_AUTHKEY missing"
+      });
+    }
+
+    try {
+      const url =
+        new URL(
+          "https://control.msg91.com/api/v5/otp/retry"
+        );
+
+      url.searchParams.set(
+        "authkey",
+        MSG91_AUTHKEY
+      );
+
+      url.searchParams.set(
+        "mobile",
+        "91" + phone
+      );
+
+      url.searchParams.set(
+        "retrytype",
+        "text"
+      );
+
+      const data = await msg91(
+        url.toString(),
+        {
+          method: "GET",
+          headers: {
+            Accept:
+              "application/json"
+          }
+        }
+      );
+
+      req.session.pendingPhone = phone;
+      req.session.otpSentAt = Date.now();
+
+      res.json({
+        ok: true,
+        message:
+          data.message ||
+          "OTP resent successfully"
+      });
+
+    } catch (error) {
+      console.error(
+        "MSG91 RESEND OTP:",
+        error
+      );
+
+      res.status(400).json({
+        error:
+          error.message ||
+          "OTP resend করা যায়নি"
+      });
+    }
   }
 );
 
-
 /* =====================================================
-   CUSTOMER OTP LOGIN
-   IMPORTANT:
-   No OTP SIGNUP.
-   First successful OTP login automatically
-   creates customer account.
+   VERIFY OTP
 ===================================================== */
 
 app.post(
   "/api/otp/verify",
-  async function(
-    req,
-    res
-  ){
+  async (req, res) => {
+    const phone = normalizePhone(
+      req.body.phone
+    );
 
-    const accessToken=
-      String(
-        req.body.accessToken ||
-        ""
-      ).trim();
+    const otp = String(
+      req.body.otp || ""
+    ).replace(/\D/g, "");
 
-
-    if(!accessToken){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "OTP access token missing"
-        });
-
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({
+        error:
+          "সঠিক mobile number দিন"
+      });
     }
 
+    if (!/^\d{4,9}$/.test(otp)) {
+      return res.status(400).json({
+        error:
+          "সঠিক OTP দিন"
+      });
+    }
 
-    try{
+    if (!MSG91_AUTHKEY) {
+      return res.status(500).json({
+        error:
+          "MSG91_AUTHKEY missing"
+      });
+    }
 
-      const verified=
-        await verifyMsg91AccessToken(
-          accessToken
+    if (
+      req.session.pendingPhone &&
+      req.session.pendingPhone !== phone
+    ) {
+      return res.status(400).json({
+        error:
+          "এই OTP অন্য mobile number-এর জন্য"
+      });
+    }
+
+    try {
+      const url =
+        new URL(
+          "https://control.msg91.com/api/v5/otp/verify"
         );
 
+      url.searchParams.set(
+        "otp",
+        otp
+      );
 
-      const tokenPayload=
-        decodeJwtPayload(
-          accessToken
-        );
+      url.searchParams.set(
+        "mobile",
+        "91" + phone
+      );
 
+      const data = await msg91(
+        url.toString(),
+        {
+          method: "GET",
+          headers: {
+            authkey:
+              MSG91_AUTHKEY,
+            Accept:
+              "application/json"
+          }
+        }
+      );
 
-      const verifiedPhone=
-        extractMsg91Phone(
-          verified
-        ) ||
-        extractMsg91Phone(
-          tokenPayload
-        );
+      console.log(
+        "MSG91 VERIFY:",
+        data
+      );
 
-
-      if(
-        !/^\d{10}$/.test(
-          verifiedPhone
-        )
-      ){
-
-        console.error(
-          "MSG91 verified data:",
-          verified
-        );
-
-
-        return res
-          .status(400)
-          .json({
-            error:
-              "MSG91 verified mobile number পাওয়া যায়নি"
-          });
-
-      }
-
-
-      let user=
-        db.prepare(
-          "SELECT * FROM users WHERE phone=?"
-        )
-        .get(
-          verifiedPhone
-        );
-
-
-      /*
-        Existing admin/rider cannot
-        enter through customer OTP.
-      */
-
-      if(
-        user &&
-        user.role!=="customer"
-      ){
-
-        return res
-          .status(403)
-          .json({
-            error:
-              "Admin/Rider-এর জন্য Staff Login ব্যবহার করুন"
-          });
-
-      }
-
-
-      /*
-        NEW CUSTOMER:
-        OTP verification successful হলে
-        automatically customer account তৈরি হবে.
-      */
-
-      if(!user){
-
-        const randomPassword=
-          bcrypt.hashSync(
-            crypto
-              .randomBytes(32)
-              .toString("hex"),
-            10
-          );
-
-
-        const info=
-          db.prepare(`
-            INSERT INTO users(
-              name,
-              phone,
-              password,
-              role
-            )
-            VALUES(
-              ?,
-              ?,
-              ?,
-              'customer'
-            )
-          `)
-          .run(
-            "Haroa Customer",
-            verifiedPhone,
-            randomPassword
-          );
-
-
-        user=
-          db.prepare(
-            "SELECT * FROM users WHERE id=?"
+      let user =
+        db
+          .prepare(
+            "SELECT * FROM users WHERE phone=?"
           )
-          .get(
-            info.lastInsertRowid
-          );
+          .get(phone);
 
+      if (
+        user &&
+        user.role !== "customer"
+      ) {
+        return res.status(403).json({
+          error:
+            "Admin/Rider-এর জন্য Staff Login ব্যবহার করুন"
+        });
       }
 
+      if (!user) {
+        const result =
+          db.prepare(`
+            INSERT INTO users
+            (name, phone, password, role)
+            VALUES (?, ?, NULL, 'customer')
+          `).run(
+            "Haroa Customer",
+            phone
+          );
 
-      /*
-        Create session
-      */
+        user =
+          db
+            .prepare(
+              "SELECT * FROM users WHERE id=?"
+            )
+            .get(
+              result.lastInsertRowid
+            );
+      }
 
-      req.session.user={
-
-        id:user.id,
-
-        name:user.name,
-
-        phone:user.phone,
-
-        role:user.role
-
+      req.session.user = {
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        role: user.role
       };
 
+      delete req.session.pendingPhone;
+      delete req.session.otpSentAt;
 
-      res.json({
-
-        ok:true,
-
-        user:
-          req.session.user
-
+      return res.json({
+        ok: true,
+        user: req.session.user
       });
 
-
-    }catch(error){
-
+    } catch (error) {
       console.error(
-        "MSG91 OTP verify error:",
+        "MSG91 VERIFY OTP:",
         error
       );
 
-
-      res
-        .status(401)
-        .json({
-          error:
-            error.message ||
-            "OTP verification failed"
-        });
-
+      return res.status(400).json({
+        error:
+          error.message ||
+          "OTP verification failed"
+      });
     }
-
   }
 );
 
-
 /* =====================================================
-   STAFF PASSWORD LOGIN
+   STAFF LOGIN
 ===================================================== */
 
 app.post(
-  "/api/login",
-  async function(
-    req,
-    res
-  ){
+  "/api/staff/login",
+  async (req, res) => {
+    const phone = normalizePhone(
+      req.body.phone
+    );
 
-    const phone=
-      normalizeIndianPhone(
-        req.body.phone
-      );
-
-
-    const password=
+    const password =
       String(
-        req.body.password ||
-        ""
+        req.body.password || ""
       );
 
-
-    const user=
-      db.prepare(
-        "SELECT * FROM users WHERE phone=?"
-      )
-      .get(phone);
-
-
-    if(
-      !user ||
-      !user.password ||
-      !(
-        await bcrypt.compare(
-          password,
-          user.password
-        )
-      )
-    ){
-
-      return res
-        .status(401)
-        .json({
-          error:
-            "মোবাইল বা password ভুল"
-        });
-
+    if (
+      !phone ||
+      !password
+    ) {
+      return res.status(400).json({
+        error:
+          "Phone এবং password দিন"
+      });
     }
 
+    const user =
+      db
+        .prepare(
+          "SELECT * FROM users WHERE phone=?"
+        )
+        .get(phone);
 
-    req.session.user={
+    if (
+      !user ||
+      !user.password
+    ) {
+      return res.status(401).json({
+        error:
+          "Staff account পাওয়া যায়নি"
+      });
+    }
 
-      id:user.id,
+    if (
+      user.role !== "admin" &&
+      user.role !== "rider"
+    ) {
+      return res.status(403).json({
+        error:
+          "Customer-এর জন্য OTP Login ব্যবহার করুন"
+      });
+    }
 
-      name:user.name,
+    const valid =
+      await bcrypt.compare(
+        password,
+        user.password
+      );
 
-      phone:user.phone,
+    if (!valid) {
+      return res.status(401).json({
+        error:
+          "Wrong password"
+      });
+    }
 
-      role:user.role
-
+    req.session.user = {
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      role: user.role
     };
 
-
     res.json({
-
-      ok:true,
-
-      user:
-        req.session.user
-
+      ok: true,
+      user: req.session.user
     });
-
   }
 );
 
+/* =====================================================
+   ME
+===================================================== */
+
+app.get(
+  "/api/me",
+  (req, res) => {
+    res.json({
+      loggedIn:
+        Boolean(
+          req.session.user
+        ),
+      user:
+        req.session.user ||
+        null
+    });
+  }
+);
 
 /* =====================================================
    LOGOUT
@@ -1023,41 +719,16 @@ app.post(
 
 app.post(
   "/api/logout",
-  function(req,res){
-
+  (req, res) => {
     req.session.destroy(
-      function(){
-
+      () => {
         res.json({
-          ok:true
+          ok: true
         });
-
       }
     );
-
   }
 );
-
-
-/* =====================================================
-   CURRENT USER
-===================================================== */
-
-app.get(
-  "/api/me",
-  function(req,res){
-
-    res.json({
-
-      user:
-        req.session.user ||
-        null
-
-    });
-
-  }
-);
-
 
 /* =====================================================
    RESTAURANTS
@@ -1065,54 +736,59 @@ app.get(
 
 app.get(
   "/api/restaurants",
-  function(req,res){
-
-    const restaurants=
+  (req, res) => {
+    const restaurants =
       db.prepare(`
         SELECT
           id,
           name,
-          area
+          area,
+          phone
         FROM restaurants
         WHERE approved=1
-        ORDER BY name
-      `)
-      .all();
+        ORDER BY id DESC
+      `).all();
 
-
-    const menuStmt=
-      db.prepare(`
-        SELECT
-          id,
-          name,
-          price
-        FROM menu
-        WHERE restaurant_id=?
-          AND available=1
-        ORDER BY id
-      `);
-
-
-    for(
-      const restaurant
-      of restaurants
-    ){
-
-      restaurant.menu=
-        menuStmt.all(
-          restaurant.id
-        );
-
-    }
-
-
-    res.json(
-      restaurants
-    );
-
+    res.json(restaurants);
   }
 );
 
+/* =====================================================
+   RESTAURANT MENU
+===================================================== */
+
+app.get(
+  "/api/restaurants/:id/menu",
+  (req, res) => {
+    const restaurantId =
+      Number(req.params.id);
+
+    if (!restaurantId) {
+      return res.status(400).json({
+        error:
+          "Invalid restaurant"
+      });
+    }
+
+    const menu =
+      db.prepare(`
+        SELECT
+          id,
+          restaurant_id,
+          name,
+          price,
+          available
+        FROM menu
+        WHERE restaurant_id=?
+        AND available=1
+        ORDER BY id
+      `).all(
+        restaurantId
+      );
+
+    res.json(menu);
+  }
+);
 
 /* =====================================================
    CREATE ORDER
@@ -1120,279 +796,170 @@ app.get(
 
 app.post(
   "/api/orders",
-  auth,
-  function(
-    req,
-    res
-  ){
-
-    if(
-      req.session.user.role!=="customer"
-    ){
-
-      return res
-        .status(403)
-        .json({
-          error:
-            "Customer only"
-        });
-
-    }
-
-
-    const restaurantId=
+  requireLogin,
+  requireRole("customer"),
+  (req, res) => {
+    const restaurantId =
       Number(
-        req.body.restaurantId
+        req.body.restaurant_id
       );
 
-
-    const address=
+    const address =
       String(
-        req.body.address ||
-        ""
+        req.body.address || ""
       ).trim();
 
-
-    const items=
-      req.body.items;
-
-
-    if(
-      !restaurantId ||
-      !address ||
-      !Array.isArray(items) ||
-      !items.length
-    ){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "Order তথ্য অসম্পূর্ণ"
-        });
-
-    }
-
-
-    const ids=
-      items
-        .map(
-          item =>
-            Number(
-              item.menuId
-            )
-        )
-        .filter(Boolean);
-
-
-    if(!ids.length){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "Invalid menu"
-        });
-
-    }
-
-
-    const uniqueIds=
-      [
-        ...new Set(ids)
-      ];
-
-
-    const placeholders=
-      uniqueIds
-        .map(
-          () => "?"
-        )
-        .join(",");
-
-
-    const menus=
-      db.prepare(`
-        SELECT
-          id,
-          name,
-          price,
-          restaurant_id
-        FROM menu
-        WHERE id IN (${placeholders})
-          AND available=1
-      `)
-      .all(
-        ...uniqueIds
-      );
-
-
-    if(
-      menus.length !==
-      uniqueIds.length ||
-      menus.some(
-        m =>
-          Number(
-            m.restaurant_id
-          ) !== restaurantId
+    const items =
+      Array.isArray(
+        req.body.items
       )
-    ){
+        ? req.body.items
+        : [];
 
-      return res
-        .status(400)
-        .json({
-          error:
-            "Invalid menu"
-        });
-
+    if (!restaurantId) {
+      return res.status(400).json({
+        error:
+          "Restaurant নির্বাচন করুন"
+      });
     }
 
+    if (!address) {
+      return res.status(400).json({
+        error:
+          "Delivery address দিন"
+      });
+    }
 
-    let total=0;
+    if (!items.length) {
+      return res.status(400).json({
+        error:
+          "Cart empty"
+      });
+    }
 
-
-    const normalized=
-      items.map(
-        function(item){
-
-          const menu=
-            menus.find(
-              m =>
-                Number(m.id) ===
-                Number(item.menuId)
-            );
-
-
-          if(!menu){
-
-            throw new Error(
-              "Invalid menu"
-            );
-
-          }
-
-
-          const qty=
-            Math.max(
-              1,
-              Math.min(
-                20,
-                Number(
-                  item.qty
-                ) || 1
-              )
-            );
-
-
-          total +=
-            Number(menu.price) *
-            qty;
-
-
-          return {
-            ...menu,
-            qty
-          };
-
-        }
+    const restaurant =
+      db.prepare(`
+        SELECT *
+        FROM restaurants
+        WHERE id=?
+        AND approved=1
+      `).get(
+        restaurantId
       );
 
+    if (!restaurant) {
+      return res.status(404).json({
+        error:
+          "Restaurant পাওয়া যায়নি"
+      });
+    }
 
-    try{
+    let total = 0;
+    const finalItems = [];
 
-      const createOrder=
-        db.transaction(
-          function(){
+    for (const item of items) {
+      const menuId =
+        Number(item.menu_id);
 
-            const order=
-              db.prepare(`
-                INSERT INTO orders(
-                  customer_id,
-                  restaurant_id,
-                  total,
-                  address
-                )
-                VALUES(?,?,?,?)
-              `)
-              .run(
-                req.session.user.id,
-                restaurantId,
-                total,
-                address
-              );
-
-
-            const insertItem=
-              db.prepare(`
-                INSERT INTO order_items(
-                  order_id,
-                  menu_id,
-                  name,
-                  price,
-                  qty
-                )
-                VALUES(?,?,?,?,?)
-              `);
-
-
-            for(
-              const item
-              of normalized
-            ){
-
-              insertItem.run(
-                order.lastInsertRowid,
-                item.id,
-                item.name,
-                item.price,
-                item.qty
-              );
-
-            }
-
-
-            return Number(
-              order.lastInsertRowid
-            );
-
-          }
+      const qty =
+        Math.max(
+          1,
+          Number(item.qty) || 1
         );
 
+      const menu =
+        db.prepare(`
+          SELECT *
+          FROM menu
+          WHERE id=?
+          AND restaurant_id=?
+          AND available=1
+        `).get(
+          menuId,
+          restaurantId
+        );
 
-      const orderId=
-        createOrder();
-
-
-      res.json({
-
-        ok:true,
-
-        orderId,
-
-        total
-
-      });
-
-
-    }catch(error){
-
-      console.error(
-        error
-      );
-
-
-      res
-        .status(400)
-        .json({
+      if (!menu) {
+        return res.status(400).json({
           error:
-            "Order create করা যায়নি"
+            "Invalid menu item"
         });
+      }
 
+      total +=
+        Number(menu.price) *
+        qty;
+
+      finalItems.push({
+        menu_id: menu.id,
+        name: menu.name,
+        price: menu.price,
+        qty
+      });
     }
 
+    const transaction =
+      db.transaction(() => {
+
+        const order =
+          db.prepare(`
+            INSERT INTO orders
+            (
+              customer_id,
+              restaurant_id,
+              total,
+              address,
+              status
+            )
+            VALUES (?, ?, ?, ?, 'Pending')
+          `).run(
+            req.session.user.id,
+            restaurantId,
+            total,
+            address
+          );
+
+        const orderId =
+          order.lastInsertRowid;
+
+        const insertItem =
+          db.prepare(`
+            INSERT INTO order_items
+            (
+              order_id,
+              menu_id,
+              name,
+              price,
+              qty
+            )
+            VALUES (?, ?, ?, ?, ?)
+          `);
+
+        for (
+          const item of finalItems
+        ) {
+          insertItem.run(
+            orderId,
+            item.menu_id,
+            item.name,
+            item.price,
+            item.qty
+          );
+        }
+
+        return orderId;
+      });
+
+    const orderId =
+      transaction();
+
+    res.json({
+      ok: true,
+      orderId,
+      total
+    });
   }
 );
-
 
 /* =====================================================
    ORDERS
@@ -1400,117 +967,108 @@ app.post(
 
 app.get(
   "/api/orders",
-  auth,
-  function(
-    req,
-    res
-  ){
-
-    const user=
-      req.session.user;
-
+  requireLogin,
+  (req, res) => {
 
     let orders;
 
+    if (
+      req.session.user.role ===
+      "customer"
+    ) {
 
-    if(
-      user.role==="customer"
-    ){
-
-      orders=
+      orders =
         db.prepare(`
           SELECT
             o.*,
-            r.name AS restaurant
+            r.name AS restaurant,
+            u.name AS customer
           FROM orders o
           JOIN restaurants r
             ON r.id=o.restaurant_id
+          JOIN users u
+            ON u.id=o.customer_id
           WHERE o.customer_id=?
           ORDER BY o.id DESC
-        `)
-        .all(
-          user.id
+        `).all(
+          req.session.user.id
         );
 
+    } else {
 
-    }else if(
-      user.role==="admin"
-    ){
-
-      orders=
+      orders =
         db.prepare(`
           SELECT
             o.*,
             r.name AS restaurant,
             u.name AS customer,
-            u.phone
+            u.phone AS customer_phone
           FROM orders o
           JOIN restaurants r
             ON r.id=o.restaurant_id
           JOIN users u
             ON u.id=o.customer_id
           ORDER BY o.id DESC
-        `)
-        .all();
-
-
-    }else{
-
-      orders=
-        db.prepare(`
-          SELECT
-            o.*,
-            r.name AS restaurant
-          FROM orders o
-          JOIN restaurants r
-            ON r.id=o.restaurant_id
-          WHERE
-            o.delivery_id=?
-            OR
-            (
-              o.delivery_id IS NULL
-              AND o.status='Pending'
-            )
-          ORDER BY o.id DESC
-        `)
-        .all(
-          user.id
-        );
-
+        `).all();
     }
 
-
-    const itemStmt=
-      db.prepare(`
-        SELECT
-          name,
-          price,
-          qty
-        FROM order_items
-        WHERE order_id=?
-      `);
-
-
-    for(
-      const order
-      of orders
-    ){
-
-      order.items=
-        itemStmt.all(
-          order.id
-        );
-
-    }
-
-
-    res.json(
-      orders
-    );
-
+    res.json(orders);
   }
 );
 
+/* =====================================================
+   ORDER ITEMS
+===================================================== */
+
+app.get(
+  "/api/orders/:id/items",
+  requireLogin,
+  (req, res) => {
+
+    const orderId =
+      Number(req.params.id);
+
+    const order =
+      db.prepare(`
+        SELECT *
+        FROM orders
+        WHERE id=?
+      `).get(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        error:
+          "Order not found"
+      });
+    }
+
+    const isOwner =
+      order.customer_id ===
+      req.session.user.id;
+
+    const staff =
+      req.session.user.role ===
+        "admin" ||
+      req.session.user.role ===
+        "rider";
+
+    if (!isOwner && !staff) {
+      return res.status(403).json({
+        error:
+          "Access denied"
+      });
+    }
+
+    const items =
+      db.prepare(`
+        SELECT *
+        FROM order_items
+        WHERE order_id=?
+      `).all(orderId);
+
+    res.json(items);
+  }
+);
 
 /* =====================================================
    UPDATE ORDER STATUS
@@ -1518,153 +1076,79 @@ app.get(
 
 app.patch(
   "/api/orders/:id/status",
-  auth,
-  function(
-    req,
-    res
-  ){
+  requireLogin,
+  requireRole(
+    "admin",
+    "rider"
+  ),
+  (req, res) => {
 
-    const status=
+    const orderId =
+      Number(req.params.id);
+
+    const status =
       String(
-        req.body.status ||
-        ""
+        req.body.status || ""
       );
 
-
-    const allowed=[
-      "Accepted",
+    const allowed = [
+      "Pending",
       "Preparing",
       "Picked up",
       "Delivered",
       "Cancelled"
     ];
 
-
-    if(
-      !allowed.includes(
-        status
-      )
-    ){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "Invalid status"
-        });
-
-    }
-
-
-    const order=
-      db.prepare(
-        "SELECT * FROM orders WHERE id=?"
-      )
-      .get(
-        req.params.id
-      );
-
-
-    if(!order){
-
-      return res
-        .status(404)
-        .json({
-          error:
-            "Order not found"
-        });
-
-    }
-
-
-    const user=
-      req.session.user;
-
-
-    if(
-      user.role==="admin"
-    ){
-
-      db.prepare(
-        "UPDATE orders SET status=? WHERE id=?"
-      )
-      .run(
-        status,
-        order.id
-      );
-
-
-      return res.json({
-        ok:true
-      });
-
-    }
-
-
-    if(
-      user.role==="rider"
-    ){
-
-      if(
-        Number(order.delivery_id) !==
-        Number(user.id)
-      ){
-
-        return res
-          .status(403)
-          .json({
-            error:
-              "This order is not assigned to you"
-          });
-
-      }
-
-
-      if(
-        ![
-          "Picked up",
-          "Delivered"
-        ].includes(
-          status
-        )
-      ){
-
-        return res
-          .status(400)
-          .json({
-            error:
-              "Rider cannot set this status"
-          });
-
-      }
-
-
-      db.prepare(
-        "UPDATE orders SET status=? WHERE id=?"
-      )
-      .run(
-        status,
-        order.id
-      );
-
-
-      return res.json({
-        ok:true
-      });
-
-    }
-
-
-    res
-      .status(403)
-      .json({
+    if (!allowed.includes(status)) {
+      return res.status(400).json({
         error:
-          "Customer cannot change order status"
+          "Invalid status"
       });
+    }
 
+    const order =
+      db.prepare(`
+        SELECT *
+        FROM orders
+        WHERE id=?
+      `).get(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        error:
+          "Order not found"
+      });
+    }
+
+    if (
+      req.session.user.role ===
+      "rider"
+    ) {
+      if (
+        order.delivery_id !==
+        req.session.user.id
+      ) {
+        return res.status(403).json({
+          error:
+            "Order is not assigned to you"
+        });
+      }
+    }
+
+    db.prepare(`
+      UPDATE orders
+      SET status=?
+      WHERE id=?
+    `).run(
+      status,
+      orderId
+    );
+
+    res.json({
+      ok: true
+    });
   }
 );
-
 
 /* =====================================================
    RIDER CLAIM
@@ -1672,264 +1156,50 @@ app.patch(
 
 app.post(
   "/api/delivery/claim/:id",
-  auth,
-  role("rider"),
-  function(
-    req,
-    res
-  ){
+  requireLogin,
+  requireRole("rider"),
+  (req, res) => {
 
-    const order=
-      db.prepare(
-        "SELECT * FROM orders WHERE id=?"
-      )
-      .get(
-        req.params.id
-      );
+    const orderId =
+      Number(req.params.id);
 
-
-    if(!order){
-
-      return res
-        .status(404)
-        .json({
-          error:
-            "Order not found"
-        });
-
-    }
-
-
-    if(
-      order.delivery_id
-    ){
-
-      return res
-        .status(409)
-        .json({
-          error:
-            "এই order অন্য rider already গ্রহণ করেছে"
-        });
-
-    }
-
-
-    const result=
+    const order =
       db.prepare(`
-        UPDATE orders
-        SET
-          delivery_id=?,
-          status='Accepted'
-        WHERE
-          id=?
-          AND delivery_id IS NULL
-          AND status='Pending'
-      `)
-      .run(
-        req.session.user.id,
-        order.id
-      );
+        SELECT *
+        FROM orders
+        WHERE id=?
+      `).get(orderId);
 
-
-    if(!result.changes){
-
-      return res
-        .status(409)
-        .json({
-          error:
-            "Order আর available নেই"
-        });
-
+    if (!order) {
+      return res.status(404).json({
+        error:
+          "Order not found"
+      });
     }
 
+    if (order.delivery_id) {
+      return res.status(400).json({
+        error:
+          "Order already assigned"
+      });
+    }
+
+    db.prepare(`
+      UPDATE orders
+      SET
+        delivery_id=?,
+        status='Picked up'
+      WHERE id=?
+    `).run(
+      req.session.user.id,
+      orderId
+    );
 
     res.json({
-      ok:true
+      ok: true
     });
-
   }
 );
-
-
-/* =====================================================
-   ADMIN ADD RESTAURANT
-===================================================== */
-
-app.post(
-  "/api/restaurants",
-  auth,
-  role("admin"),
-  function(
-    req,
-    res
-  ){
-
-    const name=
-      String(
-        req.body.name ||
-        ""
-      ).trim();
-
-
-    const area=
-      String(
-        req.body.area ||
-        ""
-      ).trim();
-
-
-    const phone=
-      String(
-        req.body.phone ||
-        ""
-      ).trim();
-
-
-    if(
-      !name ||
-      !area
-    ){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "Restaurant name এবং area দিন"
-        });
-
-    }
-
-
-    const result=
-      db.prepare(`
-        INSERT INTO restaurants(
-          name,
-          area,
-          phone,
-          approved
-        )
-        VALUES(?,?,?,1)
-      `)
-      .run(
-        name,
-        area,
-        phone
-      );
-
-
-    res.json({
-
-      ok:true,
-
-      id:
-        result.lastInsertRowid
-
-    });
-
-  }
-);
-
-
-/* =====================================================
-   ADMIN ADD MENU
-===================================================== */
-
-app.post(
-  "/api/menu",
-  auth,
-  role("admin"),
-  function(
-    req,
-    res
-  ){
-
-    const restaurantId=
-      Number(
-        req.body.restaurantId
-      );
-
-
-    const name=
-      String(
-        req.body.name ||
-        ""
-      ).trim();
-
-
-    const price=
-      Number(
-        req.body.price
-      );
-
-
-    if(
-      !restaurantId ||
-      !name ||
-      !Number.isFinite(
-        price
-      ) ||
-      price<=0
-    ){
-
-      return res
-        .status(400)
-        .json({
-          error:
-            "Menu তথ্য সঠিক নয়"
-        });
-
-    }
-
-
-    const restaurant=
-      db.prepare(
-        "SELECT id FROM restaurants WHERE id=?"
-      )
-      .get(
-        restaurantId
-      );
-
-
-    if(!restaurant){
-
-      return res
-        .status(404)
-        .json({
-          error:
-            "Restaurant not found"
-        });
-
-    }
-
-
-    const result=
-      db.prepare(`
-        INSERT INTO menu(
-          restaurant_id,
-          name,
-          price
-        )
-        VALUES(?,?,?)
-      `)
-      .run(
-        restaurantId,
-        name,
-        price
-      );
-
-
-    res.json({
-
-      ok:true,
-
-      id:
-        result.lastInsertRowid
-
-    });
-
-  }
-);
-
 
 /* =====================================================
    ADMIN STATS
@@ -1937,133 +1207,94 @@ app.post(
 
 app.get(
   "/api/admin/stats",
-  auth,
-  role("admin"),
-  function(
-    req,
-    res
-  ){
+  requireLogin,
+  requireRole("admin"),
+  (req, res) => {
+
+    const restaurants =
+      db.prepare(`
+        SELECT COUNT(*) AS c
+        FROM restaurants
+      `).get().c;
+
+    const customers =
+      db.prepare(`
+        SELECT COUNT(*) AS c
+        FROM users
+        WHERE role='customer'
+      `).get().c;
+
+    const riders =
+      db.prepare(`
+        SELECT COUNT(*) AS c
+        FROM users
+        WHERE role='rider'
+      `).get().c;
+
+    const orders =
+      db.prepare(`
+        SELECT COUNT(*) AS c
+        FROM orders
+      `).get().c;
+
+    const revenue =
+      db.prepare(`
+        SELECT COALESCE(
+          SUM(total),
+          0
+        ) AS total
+        FROM orders
+        WHERE status != 'Cancelled'
+      `).get().total;
 
     res.json({
-
-      restaurants:
-        db.prepare(
-          "SELECT COUNT(*) c FROM restaurants"
-        )
-        .get().c,
-
-
-      customers:
-        db.prepare(
-          "SELECT COUNT(*) c FROM users WHERE role='customer'"
-        )
-        .get().c,
-
-
-      riders:
-        db.prepare(
-          "SELECT COUNT(*) c FROM users WHERE role='rider'"
-        )
-        .get().c,
-
-
-      orders:
-        db.prepare(
-          "SELECT COUNT(*) c FROM orders"
-        )
-        .get().c,
-
-
-      revenue:
-        db.prepare(`
-          SELECT
-            COALESCE(
-              SUM(total),
-              0
-            ) s
-          FROM orders
-          WHERE status!='Cancelled'
-        `)
-        .get().s
-
+      restaurants,
+      customers,
+      riders,
+      orders,
+      revenue
     });
-
   }
 );
 
-
 /* =====================================================
-   HEALTH CHECK
+   HEALTH
 ===================================================== */
 
 app.get(
   "/api/health",
-  function(
-    req,
-    res
-  ){
-
+  (req, res) => {
     res.json({
-
-      ok:true,
-
+      ok: true,
       service:
-        "haroa-eats",
-
-      otpConfigured:
+        "Haroa Eats",
+      otp:
         Boolean(
-          MSG91_WIDGET_ID &&
-          MSG91_WIDGET_TOKEN &&
-          MSG91_AUTHKEY
+          MSG91_AUTHKEY &&
+          MSG91_TEMPLATE_ID
         )
-
     });
-
   }
 );
 
-
 /* =====================================================
-   START SERVER
+   START
 ===================================================== */
-
-const PORT=
-  process.env.PORT ||
-  3000;
-
 
 app.listen(
   PORT,
-  function(){
-
+  "0.0.0.0",
+  () => {
     console.log(
-      "Haroa Eats running on port "+
-      PORT
+      `Haroa Eats running on port ${PORT}`
     );
 
-
     console.log(
-      "MSG91 widget:",
-      MSG91_WIDGET_ID
-        ? "configured"
-        : "MISSING"
+      "MSG91 OTP enabled:",
+      Boolean(
+        MSG91_AUTHKEY &&
+        MSG91_TEMPLATE_ID
+      )
     );
-
-
-    console.log(
-      "MSG91 widget token:",
-      MSG91_WIDGET_TOKEN
-        ? "configured"
-        : "MISSING"
-    );
-
-
-    console.log(
-      "MSG91 authkey:",
-      MSG91_AUTHKEY
-        ? "configured"
-        : "MISSING"
-    );
-
   }
 );
