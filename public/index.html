@@ -1,23 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Haroa Eats</title>
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>Haroa Eats — Local Food Delivery</title>
 
 <style>
 
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
+}
+
+:root{
+  --red:#e23744;
+  --dark:#181818;
+  --muted:#777;
+  --green:#16834b;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#f7f7f7;
-  color:#222;
+  margin:0;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  background:#f7f7f8;
+  color:#191919;
 }
 
 button,
@@ -28,575 +40,1023 @@ textarea{
 
 button{
   cursor:pointer;
+  border:0;
 }
+
+.container{
+  width:min(1180px,92%);
+  margin:auto;
+}
+
+
+/* HEADER */
 
 header{
+  background:
+    linear-gradient(
+      135deg,
+      #d91624,
+      #ef3340
+    );
+
+  color:#fff;
+
   position:sticky;
   top:0;
-  z-index:1000;
-  background:#e23744;
-  color:white;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
+
+  z-index:50;
+
+  box-shadow:
+    0 3px 15px #0002;
 }
 
-.headerInner{
-  max-width:1150px;
-  margin:auto;
-  padding:12px 18px;
+.navbar{
+  min-height:78px;
+
   display:flex;
   align-items:center;
-  gap:18px;
+  justify-content:space-between;
+
+  gap:20px;
 }
 
 .logo{
-  flex:1;
-  font-size:26px;
+  display:flex;
+  align-items:center;
+
+  gap:10px;
+
+  font-size:25px;
   font-weight:800;
+
+  white-space:nowrap;
+}
+
+.logoIcon{
+  font-size:30px;
 }
 
 .logo small{
   display:block;
   font-size:11px;
-  font-weight:normal;
-  opacity:.85;
+  font-weight:400;
+  opacity:.9;
 }
 
-.nav{
+.navLinks{
   display:flex;
-  gap:8px;
+  gap:6px;
   align-items:center;
 }
 
-.nav button{
+.navLinks button{
+  color:#fff;
   background:transparent;
-  color:white;
-  border:0;
-  padding:10px 12px;
-  border-radius:8px;
-}
 
-.nav button:hover{
-  background:rgba(255,255,255,.15);
-}
+  padding:11px 14px;
 
-.iconBtn{
-  background:white;
-  color:#222;
-  border:0;
   border-radius:9px;
-  padding:10px 13px;
-  min-width:48px;
+
+  font-weight:700;
 }
 
-.menuBtn{
-  display:none;
-  background:white;
-  color:#222;
-  border:0;
-  border-radius:8px;
-  padding:10px 13px;
-  font-size:20px;
+.navLinks button:hover{
+  background:#fff2;
 }
+
+.navRight{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.locationBtn{
+  background:#fff1;
+  border:1px solid #fff8;
+
+  color:#fff;
+
+  padding:11px 16px;
+
+  border-radius:10px;
+}
+
+.cartBtn{
+  background:#fff;
+  color:var(--red);
+
+  padding:11px 15px;
+
+  border-radius:10px;
+
+  font-weight:800;
+}
+
+.userBtn{
+  background:#ffca28;
+  color:#222;
+
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  font-weight:800;
+}
+
+
+/* HAMBURGER */
+
+.hamburgerBtn{
+  position:absolute;
+
+  top:20px;
+  left:20px;
+
+  z-index:1000;
+
+  width:48px;
+  height:48px;
+
+  border-radius:10px;
+
+  background:#fff;
+  color:#333;
+
+  font-size:25px;
+
+  box-shadow:
+    0 4px 15px #0003;
+}
+
+
+/* SIDE MENU */
 
 .sideMenu{
   position:fixed;
-  left:-280px;
+
   top:0;
-  bottom:0;
-  width:280px;
+  left:-320px;
+
+  width:300px;
+  height:100vh;
+
+  background:#fff;
+
   z-index:2000;
-  background:white;
-  box-shadow:4px 0 15px rgba(0,0,0,.2);
-  padding:25px;
-  transition:.25s;
+
+  box-shadow:
+    5px 0 25px #0003;
+
+  transition:left .3s ease;
+
+  padding-top:20px;
 }
 
 .sideMenu.active{
   left:0;
 }
 
-.sideMenu h2{
-  margin-bottom:20px;
-}
+.sideMenuHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 
-.sideMenu button{
-  width:100%;
-  text-align:left;
-  padding:14px;
-  margin:5px 0;
-  border:0;
-  background:#f5f5f5;
-  border-radius:8px;
-}
-
-.overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:1900;
-  background:rgba(0,0,0,.4);
-}
-
-.overlay.active{
-  display:block;
-}
-
-main{
-  max-width:1150px;
-  margin:auto;
   padding:20px;
+
+  border-bottom:1px solid #eee;
 }
+
+.sideMenuHeader span{
+  font-size:22px;
+  font-weight:800;
+  color:var(--red);
+}
+
+.sideMenuHeader button{
+  background:transparent;
+  font-size:22px;
+}
+
+.menuItem{
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+
+  padding:18px 22px;
+
+  font-size:18px;
+  font-weight:600;
+
+  border-bottom:1px solid #f1f1f1;
+}
+
+.menuItem span:nth-child(2){
+  flex:1;
+}
+
+.menuItem:hover{
+  background:#fff3f3;
+  color:var(--red);
+}
+
+
+/* HERO */
+
+.hero{
+  background:
+    radial-gradient(
+      circle at 90% 20%,
+      #ffddd7 0,
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #fff,
+      #fff7f5
+    );
+
+  overflow:hidden;
+}
+
+.heroInner{
+  min-height:460px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.heroText{
+  width:100%;
+  max-width:850px;
+
+  text-align:center;
+
+  margin:auto;
+
+  padding:55px 0 45px;
+}
+
+.heroText h1{
+  font-size:52px;
+  line-height:1.08;
+
+  margin:15px 0;
+}
+
+.heroText h1 span{
+  color:var(--red);
+}
+
+.heroText p{
+  color:#666;
+
+  font-size:19px;
+
+  line-height:1.6;
+
+  max-width:650px;
+
+  margin:0 auto 25px;
+}
+
+
+/* SEARCH */
 
 .searchBox{
   display:flex;
-  gap:10px;
-  margin:10px auto 25px;
-  max-width:800px;
+
+  background:#fff;
+
+  border-radius:14px;
+
+  padding:7px;
+
+  box-shadow:
+    0 7px 30px #0001;
+
+  margin:0 auto;
+
+  max-width:700px;
 }
 
 .searchBox input{
   flex:1;
-  padding:15px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  background:white;
+
+  border:0;
+  outline:0;
+
+  padding:14px;
+
+  min-width:0;
 }
 
 .searchBox button{
-  padding:0 22px;
-  border:0;
+  background:var(--red);
+  color:#fff;
+
+  padding:13px 25px;
+
   border-radius:10px;
-  background:#e23744;
-  color:white;
+
+  font-weight:800;
 }
 
-.hero{
-  background:
-    linear-gradient(
-      120deg,
-      #fff1f2,
-      #ffe1e5
-    );
-  border-radius:18px;
-  padding:55px 35px;
-  margin-bottom:30px;
+
+/* SECTIONS */
+
+section{
+  padding:55px 0;
 }
 
-.hero h1{
-  font-size:38px;
-  margin-bottom:12px;
+.sectionHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:22px;
 }
 
-.hero p{
-  color:#555;
-  font-size:18px;
+.sectionHead h2{
+  margin:0;
+  font-size:30px;
 }
 
-.sectionTitle{
-  margin:25px 0 15px;
+.viewAll{
+  color:var(--red);
+  background:none;
+  font-weight:800;
 }
+
+
+/* RESTAURANTS */
 
 .restaurantGrid{
   display:grid;
+
   grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(240px,1fr)
-    );
-  gap:18px;
+    repeat(4,1fr);
+
+  gap:20px;
 }
 
 .restaurantCard{
-  background:white;
-  border-radius:15px;
-  padding:20px;
+  background:#fff;
+
+  border-radius:17px;
+
+  overflow:hidden;
+
   box-shadow:
-    0 3px 14px
-    rgba(0,0,0,.08);
+    0 4px 18px #0000000d;
+
+  transition:.2s;
 }
 
-.restaurantCard h3{
-  margin-bottom:8px;
+.restaurantCard:hover{
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 10px 28px #0002;
 }
 
-.restaurantCard p{
-  color:#666;
-  margin-bottom:15px;
-}
-
-.primary{
+.restaurantImg{
+  height:170px;
   width:100%;
-  border:0;
-  background:#e23744;
-  color:white;
-  padding:12px;
-  border-radius:8px;
+
+  object-fit:cover;
+
+  display:block;
 }
 
-.secondary{
-  border:0;
-  background:#eee;
-  padding:10px 14px;
-  border-radius:8px;
+.restaurantBody{
+  padding:16px;
 }
+
+.restaurantBody h3{
+  margin:0 0 7px;
+  font-size:20px;
+}
+
+.area{
+  color:#777;
+  font-size:14px;
+}
+
+.ratingRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-top:14px;
+}
+
+.rating{
+  font-weight:700;
+}
+
+.rating span{
+  color:#f6aa00;
+}
+
+.time{
+  background:#e9f8ef;
+
+  color:#147a43;
+
+  padding:6px 9px;
+
+  border-radius:8px;
+
+  font-size:12px;
+
+  font-weight:700;
+}
+
+.menuBtn{
+  width:100%;
+
+  margin-top:14px;
+
+  background:var(--red);
+  color:#fff;
+
+  padding:11px;
+
+  border-radius:9px;
+
+  font-weight:800;
+}
+
+
+/* MENU */
+
+.menuGrid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:18px;
+}
+
+.menuCard{
+  background:#fff;
+
+  padding:18px;
+
+  border-radius:15px;
+
+  box-shadow:
+    0 3px 15px #0001;
+}
+
+.menuTop{
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+}
+
+.menuTop h3{
+  margin:0;
+}
+
+.price{
+  color:var(--red);
+  font-weight:800;
+}
+
+.addBtn{
+  background:#fff0f1;
+
+  color:var(--red);
+
+  padding:9px 14px;
+
+  border-radius:8px;
+
+  font-weight:800;
+}
+
+
+/* DASHBOARD */
 
 .dashboard{
   display:none;
+  padding:40px 0;
 }
 
 .dashboard.active{
   display:block;
 }
 
-.card{
-  background:white;
-  border-radius:15px;
-  padding:20px;
-  margin:15px 0;
-  box-shadow:
-    0 3px 14px
-    rgba(0,0,0,.07);
-}
-
-.menuGrid{
-  display:grid;
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(210px,1fr)
-    );
-  gap:15px;
-}
-
-.menuCard{
-  border:1px solid #eee;
-  padding:15px;
-  border-radius:12px;
-}
-
-.menuCard h4{
-  margin-bottom:8px;
-}
-
-.menuCard .price{
-  font-weight:bold;
-  color:#e23744;
-  margin-bottom:10px;
-}
-
-.qtyRow{
+.dashboardTitle{
   display:flex;
-  gap:8px;
-  align-items:center;
-}
 
-.qtyRow button{
-  width:32px;
-  height:32px;
-  border:0;
-  border-radius:6px;
-}
-
-.cartBox{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  width:320px;
-  max-width:
-    calc(100vw - 40px);
-  background:white;
-  z-index:900;
-  border-radius:15px;
-  padding:18px;
-  box-shadow:
-    0 5px 25px
-    rgba(0,0,0,.25);
-  display:none;
-}
-
-.cartBox.active{
-  display:block;
-}
-
-.cartItem{
-  display:flex;
   justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px solid #eee;
+
+  align-items:center;
+
+  margin-bottom:25px;
 }
 
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:3000;
-  background:
-    rgba(0,0,0,.55);
-  overflow:auto;
-  padding:30px 15px;
+.dashboardTitle h1{
+  margin:0;
 }
 
-.modal.active{
-  display:block;
-}
-
-.modalBox{
-  background:white;
-  max-width:700px;
-  margin:30px auto;
-  border-radius:18px;
-  padding:28px;
-  position:relative;
-}
-
-.closeBtn{
-  position:absolute;
-  right:20px;
-  top:18px;
-  border:0;
-  background:#222;
-  color:white;
-  border-radius:7px;
-  padding:8px 12px;
-}
-
-.tabs{
+.statsGrid{
   display:grid;
+
   grid-template-columns:
-    1fr 1fr;
-  gap:10px;
-  margin:20px 0;
+    repeat(4,1fr);
+
+  gap:17px;
+
+  margin-bottom:25px;
 }
 
-.tab{
-  padding:13px;
-  border:0;
-  border-radius:8px;
-  background:#eee;
+.statCard{
+  background:#fff;
+
+  padding:22px;
+
+  border-radius:15px;
+
+  box-shadow:
+    0 3px 15px #0001;
 }
 
-.tab.active{
-  background:#e23744;
-  color:white;
+.statCard small{
+  color:#777;
 }
 
-.formGroup{
-  margin:15px 0;
-}
-
-.formGroup label{
-  display:block;
-  margin-bottom:7px;
-  font-weight:bold;
-}
-
-.formGroup input,
-.formGroup textarea{
-  width:100%;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:8px;
-}
-
-.otpArea{
-  display:none;
-}
-
-.otpArea.active{
-  display:block;
-}
-
-.message{
-  margin-top:12px;
-  padding:10px;
-  border-radius:8px;
-  display:none;
-}
-
-.message.show{
-  display:block;
-}
-
-.message.error{
-  background:#ffe6e6;
-  color:#a40000;
-}
-
-.message.success{
-  background:#e4f8e8;
-  color:#126622;
-}
-
-.staffBox{
-  display:none;
-}
-
-.staffBox.active{
-  display:block;
+.statCard h2{
+  margin:8px 0 0;
+  font-size:30px;
 }
 
 .orderCard{
-  background:white;
-  border-radius:12px;
-  padding:18px;
-  margin:12px 0;
+  background:#fff;
+
+  padding:20px;
+
+  border-radius:15px;
+
+  margin-bottom:14px;
+
   box-shadow:
-    0 2px 10px
-    rgba(0,0,0,.07);
+    0 3px 14px #0001;
 }
 
 .orderHeader{
   display:flex;
+
   justify-content:space-between;
+
   gap:10px;
 }
 
 .status{
-  display:inline-block;
-  padding:5px 9px;
+  padding:6px 10px;
+
   border-radius:20px;
-  background:#eee;
-  font-size:13px;
+
+  background:#fff0f1;
+
+  color:var(--red);
+
+  font-size:12px;
+
+  font-weight:800;
 }
 
 .actionBtn{
-  border:0;
-  background:#e23744;
-  color:white;
-  padding:9px 12px;
-  border-radius:7px;
-  margin:5px 3px 0 0;
+  background:var(--red);
+  color:#fff;
+
+  padding:9px 13px;
+
+  border-radius:8px;
+
+  font-weight:700;
+
+  margin:4px;
 }
 
 .actionBtn.green{
-  background:#16a05d;
+  background:var(--green);
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(150px,1fr)
+
+/* RIDER */
+
+.riderHero{
+  background:
+    linear-gradient(
+      135deg,
+      #1c1c1c,
+      #343434
     );
-  gap:15px;
+
+  color:#fff;
+
+  border-radius:18px;
+
+  padding:25px;
+
+  margin-bottom:22px;
 }
 
-.stat{
-  background:white;
+.riderHero h1{
+  margin:0 0 7px;
+}
+
+.riderHero p{
+  margin:0;
+  color:#ccc;
+}
+
+.deliveryGrid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:18px;
+}
+
+.deliveryCard{
+  background:#fff;
+
+  border-radius:16px;
+
   padding:20px;
-  border-radius:12px;
-  text-align:center;
+
+  box-shadow:
+    0 3px 15px #0001;
 }
 
-.stat strong{
-  display:block;
-  font-size:28px;
-  color:#e23744;
-  margin-top:5px;
+.deliveryCard h3{
+  margin-top:0;
 }
+
+.deliveryInfo{
+  padding:10px 0;
+
+  border-bottom:1px solid #eee;
+}
+
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+
+  inset:0;
+
+  background:#0009;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  z-index:100;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+  width:min(700px,94%);
+
+  max-height:92vh;
+
+  overflow:auto;
+
+  background:#fff;
+
+  border-radius:22px;
+
+  padding:25px;
+}
+
+.sheetInner{
+  max-width:650px;
+  margin:auto;
+}
+
+.closeBtn{
+  float:right;
+
+  background:#222;
+  color:#fff;
+
+  padding:9px 13px;
+
+  border-radius:8px;
+}
+
+.formInput{
+  width:100%;
+
+  border:1px solid #ddd;
+
+  padding:13px;
+
+  border-radius:9px;
+
+  margin:6px 0 13px;
+
+  outline:none;
+}
+
+.formInput:focus{
+  border-color:var(--red);
+}
+
+.primary{
+  width:100%;
+
+  background:var(--red);
+  color:#fff;
+
+  padding:13px;
+
+  border-radius:9px;
+
+  font-weight:800;
+}
+
+.secondary{
+  background:#eee;
+  color:#222;
+
+  padding:11px 15px;
+
+  border-radius:9px;
+
+  font-weight:700;
+}
+
+.notice{
+  padding:13px;
+
+  background:#fff8d7;
+
+  border-radius:9px;
+
+  margin-top:12px;
+}
+
+
+/* OTP */
+
+.otpTitle{
+  text-align:center;
+
+  margin-bottom:8px;
+}
+
+.otpSubtitle{
+  text-align:center;
+
+  color:#777;
+
+  margin-bottom:22px;
+}
+
+.otpMode{
+  display:flex;
+
+  gap:8px;
+
+  margin-bottom:18px;
+}
+
+.otpMode button{
+  flex:1;
+
+  padding:13px;
+
+  border-radius:9px;
+
+  background:#eee;
+
+  font-weight:800;
+}
+
+.otpMode button.active{
+  background:var(--red);
+  color:#fff;
+}
+
+.otpSection{
+  display:none;
+}
+
+.otpSection.active{
+  display:block;
+}
+
+.otpStatus{
+  text-align:center;
+
+  margin:12px 0;
+
+  min-height:22px;
+}
+
+.otpVerifyBox{
+  display:none;
+
+  margin-top:8px;
+}
+
+.otpVerifyBox.show{
+  display:block;
+}
+
+
+/* CART */
+
+.cartItem{
+  display:flex;
+
+  justify-content:space-between;
+
+  padding:14px 0;
+
+  border-bottom:1px solid #eee;
+}
+
+.cartTotal{
+  display:flex;
+
+  justify-content:space-between;
+
+  font-size:21px;
+
+  font-weight:800;
+
+  margin:18px 0;
+}
+
+
+/* FOOTER */
 
 footer{
-  margin-top:50px;
-  background:#222;
-  color:white;
-  text-align:center;
-  padding:35px;
+  background:#171717;
+
+  color:#fff;
+
+  padding:45px 0 25px;
+
+  margin-top:40px;
 }
 
-@media(max-width:800px){
+.footerGrid{
+  display:grid;
 
-  .menuBtn{
-    display:block;
-  }
+  grid-template-columns:
+    2fr 1fr 1fr;
 
-  .nav{
+  gap:30px;
+}
+
+footer h3{
+  margin-top:0;
+}
+
+footer p,
+footer li{
+  color:#bbb;
+  line-height:1.7;
+}
+
+footer ul{
+  padding:0;
+  list-style:none;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:950px){
+
+  .navLinks{
     display:none;
   }
 
+  .restaurantGrid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .statsGrid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .deliveryGrid{
+    grid-template-columns:
+      1fr 1fr;
+  }
+}
+
+
+@media(max-width:600px){
+
+  .navbar{
+    min-height:68px;
+  }
+
   .logo{
-    text-align:center;
+    font-size:20px;
   }
 
-  .headerInner{
-    gap:10px;
+  .locationBtn{
+    display:none;
   }
 
-  .hero{
-    padding:35px 22px;
+  .heroText{
+    padding:65px 0 40px;
   }
 
-  .hero h1{
-    font-size:30px;
+  .heroText h1{
+    font-size:39px;
   }
 
+  .heroText p{
+    font-size:16px;
+  }
+
+  .searchBox{
+    width:100%;
+  }
+
+  .searchBox button{
+    padding:12px 16px;
+  }
+
+  .restaurantGrid,
+  .menuGrid,
+  .deliveryGrid,
+  .statsGrid{
+    grid-template-columns:1fr;
+  }
+
+  .heroInner{
+    min-height:390px;
+  }
+
+  section{
+    padding:35px 0;
+  }
+
+  .footerGrid{
+    grid-template-columns:1fr;
+  }
 }
 
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =================================================
-     SIDE MENU
-================================================= -->
 
-<div
-  id="overlay"
-  class="overlay"
-  onclick="closeSideMenu()">
-</div>
-
-<aside
-  id="sideMenu"
-  class="sideMenu">
-
-  <h2>Haroa Eats</h2>
-
-  <button onclick="showCategory('Food')">
-    🍛 Food
-  </button>
-
-  <button onclick="showCategory('Grocery')">
-    🛒 Grocery
-  </button>
-
-  <button onclick="showCategory('Beverages')">
-    🥤 Beverages
-  </button>
-
-  <button onclick="showCategory('Drinks')">
-    🍹 Drinks
-  </button>
-
-  <button onclick="closeSideMenu()">
-    ✕ Close
-  </button>
-
-</aside>
-
-<!-- =================================================
-     HEADER
-================================================= -->
+<!-- HEADER -->
 
 <header>
 
-  <div class="headerInner">
-
-    <button
-      class="menuBtn"
-      onclick="toggleSideMenu()">
-      ☰
-    </button>
+  <div class="container navbar">
 
     <div class="logo">
-      🍴 Haroa Eats
-      <small>
-        Haroa-এর local food delivery
-      </small>
+
+      <div class="logoIcon">
+        🍴
+      </div>
+
+      <div>
+        Haroa Eats
+
+        <small>
+          Haroa-এর local food delivery
+        </small>
+      </div>
+
     </div>
 
-    <nav class="nav">
+
+    <div class="navLinks">
 
       <button onclick="showHome()">
         Home
@@ -606,7 +1066,7 @@ footer{
         Restaurants
       </button>
 
-      <button onclick="showMyOrders()">
+      <button onclick="showCustomerOrders()">
         My Orders
       </button>
 
@@ -618,442 +1078,732 @@ footer{
         Admin
       </button>
 
-    </nav>
+    </div>
 
-    <button
-      class="iconBtn"
-      onclick="openLogin()">
-      👤
-    </button>
 
-    <button
-      class="iconBtn"
-      onclick="toggleCart()">
-      🛒
-      <span id="cartCount">
-        0
-      </span>
-    </button>
+    <div class="navRight">
+
+      <button class="locationBtn">
+        📍 Haroa
+      </button>
+
+      <button
+        class="cartBtn"
+        onclick="openCart()"
+      >
+        🛒
+        <span id="cartCount">
+          0
+        </span>
+      </button>
+
+      <button
+        class="userBtn"
+        onclick="openLogin()"
+        id="userBtn"
+      >
+        J
+      </button>
+
+    </div>
 
   </div>
 
 </header>
 
-<!-- =================================================
-     MAIN
-================================================= -->
 
-<main>
+<!-- HOME -->
 
-<section
-  id="homePage">
-
-  <div class="searchBox">
-
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="Restaurant search করুন...">
-
-    <button
-      onclick="renderRestaurants()">
-      Search
-    </button>
-
-  </div>
+<div id="homePage">
 
   <div class="hero">
 
-    <h1>
-      আপনার পছন্দের খাবার
-      Haroa Eats-এ
-    </h1>
-
-    <p>
-      কাছের restaurant থেকে
-      সহজে খাবার অর্ডার করুন।
-    </p>
-
-  </div>
-
-  <h2 class="sectionTitle">
-    Restaurants
-  </h2>
-
-  <div
-    id="restaurantMessage">
-    Restaurant loading হচ্ছে...
-  </div>
-
-  <div
-    id="restaurantGrid"
-    class="restaurantGrid">
-  </div>
-
-</section>
-
-<!-- =================================================
-     CUSTOMER DASHBOARD
-================================================= -->
-
-<section
-  id="customerDashboard"
-  class="dashboard">
-
-  <div class="card">
-
-    <h2>
-      Customer Dashboard
-    </h2>
-
-    <p id="customerWelcome"></p>
 
     <button
-      class="actionBtn"
-      onclick="logoutUser()">
-      Logout
+      class="hamburgerBtn"
+      onclick="toggleSideMenu()"
+    >
+      ☰
     </button>
 
-  </div>
 
-  <div class="card">
+    <div
+      id="sideMenu"
+      class="sideMenu"
+    >
 
-    <h2>
-      My Orders
-    </h2>
+      <div class="sideMenuHeader">
 
-    <div id="customerOrders">
+        <span>
+          Haroa Eats
+        </span>
+
+        <button
+          onclick="toggleSideMenu()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <div
+        class="menuItem"
+        onclick="showCategory('Food')"
+      >
+        🍔
+        <span>Food</span>
+        <span>➡️</span>
+      </div>
+
+
+      <div
+        class="menuItem"
+        onclick="showCategory('Grocery')"
+      >
+        🛒
+        <span>Grocery</span>
+        <span>➡️</span>
+      </div>
+
+
+      <div
+        class="menuItem"
+        onclick="showCategory('Beverages')"
+      >
+        🥤
+        <span>Beverages</span>
+        <span>➡️</span>
+      </div>
+
+
+      <div
+        class="menuItem"
+        onclick="showCategory('Drinks')"
+      >
+        🍹
+        <span>Drinks</span>
+        <span>➡️</span>
+      </div>
+
     </div>
 
-  </div>
 
-</section>
+    <div class="container heroInner">
 
-<!-- =================================================
-     RIDER DASHBOARD
-================================================= -->
+      <div class="heroText">
 
-<section
-  id="riderDashboard"
-  class="dashboard">
 
-  <div class="card">
+        <div class="searchBox">
 
-    <h2>
-      Rider Dashboard
-    </h2>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Restaurant বা খাবার খুঁজুন..."
+            oninput="renderRestaurants()"
+          >
 
-    <p id="riderWelcome"></p>
+          <button
+            onclick="renderRestaurants()"
+          >
+            খুঁজুন
+          </button>
 
-    <div class="stats">
+        </div>
 
-      <div class="stat">
-        Available
-        <strong id="availableCount">
-          0
-        </strong>
-      </div>
 
-      <div class="stat">
-        My Deliveries
-        <strong id="myDeliveryCount">
-          0
-        </strong>
-      </div>
+        <h1>
+          খাবার
+          <span>
+            ঘরে বসেই
+          </span>
+        </h1>
 
-      <div class="stat">
-        Completed
-        <strong id="completedCount">
-          0
-        </strong>
-      </div>
 
-    </div>
+        <p>
+          Haroa-এর সেরা restaurant থেকে
+          আপনার পছন্দের খাবার দ্রুত
+          বাড়ি পৌঁছে যাবে 😍
+        </p>
 
-  </div>
-
-  <div class="card">
-
-    <h2>
-      Delivery Orders
-    </h2>
-
-    <div id="riderOrders">
-    </div>
-
-  </div>
-
-</section>
-
-<!-- =================================================
-     ADMIN DASHBOARD
-================================================= -->
-
-<section
-  id="adminDashboard"
-  class="dashboard">
-
-  <div class="card">
-
-    <h2>
-      Admin Dashboard
-    </h2>
-
-    <div class="stats">
-
-      <div class="stat">
-        Restaurants
-        <strong id="statRestaurants">
-          0
-        </strong>
-      </div>
-
-      <div class="stat">
-        Customers
-        <strong id="statCustomers">
-          0
-        </strong>
-      </div>
-
-      <div class="stat">
-        Riders
-        <strong id="statRiders">
-          0
-        </strong>
-      </div>
-
-      <div class="stat">
-        Orders
-        <strong id="statOrders">
-          0
-        </strong>
-      </div>
-
-      <div class="stat">
-        Revenue
-        <strong>
-          ₹<span id="statRevenue">0</span>
-        </strong>
       </div>
 
     </div>
 
   </div>
 
-  <div class="card">
 
-    <h2>
-      All Orders
-    </h2>
+  <section>
 
-    <div id="adminOrders">
+    <div class="container">
+
+      <div class="sectionHead">
+
+        <h2>
+          Popular Restaurants
+        </h2>
+
+        <button
+          class="viewAll"
+          onclick="showRestaurants()"
+        >
+          View all →
+        </button>
+
+      </div>
+
+
+      <div
+        id="restaurantGrid"
+        class="restaurantGrid"
+      >
+        <p>
+          Loading restaurants...
+        </p>
+      </div>
+
     </div>
 
-  </div>
+  </section>
 
-</section>
 
-</main>
+  <section style="background:#fff">
 
-<!-- =================================================
-     CART
-================================================= -->
+    <div class="container">
 
-<div
-  id="cartBox"
-  class="cartBox">
+      <div class="sectionHead">
 
-  <h3>
-    🛒 Your Cart
-  </h3>
+        <h2>
+          Popular Foods
+        </h2>
 
-  <div id="cartItems">
-  </div>
+      </div>
 
-  <hr style="margin:12px 0">
 
-  <p>
-    Total:
-    ₹<strong id="cartTotal">
-      0
-    </strong>
-  </p>
+      <div
+        id="foodGrid"
+        class="menuGrid"
+      ></div>
 
-  <div
-    class="formGroup">
+    </div>
 
-    <label>
-      Delivery Address
-    </label>
-
-    <textarea
-      id="deliveryAddress"
-      rows="3"
-      placeholder="আপনার address লিখুন">
-    </textarea>
-
-  </div>
-
-  <button
-    class="primary"
-    onclick="placeOrder()">
-    Confirm Order
-  </button>
+  </section>
 
 </div>
 
-<!-- =================================================
-     LOGIN MODAL
-================================================= -->
+
+<!-- CUSTOMER DASHBOARD -->
 
 <div
-  id="loginModal"
-  class="modal">
+  id="customerDashboard"
+  class="dashboard"
+>
 
-  <div class="modalBox">
+  <div class="container">
 
-    <button
-      class="closeBtn"
-      onclick="closeLogin()">
-      Close
-    </button>
+    <div class="dashboardTitle">
 
-    <h2>
-      Customer Login
-    </h2>
+      <div>
 
-    <p style="margin-top:8px;color:#666">
-      OTP দিয়ে Haroa Eats-এ login করুন
-    </p>
+        <h1>
+          My Orders
+        </h1>
 
-    <div class="tabs">
+        <p style="color:#777">
+          আপনার সব order এখানে দেখতে পারবেন
+        </p>
 
-      <button
-        id="otpTab"
-        class="tab active"
-        onclick="showOtpLogin()">
-        OTP Login
-      </button>
+      </div>
 
       <button
-        id="staffTab"
-        class="tab"
-        onclick="showStaffLogin()">
-        Staff Login
+        class="secondary"
+        onclick="showHome()"
+      >
+        ← Home
       </button>
 
     </div>
 
-    <!-- OTP LOGIN -->
+
+    <div id="customerOrders">
+      Loading...
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- RIDER DASHBOARD -->
+
+<div
+  id="riderDashboard"
+  class="dashboard"
+>
+
+  <div class="container">
+
+    <div class="riderHero">
+
+      <h1>
+        🏍️ Rider Dashboard
+      </h1>
+
+      <p id="riderWelcome">
+        Welcome, Rider!
+      </p>
+
+    </div>
+
+
+    <div class="statsGrid">
+
+      <div class="statCard">
+
+        <small>
+          Available Orders
+        </small>
+
+        <h2 id="availableCount">
+          0
+        </h2>
+
+      </div>
+
+
+      <div class="statCard">
+
+        <small>
+          My Deliveries
+        </small>
+
+        <h2 id="myDeliveryCount">
+          0
+        </h2>
+
+      </div>
+
+
+      <div class="statCard">
+
+        <small>
+          Completed
+        </small>
+
+        <h2 id="completedCount">
+          0
+        </h2>
+
+      </div>
+
+
+      <div class="statCard">
+
+        <small>
+          Today's Earnings
+        </small>
+
+        <h2>
+          ₹0
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <h2>
+      Available Orders
+    </h2>
+
+    <div id="riderOrders">
+      Loading orders...
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN DASHBOARD -->
+
+<div
+  id="adminDashboard"
+  class="dashboard"
+>
+
+  <div class="container">
+
+    <div class="dashboardTitle">
+
+      <div>
+
+        <h1>
+          Admin Dashboard
+        </h1>
+
+        <p style="color:#777">
+          Haroa Eats management panel
+        </p>
+
+      </div>
+
+
+      <button
+        class="secondary"
+        onclick="showHome()"
+      >
+        ← Website
+      </button>
+
+    </div>
+
+
+    <div class="statsGrid">
+
+      <div class="statCard">
+        <small>
+          Restaurants
+        </small>
+        <h2 id="statRestaurants">
+          0
+        </h2>
+      </div>
+
+
+      <div class="statCard">
+        <small>
+          Customers
+        </small>
+        <h2 id="statCustomers">
+          0
+        </h2>
+      </div>
+
+
+      <div class="statCard">
+        <small>
+          Riders
+        </small>
+        <h2 id="statRiders">
+          0
+        </h2>
+      </div>
+
+
+      <div class="statCard">
+        <small>
+          Total Orders
+        </small>
+        <h2 id="statOrders">
+          0
+        </h2>
+      </div>
+
+    </div>
+
 
     <div
-      id="otpLoginBox">
+      class="statCard"
+      style="margin-bottom:25px"
+    >
 
-      <div class="formGroup">
+      <small>
+        Total Revenue
+      </small>
+
+      <h2>
+        ₹
+        <span id="statRevenue">
+          0
+        </span>
+      </h2>
+
+    </div>
+
+
+    <h2>
+      Recent Orders
+    </h2>
+
+    <div id="adminOrders">
+      Loading...
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- CART -->
+
+<div
+  id="cartModal"
+  class="modal"
+>
+
+  <div class="sheet">
+
+    <div class="sheetInner">
+
+      <button
+        class="closeBtn"
+        onclick="closeCart()"
+      >
+        Close
+      </button>
+
+
+      <h2>
+        🛒 Your Cart
+      </h2>
+
+
+      <div id="cartItems"></div>
+
+
+      <div class="cartTotal">
+
+        <span>
+          Total
+        </span>
+
+        <span>
+          ₹
+          <span id="cartTotal">
+            0
+          </span>
+        </span>
+
+      </div>
+
+
+      <textarea
+        id="address"
+        class="formInput"
+        rows="4"
+        placeholder="Delivery address লিখুন..."
+      ></textarea>
+
+
+      <button
+        class="primary"
+        onclick="checkout()"
+      >
+        Confirm Order
+      </button>
+
+
+      <div id="checkoutMessage"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<div
+  id="loginModal"
+  class="modal"
+>
+
+  <div class="sheet">
+
+    <div class="sheetInner">
+
+
+      <button
+        class="closeBtn"
+        onclick="closeLogin()"
+      >
+        Close
+      </button>
+
+
+      <h2 class="otpTitle">
+        Customer Login
+      </h2>
+
+
+      <p class="otpSubtitle">
+        OTP দিয়ে Haroa Eats-এ login করুন
+      </p>
+
+
+      <div class="otpMode">
+
+        <button
+          id="otpLoginTab"
+          class="active"
+          onclick="switchLoginMode('login')"
+        >
+          OTP Login
+        </button>
+
+
+        <button
+          id="staffTab"
+          onclick="switchLoginMode('staff')"
+        >
+          Staff Login
+        </button>
+
+      </div>
+
+
+      <!-- NO CAPTCHA -->
+
+
+      <!-- CUSTOMER OTP -->
+
+      <div
+        id="otpLoginSection"
+        class="otpSection active"
+      >
 
         <label>
           Mobile Number
         </label>
 
+
         <input
-          id="otpPhone"
+          id="otpLoginPhone"
+          class="formInput"
           type="tel"
+          inputmode="numeric"
           maxlength="10"
-          placeholder="10 digit mobile number">
+          placeholder="10 digit mobile number"
+        >
 
-      </div>
-
-      <button
-        id="sendOtpBtn"
-        class="primary"
-        onclick="sendOtp()">
-        Send OTP
-      </button>
-
-      <div
-        id="otpArea"
-        class="otpArea">
-
-        <div class="formGroup">
-
-          <label>
-            OTP
-          </label>
-
-          <input
-            id="otpInput"
-            type="text"
-            maxlength="9"
-            inputmode="numeric"
-            placeholder="OTP লিখুন">
-
-        </div>
 
         <button
           class="primary"
-          onclick="verifyOtp()">
-          Verify OTP
+          onclick="sendOtp()"
+        >
+          Send OTP
         </button>
 
-        <button
-          class="secondary"
-          style="width:100%;margin-top:8px"
-          onclick="resendOtp()">
-          Resend OTP
-        </button>
+
+        <div
+          id="otpLoginVerifyBox"
+          class="otpVerifyBox"
+        >
+
+          <input
+            id="otpLoginCode"
+            class="formInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="9"
+            placeholder="Enter OTP"
+          >
+
+
+          <button
+            class="primary"
+            onclick="verifyOtpCode()"
+          >
+            Verify OTP
+          </button>
+
+
+          <button
+            class="secondary"
+            style="margin-top:10px;width:100%;"
+            onclick="resendOtp()"
+          >
+            Resend OTP
+          </button>
+
+        </div>
+
+
+        <p
+          id="otpLoginStatus"
+          class="otpStatus"
+        ></p>
 
       </div>
+
+
+      <!-- STAFF LOGIN -->
 
       <div
-        id="otpMessage"
-        class="message">
-      </div>
-
-    </div>
-
-    <!-- STAFF LOGIN -->
-
-    <div
-      id="staffLoginBox"
-      class="staffBox">
-
-      <div class="formGroup">
-
-        <label>
-          Staff Mobile
-        </label>
+        id="staffSection"
+        class="otpSection"
+      >
 
         <input
           id="staffPhone"
+          class="formInput"
           type="tel"
+          inputmode="numeric"
           maxlength="10"
-          placeholder="Staff phone">
+          placeholder="Admin/Rider mobile number"
+        >
 
-      </div>
-
-      <div class="formGroup">
-
-        <label>
-          Password
-        </label>
 
         <input
           id="staffPassword"
+          class="formInput"
           type="password"
-          placeholder="Password">
+          placeholder="Password"
+        >
+
+
+        <button
+          class="primary"
+          onclick="staffLogin()"
+        >
+          Login
+        </button>
+
+
+        <p
+          id="staffStatus"
+          class="otpStatus"
+        ></p>
+
+
+        <div class="notice">
+
+          <b>
+            Demo Admin
+          </b>
+
+          <br>
+
+          9999999999 / admin123
+
+          <br>
+          <br>
+
+          <b>
+            Demo Rider
+          </b>
+
+          <br>
+
+          8888888888 / rider123
+
+        </div>
 
       </div>
 
-      <button
-        class="primary"
-        onclick="staffLogin()">
-        Staff Login
-      </button>
 
-      <div
-        id="staffMessage"
-        class="message">
-      </div>
+      <p
+        style="
+          color:#777;
+          text-align:center;
+          font-size:13px;
+          margin-top:18px;
+        "
+      >
+        Customer login শুধুমাত্র MSG91 OTP-এর মাধ্যমে হবে।
+      </p>
 
     </div>
 
@@ -1061,61 +1811,98 @@ footer{
 
 </div>
 
-<!-- =================================================
-     RESTAURANT MENU MODAL
-================================================= -->
 
-<div
-  id="menuModal"
-  class="modal">
-
-  <div class="modalBox">
-
-    <button
-      class="closeBtn"
-      onclick="closeMenu()">
-      Close
-    </button>
-
-    <h2 id="menuTitle">
-      Menu
-    </h2>
-
-    <div
-      id="menuGrid"
-      class="menuGrid"
-      style="margin-top:20px">
-    </div>
-
-  </div>
-
-</div>
-
-<!-- =================================================
-     FOOTER
-================================================= -->
+<!-- FOOTER -->
 
 <footer>
 
-  <h3>
-    Haroa Eats
-  </h3>
+  <div class="container footerGrid">
 
-  <p style="margin-top:8px">
-    Fast • Fresh • Local
-  </p>
+    <div>
+
+      <h3>
+        🍴 Haroa Eats
+      </h3>
+
+      <p>
+        Haroa-এর local food delivery platform।
+        আপনার পছন্দের খাবার সহজে order করুন।
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <h3>
+        Quick Links
+      </h3>
+
+      <ul>
+
+        <li>
+          Home
+        </li>
+
+        <li>
+          Restaurants
+        </li>
+
+        <li>
+          My Orders
+        </li>
+
+        <li>
+          Track Order
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div>
+
+      <h3>
+        Contact
+      </h3>
+
+      <p>
+        📍 Haroa, West Bengal
+      </p>
+
+      <p>
+        🍴 Haroa Eats
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="container"
+    style="
+      border-top:1px solid #333;
+      margin-top:25px;
+      padding-top:18px;
+      color:#777;
+    "
+  >
+    © 2026 Haroa Eats.
+    All rights reserved.
+  </div>
 
 </footer>
 
+
 <script>
 
-/* =====================================================
-   GLOBALS
-===================================================== */
+let restaurantsData = [];
 
-let restaurants = [];
 let cart = [];
-let selectedRestaurant = null;
+
+let otpPhone = "";
 
 
 /* =====================================================
@@ -1131,22 +1918,29 @@ async function api(
     await fetch(
       url,
       {
-        credentials:"same-origin",
         headers:{
           "Content-Type":
-            "application/json",
-          ...(options.headers || {})
+            "application/json"
         },
+
+        credentials:
+          "same-origin",
+
         ...options
       }
     );
+
 
   let data = {};
 
   try{
     data =
       await response.json();
-  }catch(_){}
+  }
+  catch(e){
+    data = {};
+  }
+
 
   if(!response.ok){
 
@@ -1156,7 +1950,1169 @@ async function api(
     );
   }
 
+
   return data;
+}
+
+
+/* =====================================================
+   LOGIN MODE
+===================================================== */
+
+function switchLoginMode(
+  mode
+){
+
+  const isStaff =
+    mode === "staff";
+
+
+  document
+    .getElementById(
+      "otpLoginSection"
+    )
+    .classList
+    .toggle(
+      "active",
+      !isStaff
+    );
+
+
+  document
+    .getElementById(
+      "staffSection"
+    )
+    .classList
+    .toggle(
+      "active",
+      isStaff
+    );
+
+
+  document
+    .getElementById(
+      "otpLoginTab"
+    )
+    .classList
+    .toggle(
+      "active",
+      !isStaff
+    );
+
+
+  document
+    .getElementById(
+      "staffTab"
+    )
+    .classList
+    .toggle(
+      "active",
+      isStaff
+    );
+}
+
+
+/* =====================================================
+   PHONE
+===================================================== */
+
+function normalizePhone(
+  value
+){
+
+  let phone =
+    String(value || "")
+      .replace(/\D/g,"");
+
+
+  if(
+    phone.length === 10
+  ){
+    return phone;
+  }
+
+
+  if(
+    phone.length === 12 &&
+    phone.startsWith("91")
+  ){
+    return phone.slice(2);
+  }
+
+
+  return "";
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function getOtpStatus(){
+
+  return document
+    .getElementById(
+      "otpLoginStatus"
+    );
+}
+
+
+/* =====================================================
+   SEND OTP
+===================================================== */
+
+async function sendOtp(){
+
+  const status =
+    getOtpStatus();
+
+
+  const verifyBox =
+    document
+      .getElementById(
+        "otpLoginVerifyBox"
+      );
+
+
+  const phone =
+    normalizePhone(
+      document
+        .getElementById(
+          "otpLoginPhone"
+        )
+        .value
+    );
+
+
+  if(
+    !phone
+  ){
+
+    status.innerHTML =
+      '<span style="color:red">সঠিক 10 digit mobile number দিন।</span>';
+
+    return;
+  }
+
+
+  otpPhone = phone;
+
+
+  status.textContent =
+    "OTP পাঠানো হচ্ছে...";
+
+
+  verifyBox
+    .classList
+    .remove("show");
+
+
+  try{
+
+    const result =
+      await api(
+        "/api/otp/send",
+        {
+          method:"POST",
+
+          body:
+            JSON.stringify({
+              phone
+            })
+        }
+      );
+
+
+    if(
+      result.ok
+    ){
+
+      verifyBox
+        .classList
+        .add("show");
+
+
+      status.innerHTML =
+        '<span style="color:#16834b">✅ OTP পাঠানো হয়েছে। SMS থেকে OTP লিখুন।</span>';
+
+      document
+        .getElementById(
+          "otpLoginCode"
+        )
+        .focus();
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "SEND OTP ERROR:",
+      error
+    );
+
+
+    status.innerHTML =
+      '<span style="color:red">' +
+      escapeHtml(
+        error.message
+      ) +
+      '</span>';
+  }
+}
+
+
+/* =====================================================
+   VERIFY OTP
+===================================================== */
+
+async function verifyOtpCode(){
+
+  const status =
+    getOtpStatus();
+
+
+  const code =
+    String(
+      document
+        .getElementById(
+          "otpLoginCode"
+        )
+        .value || ""
+    )
+    .replace(
+      /\D/g,
+      ""
+    );
+
+
+  if(
+    !otpPhone
+  ){
+
+    status.innerHTML =
+      '<span style="color:red">আগে Send OTP চাপুন।</span>';
+
+    return;
+  }
+
+
+  if(
+    code.length < 4
+  ){
+
+    status.innerHTML =
+      '<span style="color:red">সঠিক OTP লিখুন।</span>';
+
+    return;
+  }
+
+
+  status.textContent =
+    "OTP verify করা হচ্ছে...";
+
+
+  try{
+
+    const result =
+      await api(
+        "/api/otp/verify",
+        {
+          method:"POST",
+
+          body:
+            JSON.stringify({
+              phone:
+                otpPhone,
+
+              otp:
+                code
+            })
+        }
+      );
+
+
+    if(
+      result.ok
+    ){
+
+      status.innerHTML =
+        '<span style="color:#16834b">✅ Login successful</span>';
+
+
+      setTimeout(
+        () => {
+
+          closeLogin();
+
+          updateUserButton();
+
+          showHome();
+
+        },
+        500
+      );
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "VERIFY OTP ERROR:",
+      error
+    );
+
+
+    status.innerHTML =
+      '<span style="color:red">' +
+      escapeHtml(
+        error.message
+      ) +
+      '</span>';
+  }
+}
+
+
+/* =====================================================
+   RESEND OTP
+===================================================== */
+
+async function resendOtp(){
+
+  const status =
+    getOtpStatus();
+
+
+  if(
+    !otpPhone
+  ){
+
+    status.innerHTML =
+      '<span style="color:red">আগে Send OTP চাপুন।</span>';
+
+    return;
+  }
+
+
+  status.textContent =
+    "OTP আবার পাঠানো হচ্ছে...";
+
+
+  try{
+
+    const result =
+      await api(
+        "/api/otp/resend",
+        {
+          method:"POST",
+
+          body:
+            JSON.stringify({
+              phone:
+                otpPhone
+            })
+        }
+      );
+
+
+    if(
+      result.ok
+    ){
+
+      status.innerHTML =
+        '<span style="color:#16834b">✅ OTP আবার পাঠানো হয়েছে।</span>';
+    }
+
+
+  }catch(error){
+
+    status.innerHTML =
+      '<span style="color:red">' +
+      escapeHtml(
+        error.message
+      ) +
+      '</span>';
+  }
+}
+
+
+/* =====================================================
+   STAFF LOGIN
+===================================================== */
+
+async function staffLogin(){
+
+  const status =
+    document
+      .getElementById(
+        "staffStatus"
+      );
+
+
+  try{
+
+    const result =
+      await api(
+        "/api/login",
+        {
+          method:"POST",
+
+          body:
+            JSON.stringify({
+
+              phone:
+                document
+                  .getElementById(
+                    "staffPhone"
+                  )
+                  .value
+                  .trim(),
+
+              password:
+                document
+                  .getElementById(
+                    "staffPassword"
+                  )
+                  .value
+
+            })
+        }
+      );
+
+
+    status.innerHTML =
+      '<span style="color:#16834b">✅ Login successful</span>';
+
+
+    setTimeout(
+      () => {
+
+        closeLogin();
+
+        updateUserButton();
+
+
+        if(
+          result.user.role ===
+          "rider"
+        ){
+
+          showRider();
+
+        }
+        else if(
+          result.user.role ===
+          "admin"
+        ){
+
+          showAdmin();
+
+        }
+        else{
+
+          showHome();
+
+        }
+
+      },
+      400
+    );
+
+
+  }catch(error){
+
+    status.innerHTML =
+      '<span style="color:red">' +
+      escapeHtml(
+        error.message
+      ) +
+      '</span>';
+  }
+}
+
+
+/* =====================================================
+   RESTAURANTS
+===================================================== */
+
+async function loadRestaurants(){
+
+  try{
+
+    restaurantsData =
+      await api(
+        "/api/restaurants"
+      );
+
+
+    renderRestaurants();
+
+    renderPopularFoods();
+
+  }catch(error){
+
+    document
+      .getElementById(
+        "restaurantGrid"
+      )
+      .innerHTML =
+      "<p>" +
+      escapeHtml(
+        error.message
+      ) +
+      "</p>";
+  }
+}
+
+
+function renderRestaurants(){
+
+  const grid =
+    document
+      .getElementById(
+        "restaurantGrid"
+      );
+
+
+  if(!grid){
+    return;
+  }
+
+
+  const query =
+    (
+      document
+        .getElementById(
+          "searchInput"
+        )
+        ?.value ||
+      ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+  const filtered =
+    restaurantsData.filter(
+      r =>
+        [
+          r.name,
+          r.area,
+
+          (r.menu || [])
+            .map(
+              m => m.name
+            )
+            .join(" ")
+
+        ]
+        .join(" ")
+        .toLowerCase()
+        .includes(query)
+    );
+
+
+  const images = [
+
+    "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80",
+
+    "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+
+    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=800&q=80",
+
+    "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80"
+
+  ];
+
+
+  grid.innerHTML =
+    filtered
+      .map(
+        (r,i) => `
+
+        <div class="restaurantCard">
+
+          <img
+            class="restaurantImg"
+            src="${images[i % images.length]}"
+            alt="${escapeHtml(r.name)}"
+          >
+
+          <div class="restaurantBody">
+
+            <h3>
+              ${escapeHtml(r.name)}
+            </h3>
+
+            <div class="area">
+              📍
+              ${escapeHtml(r.area)}
+            </div>
+
+            <div class="ratingRow">
+
+              <div class="rating">
+                <span>★</span>
+                4.${i+2}
+                <small style="color:#888">
+                  (100+)
+                </small>
+              </div>
+
+              <div class="time">
+                ${25+i*5}-${35+i*5} min
+              </div>
+
+            </div>
+
+            <button
+              class="menuBtn"
+              onclick="showRestaurantMenu(${Number(r.id)})"
+            >
+              View Menu
+            </button>
+
+          </div>
+
+        </div>
+
+      `
+      )
+      .join("")
+
+
+    ||
+    "<p>No restaurant found.</p>";
+}
+
+
+function renderPopularFoods(){
+
+  const grid =
+    document
+      .getElementById(
+        "foodGrid"
+      );
+
+
+  if(!grid){
+    return;
+  }
+
+
+  const foods = [];
+
+
+  restaurantsData.forEach(
+    r =>
+      (r.menu || [])
+        .forEach(
+          m =>
+            foods.push({
+              ...m,
+              restaurantId:r.id,
+              restaurant:r.name
+            })
+        )
+  );
+
+
+  grid.innerHTML =
+    foods
+      .slice(0,6)
+      .map(
+        m => `
+
+          <div class="menuCard">
+
+            <div class="menuTop">
+
+              <div>
+
+                <h3>
+                  ${escapeHtml(m.name)}
+                </h3>
+
+                <small style="color:#777">
+                  ${escapeHtml(m.restaurant)}
+                </small>
+
+              </div>
+
+              <div class="price">
+                ₹${m.price}
+              </div>
+
+            </div>
+
+
+            <button
+              class="addBtn"
+              style="margin-top:15px"
+              onclick="addToCart(
+                ${Number(m.restaurantId)},
+                ${Number(m.id)},
+                '${escapeJs(m.name)}',
+                ${Number(m.price)}
+              )"
+            >
+              + Add to Cart
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+}
+
+
+/* =====================================================
+   RESTAURANT MENU
+===================================================== */
+
+function showRestaurantMenu(
+  id
+){
+
+  const r =
+    restaurantsData.find(
+      x =>
+        Number(x.id) ===
+        Number(id)
+    );
+
+
+  if(!r){
+    return;
+  }
+
+
+  hideAll();
+
+
+  document
+    .getElementById(
+      "customerDashboard"
+    )
+    .classList
+    .add("active");
+
+
+  document
+    .getElementById(
+      "customerOrders"
+    )
+    .innerHTML = `
+
+      <div class="dashboardTitle">
+
+        <div>
+
+          <h1>
+            ${escapeHtml(r.name)}
+          </h1>
+
+          <p>
+            📍
+            ${escapeHtml(r.area)}
+          </p>
+
+        </div>
+
+        <button
+          class="secondary"
+          onclick="showHome()"
+        >
+          ← Back
+        </button>
+
+      </div>
+
+
+      <div class="menuGrid">
+
+        ${
+          (r.menu || [])
+            .map(
+              m => `
+
+                <div class="menuCard">
+
+                  <div class="menuTop">
+
+                    <div>
+
+                      <h3>
+                        ${escapeHtml(m.name)}
+                      </h3>
+
+                      <small>
+                        Fresh & delicious
+                      </small>
+
+                    </div>
+
+                    <div class="price">
+                      ₹${m.price}
+                    </div>
+
+                  </div>
+
+
+                  <button
+                    class="menuBtn"
+                    onclick="addToCart(
+                      ${Number(r.id)},
+                      ${Number(m.id)},
+                      '${escapeJs(m.name)}',
+                      ${Number(m.price)}
+                    )"
+                  >
+                    Add to Cart
+                  </button>
+
+                </div>
+
+              `
+            )
+            .join("")
+        }
+
+      </div>
+  `;
+}
+
+
+/* =====================================================
+   CART
+===================================================== */
+
+function addToCart(
+  restaurantId,
+  menuId,
+  name,
+  price
+){
+
+  const existing =
+    cart.find(
+      x =>
+        Number(x.menuId) ===
+        Number(menuId)
+    );
+
+
+  if(existing){
+
+    existing.qty++;
+
+  }else{
+
+    cart.push({
+
+      restaurantId:
+        Number(
+          restaurantId
+        ),
+
+      menuId:
+        Number(
+          menuId
+        ),
+
+      name,
+
+      price:
+        Number(
+          price
+        ),
+
+      qty:1
+    });
+  }
+
+
+  drawCart();
+}
+
+
+function drawCart(){
+
+  document
+    .getElementById(
+      "cartCount"
+    )
+    .textContent =
+    cart.reduce(
+      (s,x) =>
+        s + x.qty,
+      0
+    );
+
+
+  document
+    .getElementById(
+      "cartTotal"
+    )
+    .textContent =
+    cart.reduce(
+      (s,x) =>
+        s +
+        x.price *
+        x.qty,
+      0
+    );
+
+
+  const box =
+    document
+      .getElementById(
+        "cartItems"
+      );
+
+
+  if(
+    !cart.length
+  ){
+
+    box.innerHTML =
+      "<p>Your cart is empty.</p>";
+
+    return;
+  }
+
+
+  box.innerHTML =
+    cart
+      .map(
+        (x,i) => `
+
+          <div class="cartItem">
+
+            <div>
+
+              <b>
+                ${escapeHtml(x.name)}
+              </b>
+
+              <br>
+
+              <small>
+                ₹${x.price}
+                ×
+                ${x.qty}
+              </small>
+
+            </div>
+
+
+            <div>
+
+              <b>
+                ₹${x.price * x.qty}
+              </b>
+
+              <button
+                class="secondary"
+                onclick="removeCart(${i})"
+              >
+                ×
+              </button>
+
+            </div>
+
+          </div>
+
+        `
+      )
+      .join("");
+}
+
+
+function removeCart(i){
+
+  cart.splice(
+    i,
+    1
+  );
+
+  drawCart();
+}
+
+
+function openCart(){
+
+  document
+    .getElementById(
+      "cartModal"
+    )
+    .classList
+    .add("show");
+
+  drawCart();
+}
+
+
+function closeCart(){
+
+  document
+    .getElementById(
+      "cartModal"
+    )
+    .classList
+    .remove("show");
+}
+
+
+/* =====================================================
+   CHECKOUT
+===================================================== */
+
+async function checkout(){
+
+  if(
+    !cart.length
+  ){
+
+    alert(
+      "Cart খালি"
+    );
+
+    return;
+  }
+
+
+  const me =
+    await api(
+      "/api/me"
+    );
+
+
+  if(!me.user){
+
+    closeCart();
+
+    openLogin();
+
+    return;
+  }
+
+
+  if(
+    me.user.role !==
+    "customer"
+  ){
+
+    alert(
+      "Customer account দিয়ে order করুন"
+    );
+
+    return;
+  }
+
+
+  const address =
+    document
+      .getElementById(
+        "address"
+      )
+      .value
+      .trim();
+
+
+  if(!address){
+
+    alert(
+      "Delivery address দিন"
+    );
+
+    return;
+  }
+
+
+  const restaurantId =
+    cart[0].restaurantId;
+
+
+  if(
+    cart.some(
+      x =>
+        x.restaurantId !==
+        restaurantId
+    )
+  ){
+
+    alert(
+      "একবারে একটি restaurant থেকে order করুন"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const result =
+      await api(
+        "/api/orders",
+        {
+          method:"POST",
+
+          body:
+            JSON.stringify({
+
+              restaurantId,
+
+              address,
+
+              items:
+                cart.map(
+                  x => ({
+                    menuId:
+                      x.menuId,
+
+                    qty:
+                      x.qty
+                  })
+                )
+            })
+        }
+      );
+
+
+    document
+      .getElementById(
+        "checkoutMessage"
+      )
+      .innerHTML = `
+
+        <div class="notice">
+
+          ✅ Order successfully placed!
+
+          <br>
+
+          Order ID:
+          <b>
+            #${result.orderId}
+          </b>
+
+        </div>
+
+      `;
+
+
+    cart = [];
+
+    drawCart();
+
+
+  }catch(error){
+
+    alert(
+      error.message
+    );
+  }
 }
 
 
@@ -1170,13 +3126,33 @@ function openLogin(){
     .getElementById(
       "loginModal"
     )
-    .classList.add(
-      "active"
-    );
+    .classList
+    .add("show");
 
-  showOtpLogin();
 
+  switchLoginMode(
+    "login"
+  );
+
+
+  document
+    .getElementById(
+      "otpLoginStatus"
+    )
+    .textContent = "";
+
+
+  document
+    .getElementById(
+      "otpLoginVerifyBox"
+    )
+    .classList
+    .remove("show");
+
+
+  otpPhone = "";
 }
+
 
 function closeLogin(){
 
@@ -1184,867 +3160,16 @@ function closeLogin(){
     .getElementById(
       "loginModal"
     )
-    .classList.remove(
-      "active"
-    );
-
-}
-
-function showOtpLogin(){
-
-  document
-    .getElementById(
-      "otpTab"
-    )
-    .classList.add(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "staffTab"
-    )
-    .classList.remove(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "otpLoginBox"
-    )
-    .style.display =
-      "block";
-
-  document
-    .getElementById(
-      "staffLoginBox"
-    )
-    .classList.remove(
-      "active"
-    );
-
-}
-
-function showStaffLogin(){
-
-  document
-    .getElementById(
-      "staffTab"
-    )
-    .classList.add(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "otpTab"
-    )
-    .classList.remove(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "otpLoginBox"
-    )
-    .style.display =
-      "none";
-
-  document
-    .getElementById(
-      "staffLoginBox"
-    )
-    .classList.add(
-      "active"
-    );
-
+    .classList
+    .remove("show");
 }
 
 
 /* =====================================================
-   MESSAGE
+   USER BUTTON
 ===================================================== */
 
-function showMessage(
-  id,
-  text,
-  error = false
-){
-
-  const box =
-    document.getElementById(id);
-
-  box.textContent =
-    text;
-
-  box.className =
-    "message show " +
-    (
-      error
-        ? "error"
-        : "success"
-    );
-
-}
-
-
-/* =====================================================
-   SEND OTP
-===================================================== */
-
-async function sendOtp(){
-
-  const phone =
-    document
-      .getElementById(
-        "otpPhone"
-      )
-      .value
-      .replace(/\D/g,"");
-
-  if(!/^[6-9]\d{9}$/.test(phone)){
-
-    showMessage(
-      "otpMessage",
-      "সঠিক 10 digit mobile number দিন",
-      true
-    );
-
-    return;
-  }
-
-  const btn =
-    document.getElementById(
-      "sendOtpBtn"
-    );
-
-  btn.disabled =
-    true;
-
-  btn.textContent =
-    "Sending...";
-
-  try{
-
-    const result =
-      await api(
-        "/api/otp/send",
-        {
-          method:"POST",
-          body:
-            JSON.stringify({
-              phone
-            })
-        }
-      );
-
-    showMessage(
-      "otpMessage",
-      result.message ||
-      "OTP পাঠানো হয়েছে"
-    );
-
-    document
-      .getElementById(
-        "otpArea"
-      )
-      .classList.add(
-        "active"
-      );
-
-  }catch(error){
-
-    showMessage(
-      "otpMessage",
-      error.message,
-      true
-    );
-
-  }finally{
-
-    btn.disabled =
-      false;
-
-    btn.textContent =
-      "Send OTP";
-
-  }
-
-}
-
-
-/* =====================================================
-   VERIFY OTP
-===================================================== */
-
-async function verifyOtp(){
-
-  const phone =
-    document
-      .getElementById(
-        "otpPhone"
-      )
-      .value
-      .replace(/\D/g,"");
-
-  const otp =
-    document
-      .getElementById(
-        "otpInput"
-      )
-      .value
-      .replace(/\D/g,"");
-
-  if(!/^[6-9]\d{9}$/.test(phone)){
-
-    showMessage(
-      "otpMessage",
-      "সঠিক mobile number দিন",
-      true
-    );
-
-    return;
-  }
-
-  if(!/^\d{4,9}$/.test(otp)){
-
-    showMessage(
-      "otpMessage",
-      "সঠিক OTP দিন",
-      true
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await api(
-        "/api/otp/verify",
-        {
-          method:"POST",
-          body:
-            JSON.stringify({
-              phone,
-              otp
-            })
-        }
-      );
-
-    showMessage(
-      "otpMessage",
-      "Login successful!"
-    );
-
-    setTimeout(
-      () => {
-
-        closeLogin();
-
-        updateUserButton();
-
-        showHome();
-
-      },
-      500
-    );
-
-  }catch(error){
-
-    showMessage(
-      "otpMessage",
-      error.message,
-      true
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   RESEND
-===================================================== */
-
-async function resendOtp(){
-
-  const phone =
-    document
-      .getElementById(
-        "otpPhone"
-      )
-      .value
-      .replace(/\D/g,"");
-
-  try{
-
-    const result =
-      await api(
-        "/api/otp/resend",
-        {
-          method:"POST",
-          body:
-            JSON.stringify({
-              phone
-            })
-        }
-      );
-
-    showMessage(
-      "otpMessage",
-      result.message ||
-      "OTP আবার পাঠানো হয়েছে"
-    );
-
-  }catch(error){
-
-    showMessage(
-      "otpMessage",
-      error.message,
-      true
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   STAFF LOGIN
-===================================================== */
-
-async function staffLogin(){
-
-  const phone =
-    document
-      .getElementById(
-        "staffPhone"
-      )
-      .value
-      .replace(/\D/g,"");
-
-  const password =
-    document
-      .getElementById(
-        "staffPassword"
-      )
-      .value;
-
-  try{
-
-    const result =
-      await api(
-        "/api/staff/login",
-        {
-          method:"POST",
-          body:
-            JSON.stringify({
-              phone,
-              password
-            })
-        }
-      );
-
-    closeLogin();
-
-    updateUserButton();
-
-    if(
-      result.user.role ===
-      "admin"
-    ){
-
-      showAdmin();
-
-    }else if(
-      result.user.role ===
-      "rider"
-    ){
-
-      showRider();
-
-    }
-
-  }catch(error){
-
-    showMessage(
-      "staffMessage",
-      error.message,
-      true
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   LOAD RESTAURANTS
-===================================================== */
-
-async function loadRestaurants(){
-
-  const message =
-    document.getElementById(
-      "restaurantMessage"
-    );
-
-  try{
-
-    restaurants =
-      await api(
-        "/api/restaurants"
-      );
-
-    renderRestaurants();
-
-  }catch(error){
-
-    message.textContent =
-      error.message;
-
-  }
-
-}
-
-
-/* =====================================================
-   RENDER RESTAURANTS
-===================================================== */
-
-function renderRestaurants(){
-
-  const grid =
-    document.getElementById(
-      "restaurantGrid"
-    );
-
-  const message =
-    document.getElementById(
-      "restaurantMessage"
-    );
-
-  const search =
-    document
-      .getElementById(
-        "searchInput"
-      )
-      .value
-      .toLowerCase()
-      .trim();
-
-  const list =
-    restaurants.filter(
-      r =>
-        !search ||
-        String(r.name)
-          .toLowerCase()
-          .includes(search) ||
-        String(r.area)
-          .toLowerCase()
-          .includes(search)
-    );
-
-  message.textContent =
-    list.length +
-    "টি restaurant পাওয়া গেছে।";
-
-  if(!list.length){
-
-    grid.innerHTML =
-      "<p>কোনো restaurant পাওয়া যায়নি।</p>";
-
-    return;
-  }
-
-  grid.innerHTML =
-    list
-      .map(
-        r => `
-
-        <div class="restaurantCard">
-
-          <h3>
-            ${escapeHtml(r.name)}
-          </h3>
-
-          <p>
-            📍 ${escapeHtml(r.area)}
-          </p>
-
-          <button
-            class="primary"
-            onclick="openRestaurant(${r.id})">
-            View Menu
-          </button>
-
-        </div>
-
-        `
-      )
-      .join("");
-
-}
-
-
-/* =====================================================
-   OPEN RESTAURANT
-===================================================== */
-
-async function openRestaurant(
-  restaurantId
-){
-
-  const restaurant =
-    restaurants.find(
-      r =>
-        Number(r.id) ===
-        Number(restaurantId)
-    );
-
-  if(!restaurant){
-    return;
-  }
-
-  selectedRestaurant =
-    restaurant;
-
-  document
-    .getElementById(
-      "menuTitle"
-    )
-    .textContent =
-      restaurant.name +
-      " — Menu";
-
-  const grid =
-    document.getElementById(
-      "menuGrid"
-    );
-
-  grid.innerHTML =
-    "Loading...";
-
-  document
-    .getElementById(
-      "menuModal"
-    )
-    .classList.add(
-      "active"
-    );
-
-  try{
-
-    const menu =
-      await api(
-        "/api/restaurants/" +
-        restaurantId +
-        "/menu"
-      );
-
-    if(!menu.length){
-
-      grid.innerHTML =
-        "<p>Menu পাওয়া যায়নি।</p>";
-
-      return;
-    }
-
-    grid.innerHTML =
-      menu
-        .map(
-          item => `
-
-          <div class="menuCard">
-
-            <h4>
-              ${escapeHtml(item.name)}
-            </h4>
-
-            <div class="price">
-              ₹${Number(item.price).toFixed(2)}
-            </div>
-
-            <button
-              class="primary"
-              onclick='addToCart(
-                ${item.id},
-                ${JSON.stringify(
-                  item.name
-                )},
-                ${Number(item.price)},
-                ${Number(
-                  restaurant.id
-                )}
-              )'>
-              Add to Cart
-            </button>
-
-          </div>
-
-          `
-        )
-        .join("");
-
-  }catch(error){
-
-    grid.innerHTML =
-      `<p>${escapeHtml(
-        error.message
-      )}</p>`;
-
-  }
-
-}
-
-function closeMenu(){
-
-  document
-    .getElementById(
-      "menuModal"
-    )
-    .classList.remove(
-      "active"
-    );
-
-}
-
-
-/* =====================================================
-   CART
-===================================================== */
-
-function addToCart(
-  menuId,
-  name,
-  price,
-  restaurantId
-){
-
-  if(
-    cart.length &&
-    Number(
-      cart[0].restaurant_id
-    ) !== Number(restaurantId)
-  ){
-
-    if(
-      !confirm(
-        "অন্য restaurant-এর item আছে। Cart clear করে নতুন item যোগ করবেন?"
-      )
-    ){
-      return;
-    }
-
-    cart = [];
-  }
-
-  const existing =
-    cart.find(
-      item =>
-        Number(item.menu_id) ===
-        Number(menuId)
-    );
-
-  if(existing){
-
-    existing.qty++;
-
-  }else{
-
-    cart.push({
-      menu_id:
-        Number(menuId),
-      name,
-      price:
-        Number(price),
-      qty:1,
-      restaurant_id:
-        Number(restaurantId)
-    });
-
-  }
-
-  updateCart();
-
-  alert(
-    "Cart-এ যোগ হয়েছে"
-  );
-
-}
-
-function updateCart(){
-
-  const count =
-    cart.reduce(
-      (sum,item) =>
-        sum +
-        Number(item.qty),
-      0
-    );
-
-  document.getElementById(
-    "cartCount"
-  ).textContent =
-    count;
-
-  const box =
-    document.getElementById(
-      "cartItems"
-    );
-
-  if(!cart.length){
-
-    box.innerHTML =
-      "<p>Cart empty.</p>";
-
-    document.getElementById(
-      "cartTotal"
-    ).textContent =
-      "0";
-
-    return;
-  }
-
-  box.innerHTML =
-    cart
-      .map(
-        (item,index) => `
-
-        <div class="cartItem">
-
-          <div>
-
-            <strong>
-              ${escapeHtml(
-                item.name
-              )}
-            </strong>
-
-            <br>
-
-            ₹${item.price}
-            ×
-            ${item.qty}
-
-          </div>
-
-          <div>
-
-            <button
-              class="secondary"
-              onclick="changeQty(
-                ${index},
-                -1
-              )">
-              −
-            </button>
-
-            <button
-              class="secondary"
-              onclick="changeQty(
-                ${index},
-                1
-              )">
-              +
-            </button>
-
-          </div>
-
-        </div>
-
-        `
-      )
-      .join("");
-
-  const total =
-    cart.reduce(
-      (sum,item) =>
-        sum +
-        item.price *
-        item.qty,
-      0
-    );
-
-  document.getElementById(
-    "cartTotal"
-  ).textContent =
-    total.toFixed(2);
-
-}
-
-function changeQty(
-  index,
-  amount
-){
-
-  if(!cart[index]){
-    return;
-  }
-
-  cart[index].qty +=
-    amount;
-
-  if(
-    cart[index].qty <= 0
-  ){
-
-    cart.splice(
-      index,
-      1
-    );
-
-  }
-
-  updateCart();
-
-}
-
-function toggleCart(){
-
-  document
-    .getElementById(
-      "cartBox"
-    )
-    .classList.toggle(
-      "active"
-    );
-
-}
-
-
-/* =====================================================
-   PLACE ORDER
-===================================================== */
-
-async function placeOrder(){
-
-  if(!cart.length){
-
-    alert(
-      "Cart empty"
-    );
-
-    return;
-  }
-
-  const address =
-    document
-      .getElementById(
-        "deliveryAddress"
-      )
-      .value
-      .trim();
-
-  if(!address){
-
-    alert(
-      "Delivery address দিন"
-    );
-
-    return;
-  }
+async function updateUserButton(){
 
   try{
 
@@ -2053,75 +3178,31 @@ async function placeOrder(){
         "/api/me"
       );
 
-    if(
-      !me.loggedIn ||
-      !me.user
-    ){
 
-      openLogin();
+    const btn =
+      document
+        .getElementById(
+          "userBtn"
+        );
 
-      return;
+
+    if(me.user){
+
+      btn.textContent =
+        (
+          me.user.name ||
+          "U"
+        )
+        .charAt(0)
+        .toUpperCase();
+
+    }else{
+
+      btn.textContent =
+        "J";
     }
 
-    if(
-      me.user.role !==
-      "customer"
-    ){
-
-      alert(
-        "Customer account দিয়ে order করুন"
-      );
-
-      return;
-    }
-
-    const result =
-      await api(
-        "/api/orders",
-        {
-          method:"POST",
-          body:
-            JSON.stringify({
-              restaurant_id:
-                cart[0].restaurant_id,
-              address,
-              items:
-                cart.map(
-                  item => ({
-                    menu_id:
-                      item.menu_id,
-                    qty:
-                      item.qty
-                  })
-                )
-            })
-        }
-      );
-
-    alert(
-      "Order confirmed! Order #" +
-      result.orderId
-    );
-
-    cart = [];
-
-    updateCart();
-
-    document.getElementById(
-      "deliveryAddress"
-    ).value =
-      "";
-
-    showMyOrders();
-
-  }catch(error){
-
-    alert(
-      error.message
-    );
-
-  }
-
+  }catch(e){}
 }
 
 
@@ -2129,18 +3210,18 @@ async function placeOrder(){
    CUSTOMER ORDERS
 ===================================================== */
 
-async function showMyOrders(){
+async function showCustomerOrders(){
 
   hideAll();
 
-  const section =
-    document.getElementById(
-      "customerDashboard"
-    );
 
-  section.classList.add(
-    "active"
-  );
+  document
+    .getElementById(
+      "customerDashboard"
+    )
+    .classList
+    .add("active");
+
 
   try{
 
@@ -2149,103 +3230,156 @@ async function showMyOrders(){
         "/api/me"
       );
 
-    if(
-      !me.loggedIn ||
-      me.user.role !==
-      "customer"
-    ){
+
+    if(!me.user){
 
       openLogin();
 
       return;
     }
 
-    document.getElementById(
-      "customerWelcome"
-    ).textContent =
-      "Welcome, " +
-      me.user.name;
+
+    if(
+      me.user.role !==
+      "customer"
+    ){
+
+      alert(
+        "Customer account required"
+      );
+
+      showHome();
+
+      return;
+    }
+
 
     const orders =
       await api(
         "/api/orders"
       );
 
+
     const box =
-      document.getElementById(
-        "customerOrders"
-      );
+      document
+        .getElementById(
+          "customerOrders"
+        );
 
-    if(!orders.length){
 
-      box.innerHTML =
-        "<p>এখনও কোনো order নেই।</p>";
+    if(
+      !orders.length
+    ){
+
+      box.innerHTML = `
+
+        <div class="statCard">
+
+          <h2>
+            No orders yet
+          </h2>
+
+          <p>
+            আপনার প্রথম order এখনই করুন।
+          </p>
+
+        </div>
+
+      `;
 
       return;
     }
 
+
     box.innerHTML =
       orders
         .map(
-          order => `
+          o => `
 
-          <div class="orderCard">
+            <div class="orderCard">
 
-            <div class="orderHeader">
+              <div class="orderHeader">
 
-              <div>
+                <div>
 
-                <h3>
-                  Order #${order.id}
-                </h3>
+                  <h3>
+                    Order #${o.id}
+                  </h3>
 
-                <p>
+                  <p>
+                    ${escapeHtml(
+                      o.restaurant ||
+                      ""
+                    )}
+                  </p>
+
+                </div>
+
+
+                <span class="status">
+
                   ${escapeHtml(
-                    order.restaurant
+                    o.status ||
+                    ""
                   )}
-                </p>
+
+                </span>
 
               </div>
 
-              <span class="status">
+
+              <p>
+
+                ${
+                  (o.items || [])
+                    .map(
+                      i =>
+                        escapeHtml(
+                          i.name ||
+                          ""
+                        ) +
+                        " × " +
+                        i.qty
+                    )
+                    .join(", ")
+                }
+
+              </p>
+
+
+              <p>
+                📍
                 ${escapeHtml(
-                  order.status
+                  o.address ||
+                  ""
                 )}
-              </span>
+              </p>
+
+
+              <b>
+                ₹${o.total}
+              </b>
 
             </div>
-
-            <p style="margin-top:10px">
-              Total:
-              ₹${Number(
-                order.total
-              ).toFixed(2)}
-            </p>
-
-            <p>
-              Address:
-              ${escapeHtml(
-                order.address
-              )}
-            </p>
-
-          </div>
 
           `
         )
         .join("");
 
+
   }catch(error){
 
-    document.getElementById(
-      "customerOrders"
-    ).innerHTML =
-      `<p>${escapeHtml(
+    document
+      .getElementById(
+        "customerOrders"
+      )
+      .innerHTML =
+      "<p>" +
+      escapeHtml(
         error.message
-      )}</p>`;
-
+      ) +
+      "</p>";
   }
-
 }
 
 
@@ -2257,13 +3391,14 @@ async function showRider(){
 
   hideAll();
 
+
   document
     .getElementById(
       "riderDashboard"
     )
-    .classList.add(
-      "active"
-    );
+    .classList
+    .add("active");
+
 
   try{
 
@@ -2272,8 +3407,9 @@ async function showRider(){
         "/api/me"
       );
 
+
     if(
-      !me.loggedIn ||
+      !me.user ||
       me.user.role !==
       "rider"
     ){
@@ -2283,28 +3419,42 @@ async function showRider(){
       return;
     }
 
-    document.getElementById(
-      "riderWelcome"
-    ).textContent =
-      "Welcome, " +
-      me.user.name;
+
+    document
+      .getElementById(
+        "riderWelcome"
+      )
+      .textContent =
+      `Welcome, ${
+        me.user.name ||
+        "Haroa Rider"
+      }!`;
+
 
     const orders =
       await api(
         "/api/orders"
       );
 
+
     const available =
       orders.filter(
-        o => !o.delivery_id
+        o =>
+          !o.delivery_id
       );
+
 
     const mine =
       orders.filter(
         o =>
-          Number(o.delivery_id) ===
-          Number(me.user.id)
+          Number(
+            o.delivery_id
+          ) ===
+          Number(
+            me.user.id
+          )
       );
+
 
     const completed =
       mine.filter(
@@ -2313,27 +3463,41 @@ async function showRider(){
           "Delivered"
       );
 
-    document.getElementById(
-      "availableCount"
-    ).textContent =
+
+    document
+      .getElementById(
+        "availableCount"
+      )
+      .textContent =
       available.length;
 
-    document.getElementById(
-      "myDeliveryCount"
-    ).textContent =
+
+    document
+      .getElementById(
+        "myDeliveryCount"
+      )
+      .textContent =
       mine.length;
 
-    document.getElementById(
-      "completedCount"
-    ).textContent =
+
+    document
+      .getElementById(
+        "completedCount"
+      )
+      .textContent =
       completed.length;
 
-    const box =
-      document.getElementById(
-        "riderOrders"
-      );
 
-    if(!orders.length){
+    const box =
+      document
+        .getElementById(
+          "riderOrders"
+        );
+
+
+    if(
+      !orders.length
+    ){
 
       box.innerHTML =
         "<p>No orders available.</p>";
@@ -2341,126 +3505,161 @@ async function showRider(){
       return;
     }
 
+
     box.innerHTML =
       orders
         .map(
-          order => {
+          o => `
 
-            let buttons = "";
+            <div class="deliveryCard">
 
-            if(
-              !order.delivery_id
-            ){
+              <h3>
+                📦 Order #${o.id}
+              </h3>
 
-              buttons = `
-                <button
-                  class="actionBtn"
-                  onclick="claimOrder(
-                    ${order.id}
-                  )">
-                  🏍️ Accept Order
-                </button>
-              `;
 
-            }else if(
-              Number(
-                order.delivery_id
-              ) ===
-              Number(
-                me.user.id
-              )
-            ){
+              <div class="deliveryInfo">
 
-              buttons = `
+                <b>
+                  Restaurant
+                </b>
 
-                <button
-                  class="actionBtn"
-                  onclick="updateOrderStatus(
-                    ${order.id},
-                    'Picked up'
-                  )">
-                  Picked Up
-                </button>
+                <br>
 
-                <button
-                  class="actionBtn green"
-                  onclick="updateOrderStatus(
-                    ${order.id},
-                    'Delivered'
-                  )">
-                  Delivered
-                </button>
-
-              `;
-
-            }
-
-            return `
-
-              <div class="orderCard">
-
-                <h3>
-                  Order #${order.id}
-                </h3>
-
-                <p>
-                  Restaurant:
-                  ${escapeHtml(
-                    order.restaurant
-                  )}
-                </p>
-
-                <p>
-                  Customer:
-                  ${escapeHtml(
-                    order.customer
-                  )}
-                </p>
-
-                <p>
-                  Address:
-                  ${escapeHtml(
-                    order.address
-                  )}
-                </p>
-
-                <p>
-                  Total:
-                  ₹${order.total}
-                </p>
-
-                <p>
-                  Status:
-                  <span class="status">
-                    ${escapeHtml(
-                      order.status
-                    )}
-                  </span>
-                </p>
-
-                ${buttons}
+                ${escapeHtml(
+                  o.restaurant ||
+                  ""
+                )}
 
               </div>
 
-            `;
-          }
+
+              <div class="deliveryInfo">
+
+                <b>
+                  Address
+                </b>
+
+                <br>
+
+                ${escapeHtml(
+                  o.address ||
+                  ""
+                )}
+
+              </div>
+
+
+              <div class="deliveryInfo">
+
+                <b>
+                  Total
+                </b>
+
+                <br>
+
+                ₹${o.total}
+
+              </div>
+
+
+              <div class="deliveryInfo">
+
+                <b>
+                  Status
+                </b>
+
+                <br>
+
+                <span class="status">
+                  ${escapeHtml(
+                    o.status ||
+                    ""
+                  )}
+                </span>
+
+              </div>
+
+
+              ${
+                !o.delivery_id
+
+                ? `
+
+                  <button
+                    class="actionBtn"
+                    onclick="claimOrder(${o.id})"
+                  >
+                    🏍️ Accept Order
+                  </button>
+
+                `
+
+                :
+
+                Number(
+                  o.delivery_id
+                ) ===
+                Number(
+                  me.user.id
+                )
+
+                ? `
+
+                  <button
+                    class="actionBtn"
+                    onclick="updateOrderStatus(
+                      ${o.id},
+                      'Picked up'
+                    )"
+                  >
+                    Picked Up
+                  </button>
+
+
+                  <button
+                    class="actionBtn green"
+                    onclick="updateOrderStatus(
+                      ${o.id},
+                      'Delivered'
+                    )"
+                  >
+                    Delivered
+                  </button>
+
+                `
+
+                :
+
+                ""
+              }
+
+            </div>
+
+          `
         )
         .join("");
 
+
   }catch(error){
 
-    document.getElementById(
-      "riderOrders"
-    ).innerHTML =
-      `<p>${escapeHtml(
+    document
+      .getElementById(
+        "riderOrders"
+      )
+      .innerHTML =
+      "<p>" +
+      escapeHtml(
         error.message
-      )}</p>`;
-
+      ) +
+      "</p>";
   }
-
 }
 
-async function claimOrder(id){
+
+async function claimOrder(
+  id
+){
 
   try{
 
@@ -2472,17 +3671,23 @@ async function claimOrder(id){
       }
     );
 
+
+    alert(
+      "Order accepted successfully!"
+    );
+
+
     showRider();
+
 
   }catch(error){
 
     alert(
       error.message
     );
-
   }
-
 }
+
 
 async function updateOrderStatus(
   id,
@@ -2497,6 +3702,7 @@ async function updateOrderStatus(
       "/status",
       {
         method:"PATCH",
+
         body:
           JSON.stringify({
             status
@@ -2504,16 +3710,16 @@ async function updateOrderStatus(
       }
     );
 
+
     showRider();
+
 
   }catch(error){
 
     alert(
       error.message
     );
-
   }
-
 }
 
 
@@ -2525,13 +3731,14 @@ async function showAdmin(){
 
   hideAll();
 
+
   document
     .getElementById(
       "adminDashboard"
     )
-    .classList.add(
-      "active"
-    );
+    .classList
+    .add("active");
+
 
   try{
 
@@ -2540,8 +3747,9 @@ async function showAdmin(){
         "/api/me"
       );
 
+
     if(
-      !me.loggedIn ||
+      !me.user ||
       me.user.role !==
       "admin"
     ){
@@ -2551,142 +3759,170 @@ async function showAdmin(){
       return;
     }
 
+
     const stats =
       await api(
         "/api/admin/stats"
       );
 
-    document.getElementById(
-      "statRestaurants"
-    ).textContent =
-      stats.restaurants;
 
-    document.getElementById(
-      "statCustomers"
-    ).textContent =
-      stats.customers;
+    document
+      .getElementById(
+        "statRestaurants"
+      )
+      .textContent =
+      stats.restaurants || 0;
 
-    document.getElementById(
-      "statRiders"
-    ).textContent =
-      stats.riders;
 
-    document.getElementById(
-      "statOrders"
-    ).textContent =
-      stats.orders;
+    document
+      .getElementById(
+        "statCustomers"
+      )
+      .textContent =
+      stats.customers || 0;
 
-    document.getElementById(
-      "statRevenue"
-    ).textContent =
-      Number(
-        stats.revenue
-      ).toFixed(2);
+
+    document
+      .getElementById(
+        "statRiders"
+      )
+      .textContent =
+      stats.riders || 0;
+
+
+    document
+      .getElementById(
+        "statOrders"
+      )
+      .textContent =
+      stats.orders || 0;
+
+
+    document
+      .getElementById(
+        "statRevenue"
+      )
+      .textContent =
+      stats.revenue || 0;
+
 
     const orders =
       await api(
         "/api/orders"
       );
 
-    const box =
-      document.getElementById(
+
+    document
+      .getElementById(
         "adminOrders"
-      );
-
-    if(!orders.length){
-
-      box.innerHTML =
-        "<p>No orders.</p>";
-
-      return;
-    }
-
-    box.innerHTML =
+      )
+      .innerHTML =
       orders
         .map(
-          order => `
+          o => `
 
-          <div class="orderCard">
+            <div class="orderCard">
 
-            <div class="orderHeader">
+              <div class="orderHeader">
 
-              <div>
+                <div>
 
-                <h3>
-                  Order #${order.id}
-                </h3>
+                  <h3>
+                    Order #${o.id}
+                  </h3>
 
-                <p>
+                  <p>
+                    ${escapeHtml(
+                      o.customer ||
+                      "Customer"
+                    )}
+
+                    —
+
+                    ${escapeHtml(
+                      o.restaurant ||
+                      ""
+                    )}
+                  </p>
+
+                </div>
+
+
+                <span class="status">
+
                   ${escapeHtml(
-                    order.customer
+                    o.status ||
+                    ""
                   )}
-                  —
-                  ${escapeHtml(
-                    order.restaurant
-                  )}
-                </p>
+
+                </span>
 
               </div>
 
-              <span class="status">
-                ${escapeHtml(
-                  order.status
-                )}
-              </span>
+
+              <p>
+                ₹${o.total}
+              </p>
+
+
+              <button
+                class="actionBtn"
+                onclick="adminStatus(
+                  ${o.id},
+                  'Preparing'
+                )"
+              >
+                Preparing
+              </button>
+
+
+              <button
+                class="actionBtn"
+                onclick="adminStatus(
+                  ${o.id},
+                  'Picked up'
+                )"
+              >
+                Picked Up
+              </button>
+
+
+              <button
+                class="actionBtn green"
+                onclick="adminStatus(
+                  ${o.id},
+                  'Delivered'
+                )"
+              >
+                Delivered
+              </button>
 
             </div>
 
-            <p>
-              ₹${Number(
-                order.total
-              ).toFixed(2)}
-            </p>
-
-            <button
-              class="actionBtn"
-              onclick="adminStatus(
-                ${order.id},
-                'Preparing'
-              )">
-              Preparing
-            </button>
-
-            <button
-              class="actionBtn"
-              onclick="adminStatus(
-                ${order.id},
-                'Picked up'
-              )">
-              Picked Up
-            </button>
-
-            <button
-              class="actionBtn green"
-              onclick="adminStatus(
-                ${order.id},
-                'Delivered'
-              )">
-              Delivered
-            </button>
-
-          </div>
-
           `
         )
-        .join("");
+        .join("")
+
+      ||
+
+      "<p>No orders.</p>";
+
 
   }catch(error){
 
-    document.getElementById(
-      "adminOrders"
-    ).innerHTML =
-      `<p>${escapeHtml(
+    document
+      .getElementById(
+        "adminOrders"
+      )
+      .innerHTML =
+      "<p>" +
+      escapeHtml(
         error.message
-      )}</p>`;
-
+      ) +
+      "</p>";
   }
-
 }
+
 
 async function adminStatus(
   id,
@@ -2701,6 +3937,7 @@ async function adminStatus(
       "/status",
       {
         method:"PATCH",
+
         body:
           JSON.stringify({
             status
@@ -2708,16 +3945,16 @@ async function adminStatus(
       }
     );
 
+
     showAdmin();
+
 
   }catch(error){
 
     alert(
       error.message
     );
-
   }
-
 }
 
 
@@ -2727,77 +3964,75 @@ async function adminStatus(
 
 function hideAll(){
 
-  document.getElementById(
-    "homePage"
-  ).style.display =
+  document
+    .getElementById(
+      "homePage"
+    )
+    .style
+    .display =
     "none";
 
-  document
-    .getElementById(
-      "customerDashboard"
-    )
-    .classList.remove(
-      "active"
-    );
 
-  document
-    .getElementById(
-      "riderDashboard"
-    )
-    .classList.remove(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "adminDashboard"
-    )
-    .classList.remove(
-      "active"
-    );
-
+  [
+    "customerDashboard",
+    "riderDashboard",
+    "adminDashboard"
+  ]
+  .forEach(
+    id =>
+      document
+        .getElementById(
+          id
+        )
+        .classList
+        .remove(
+          "active"
+        )
+  );
 }
+
 
 function showHome(){
 
   hideAll();
 
-  document.getElementById(
-    "homePage"
-  ).style.display =
+
+  document
+    .getElementById(
+      "homePage"
+    )
+    .style
+    .display =
     "block";
+
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
-
 }
+
 
 function showRestaurants(){
 
   showHome();
 
+
   setTimeout(
     () => {
 
-      const grid =
-        document.getElementById(
+      document
+        .getElementById(
           "restaurantGrid"
-        );
-
-      if(grid){
-
-        grid.scrollIntoView({
-          behavior:"smooth"
+        )
+        ?.scrollIntoView({
+          behavior:"smooth",
+          block:"start"
         });
-
-      }
 
     },
     100
   );
-
 }
 
 
@@ -2811,124 +4046,36 @@ function toggleSideMenu(){
     .getElementById(
       "sideMenu"
     )
-    .classList.toggle(
+    .classList
+    .toggle(
       "active"
     );
-
-  document
-    .getElementById(
-      "overlay"
-    )
-    .classList.toggle(
-      "active"
-    );
-
 }
 
-function closeSideMenu(){
-
-  document
-    .getElementById(
-      "sideMenu"
-    )
-    .classList.remove(
-      "active"
-    );
-
-  document
-    .getElementById(
-      "overlay"
-    )
-    .classList.remove(
-      "active"
-    );
-
-}
 
 function showCategory(
   category
 ){
 
-  closeSideMenu();
+  toggleSideMenu();
 
   showHome();
 
-  document.getElementById(
-    "searchInput"
-  ).value =
-    category;
 
-  renderRestaurants();
-
-}
-
-
-/* =====================================================
-   USER
-===================================================== */
-
-async function updateUserButton(){
-
-  try{
-
-    const result =
-      await api(
-        "/api/me"
+  const search =
+    document
+      .getElementById(
+        "searchInput"
       );
 
-    const btns =
-      document.querySelectorAll(
-        ".iconBtn"
-      );
 
-    if(
-      result.loggedIn &&
-      result.user
-    ){
+  if(search){
 
-      if(btns[0]){
+    search.value =
+      category;
 
-        btns[0].title =
-          result.user.name +
-          " (" +
-          result.user.role +
-          ")";
-
-      }
-
-    }
-
-  }catch(_){}
-
-}
-
-async function logoutUser(){
-
-  try{
-
-    await api(
-      "/api/logout",
-      {
-        method:"POST"
-      }
-    );
-
-    alert(
-      "Logout successful"
-    );
-
-    showHome();
-
-    updateUserButton();
-
-  }catch(error){
-
-    alert(
-      error.message
-    );
-
+    renderRestaurants();
   }
-
 }
 
 
@@ -2936,7 +4083,9 @@ async function logoutUser(){
    ESCAPE
 ===================================================== */
 
-function escapeHtml(text){
+function escapeHtml(
+  text
+){
 
   return String(
     text ?? ""
@@ -2961,7 +4110,52 @@ function escapeHtml(text){
     /'/g,
     "&#039;"
   );
+}
 
+
+function escapeJs(
+  text
+){
+
+  return String(
+    text ?? ""
+  )
+  .replace(
+    /\\/g,
+    "\\\\"
+  )
+  .replace(
+    /'/g,
+    "\\'"
+  )
+  .replace(
+    /\r?\n/g,
+    "\\n"
+  );
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logoutUser(){
+
+  try{
+
+    await api(
+      "/api/logout",
+      {
+        method:"POST"
+      }
+    );
+
+
+    showHome();
+
+    updateUserButton();
+
+  }catch(e){}
 }
 
 
@@ -2970,7 +4164,7 @@ function escapeHtml(text){
 ===================================================== */
 
 loadRestaurants();
-updateCart();
+
 updateUserButton();
 
 </script>
