@@ -6,28 +6,50 @@ const path = require("path");
 const crypto = require("crypto");
 
 const app = express();
+
 app.set("trust proxy", 1);
 
-const db = new Database(path.join(__dirname, "haroa_eats.db"));
+const db = new Database(
+  path.join(__dirname, "haroa_eats.db")
+);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || "change-this-secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production"
-  }
-}));
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      "change-this-secret",
 
-app.use(express.static(path.join(__dirname, "public")));
+    resave: false,
+
+    saveUninitialized: false,
+
+    cookie: {
+      httpOnly: true,
+
+      sameSite: "lax",
+
+      secure:
+        process.env.NODE_ENV ===
+        "production"
+    }
+  })
+);
+
+app.use(
+  express.static(
+    path.join(__dirname, "public")
+  )
+);
 
 /* =========================
-   CONFIG
+   MSG91 CONFIG
 ========================= */
 
 const MSG91_WIDGET_ID =
@@ -35,10 +57,12 @@ const MSG91_WIDGET_ID =
   "366870715254333435383332";
 
 const MSG91_WIDGET_TOKEN =
-  process.env.MSG91_WIDGET_TOKEN || "";
+  process.env.MSG91_WIDGET_TOKEN ||
+  "";
 
 const MSG91_AUTHKEY =
-  process.env.MSG91_AUTHKEY || "";
+  process.env.MSG91_AUTHKEY ||
+  "";
 
 /* =========================
    DATABASE
@@ -96,91 +120,136 @@ CREATE TABLE IF NOT EXISTS order_items(
 
 function seed() {
 
-  const admin = db
-    .prepare("SELECT id FROM users WHERE phone=?")
-    .get("9999999999");
+  const admin =
+    db
+      .prepare(
+        "SELECT id FROM users WHERE phone=?"
+      )
+      .get("9999999999");
 
-  const rider = db
-    .prepare("SELECT id FROM users WHERE phone=?")
-    .get("8888888888");
+  const rider =
+    db
+      .prepare(
+        "SELECT id FROM users WHERE phone=?"
+      )
+      .get("8888888888");
 
   if (!rider) {
 
     db.prepare(`
-      INSERT INTO users(name,phone,password,role)
+      INSERT INTO users(
+        name,
+        phone,
+        password,
+        role
+      )
       VALUES(?,?,?,'rider')
     `).run(
       "Haroa Rider",
       "8888888888",
-      bcrypt.hashSync("rider123", 10)
+      bcrypt.hashSync(
+        "rider123",
+        10
+      )
     );
   }
 
   if (!admin) {
 
     db.prepare(`
-      INSERT INTO users(name,phone,password,role)
+      INSERT INTO users(
+        name,
+        phone,
+        password,
+        role
+      )
       VALUES(?,?,?,'admin')
     `).run(
       "Haroa Eats Admin",
       "9999999999",
-      bcrypt.hashSync("admin123", 10)
+      bcrypt.hashSync(
+        "admin123",
+        10
+      )
     );
   }
 
-  const count = db
-    .prepare("SELECT COUNT(*) AS c FROM restaurants")
-    .get().c;
+  const count =
+    db
+      .prepare(
+        "SELECT COUNT(*) AS c FROM restaurants"
+      )
+      .get().c;
 
   if (!count) {
 
-    const restaurant = db.prepare(`
-      INSERT INTO restaurants(name,area,phone,approved)
-      VALUES(?,?,?,1)
-    `);
+    const restaurant =
+      db.prepare(`
+        INSERT INTO restaurants(
+          name,
+          area,
+          phone,
+          approved
+        )
+        VALUES(?,?,?,1)
+      `);
 
-    const a = restaurant.run(
-      "Swagatam Restaurant",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
+    const a =
+      restaurant.run(
+        "Swagatam Restaurant",
+        "Haroa",
+        ""
+      ).lastInsertRowid;
 
-    const b = restaurant.run(
-      "Fry Nation",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
+    const b =
+      restaurant.run(
+        "Fry Nation",
+        "Haroa",
+        ""
+      ).lastInsertRowid;
 
-    const c = restaurant.run(
-      "A1 Haji Biryani",
-      "Haroa",
-      ""
-    ).lastInsertRowid;
+    const c =
+      restaurant.run(
+        "A1 Haji Biryani",
+        "Haroa",
+        ""
+      ).lastInsertRowid;
 
-    const menu = db.prepare(`
-      INSERT INTO menu(restaurant_id,name,price)
-      VALUES(?,?,?)
-    `);
+    const menu =
+      db.prepare(`
+        INSERT INTO menu(
+          restaurant_id,
+          name,
+          price
+        )
+        VALUES(?,?,?)
+      `);
 
     [
       ["Chicken Biryani", 160],
       ["Egg Roll", 70],
       ["Chicken Roll", 100],
       ["Fried Rice", 120]
-    ].forEach(item => menu.run(a, ...item));
+    ].forEach(
+      item => menu.run(a, ...item)
+    );
 
     [
       ["Chicken Fry", 140],
       ["French Fries", 80],
       ["Chicken Burger", 130],
       ["Momo", 100]
-    ].forEach(item => menu.run(b, ...item));
+    ].forEach(
+      item => menu.run(b, ...item)
+    );
 
     [
       ["Chicken Biryani", 150],
       ["Mutton Biryani", 220],
       ["Chicken Chaap", 140]
-    ].forEach(item => menu.run(c, ...item));
+    ].forEach(
+      item => menu.run(c, ...item)
+    );
   }
 }
 
@@ -208,7 +277,9 @@ function role(...roles) {
 
     if (
       !req.session.user ||
-      !roles.includes(req.session.user.role)
+      !roles.includes(
+        req.session.user.role
+      )
     ) {
 
       return res.status(403).json({
@@ -222,27 +293,33 @@ function role(...roles) {
 
 function normalizeIndianPhone(value) {
 
-  let phone = String(value || "")
-    .replace(/\D/g, "");
+  let phone =
+    String(value || "")
+      .replace(/\D/g, "");
 
   if (
     phone.startsWith("91") &&
     phone.length === 12
   ) {
-    phone = phone.slice(2);
+    phone =
+      phone.slice(2);
   }
 
   if (
     phone.startsWith("0") &&
     phone.length === 11
   ) {
-    phone = phone.slice(1);
+    phone =
+      phone.slice(1);
   }
 
   return phone;
 }
 
-function findValueDeep(value, keys) {
+function findValueDeep(
+  value,
+  keys
+) {
 
   if (
     !value ||
@@ -265,7 +342,10 @@ function findValueDeep(value, keys) {
     }
   }
 
-  for (const child of Object.values(value)) {
+  for (
+    const child of
+    Object.values(value)
+  ) {
 
     if (
       child &&
@@ -273,7 +353,10 @@ function findValueDeep(value, keys) {
     ) {
 
       const found =
-        findValueDeep(child, keys);
+        findValueDeep(
+          child,
+          keys
+        );
 
       if (found != null) {
         return found;
@@ -289,7 +372,8 @@ function decodeJwtPayload(token) {
   try {
 
     const parts =
-      String(token || "").split(".");
+      String(token || "")
+        .split(".");
 
     if (parts.length !== 3) {
       return {};
@@ -302,7 +386,10 @@ function decodeJwtPayload(token) {
 
     return JSON.parse(
       Buffer
-        .from(payload, "base64")
+        .from(
+          payload,
+          "base64"
+        )
         .toString("utf8")
     );
 
@@ -314,23 +401,31 @@ function decodeJwtPayload(token) {
 
 function extractMsg91Phone(data) {
 
-  const value = findValueDeep(data, [
-    "mobile",
-    "mobile_number",
-    "phone",
-    "phone_number",
-    "identifier",
-    "number"
-  ]);
+  const value =
+    findValueDeep(
+      data,
+      [
+        "mobile",
+        "mobile_number",
+        "phone",
+        "phone_number",
+        "identifier",
+        "number"
+      ]
+    );
 
-  return normalizeIndianPhone(value);
+  return normalizeIndianPhone(
+    value
+  );
 }
 
 /* =========================
-   MSG91 VERIFY
+   MSG91 ACCESS TOKEN VERIFY
 ========================= */
 
-async function verifyMsg91AccessToken(accessToken) {
+async function verifyMsg91AccessToken(
+  accessToken
+) {
 
   if (!MSG91_AUTHKEY) {
 
@@ -339,27 +434,38 @@ async function verifyMsg91AccessToken(accessToken) {
     );
   }
 
-  const response = await fetch(
-    "https://control.msg91.com/api/v5/widget/verifyAccessToken",
-    {
-      method: "POST",
+  const response =
+    await fetch(
+      "https://control.msg91.com/api/v5/widget/verifyAccessToken",
+      {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "application/json"
-      },
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
 
-      body: new URLSearchParams({
-        authkey: MSG91_AUTHKEY,
-        "access-token": accessToken
-      })
-    }
-  );
+          "Accept":
+            "application/json"
+        },
+
+        body:
+          new URLSearchParams({
+            authkey:
+              MSG91_AUTHKEY,
+
+            "access-token":
+              accessToken
+          })
+      }
+    );
 
   let data = {};
 
   try {
-    data = await response.json();
+
+    data =
+      await response.json();
+
   } catch (_) {}
 
   if (!response.ok) {
@@ -398,33 +504,43 @@ async function verifyMsg91AccessToken(accessToken) {
    OTP CONFIG
 ========================= */
 
-app.get("/api/otp/config", (req, res) => {
+app.get(
+  "/api/otp/config",
+  (req, res) => {
 
-  const widgetConfigured =
-    Boolean(MSG91_WIDGET_ID);
+    const widgetConfigured =
+      Boolean(
+        MSG91_WIDGET_ID
+      );
 
-  const tokenConfigured =
-    Boolean(MSG91_WIDGET_TOKEN);
+    const tokenConfigured =
+      Boolean(
+        MSG91_WIDGET_TOKEN
+      );
 
-  res.set("Cache-Control", "no-store");
+    res.set(
+      "Cache-Control",
+      "no-store"
+    );
 
-  res.json({
+    res.json({
 
-    enabled:
-      widgetConfigured &&
-      tokenConfigured,
+      enabled:
+        widgetConfigured &&
+        tokenConfigured,
 
-    widgetId:
-      widgetConfigured
-        ? MSG91_WIDGET_ID
-        : null,
+      widgetId:
+        widgetConfigured
+          ? MSG91_WIDGET_ID
+          : null,
 
-    tokenAuth:
-      tokenConfigured
-        ? MSG91_WIDGET_TOKEN
-        : null
-  });
-});
+      tokenAuth:
+        tokenConfigured
+          ? MSG91_WIDGET_TOKEN
+          : null
+    });
+  }
+);
 
 /* =========================
    OTP LOGIN / SIGNUP
@@ -452,7 +568,8 @@ app.post(
     if (!accessToken) {
 
       return res.status(400).json({
-        error: "OTP access token missing"
+        error:
+          "OTP access token missing"
       });
     }
 
@@ -464,13 +581,23 @@ app.post(
         );
 
       const tokenPayload =
-        decodeJwtPayload(accessToken);
+        decodeJwtPayload(
+          accessToken
+        );
 
       const verifiedPhone =
-        extractMsg91Phone(verified) ||
-        extractMsg91Phone(tokenPayload);
+        extractMsg91Phone(
+          verified
+        ) ||
+        extractMsg91Phone(
+          tokenPayload
+        );
 
-      if (!/^\d{10}$/.test(verifiedPhone)) {
+      if (
+        !/^\d{10}$/.test(
+          verifiedPhone
+        )
+      ) {
 
         return res.status(400).json({
           error:
@@ -483,7 +610,9 @@ app.post(
           .prepare(
             "SELECT * FROM users WHERE phone=?"
           )
-          .get(verifiedPhone);
+          .get(
+            verifiedPhone
+          );
 
       if (
         user &&
@@ -496,7 +625,10 @@ app.post(
         });
       }
 
-      if (mode === "login" && !user) {
+      if (
+        mode === "login" &&
+        !user
+      ) {
 
         return res.status(404).json({
           error:
@@ -504,7 +636,10 @@ app.post(
         });
       }
 
-      if (mode === "signup" && user) {
+      if (
+        mode === "signup" &&
+        user
+      ) {
 
         return res.status(409).json({
           error:
@@ -546,7 +681,9 @@ app.post(
             .prepare(
               "SELECT * FROM users WHERE id=?"
             )
-            .get(info.lastInsertRowid);
+            .get(
+              info.lastInsertRowid
+            );
 
       } else if (
         requestedName &&
@@ -567,16 +704,24 @@ app.post(
             .prepare(
               "SELECT * FROM users WHERE id=?"
             )
-            .get(user.id);
+            .get(
+              user.id
+            );
       }
 
       req.session.user = {
 
-        id: user.id,
-        name: user.name,
-        phone: user.phone,
-        role: user.role
+        id:
+          user.id,
 
+        name:
+          user.name,
+
+        phone:
+          user.phone,
+
+        role:
+          user.role
       };
 
       res.json({
@@ -637,11 +782,16 @@ app.post(
     ) {
 
       return res.status(400).json({
-        error: "সব তথ্য দিন"
+        error:
+          "সব তথ্য দিন"
       });
     }
 
-    if (!/^\d{10}$/.test(phone)) {
+    if (
+      !/^\d{10}$/.test(
+        phone
+      )
+    ) {
 
       return res.status(400).json({
         error:
@@ -649,7 +799,9 @@ app.post(
       });
     }
 
-    if (password.length < 6) {
+    if (
+      password.length < 6
+    ) {
 
       return res.status(400).json({
         error:
@@ -686,6 +838,7 @@ app.post(
           info.lastInsertRowid,
 
         name,
+
         phone,
 
         role:
@@ -753,11 +906,17 @@ app.post(
 
     req.session.user = {
 
-      id: user.id,
-      name: user.name,
-      phone: user.phone,
-      role: user.role
+      id:
+        user.id,
 
+      name:
+        user.name,
+
+      phone:
+        user.phone,
+
+      role:
+        user.role
     };
 
     res.json({
@@ -779,12 +938,24 @@ app.post(
   (req, res) => {
 
     req.session.destroy(
-      () => {
+      error => {
+
+        if (error) {
+
+          console.error(
+            "Logout error:",
+            error
+          );
+
+          return res.status(500).json({
+            error:
+              "Logout failed"
+          });
+        }
 
         res.json({
           ok: true
         });
-
       }
     );
   }
@@ -797,17 +968,23 @@ app.post(
 app.get(
   "/api/me",
   (req, res) => {
-      if (!req.session.user) {
-    return res.json({
-      loggedIn: false
+
+    if (!req.session.user) {
+
+      return res.json({
+        loggedIn: false
+      });
+    }
+
+    res.json({
+
+      loggedIn: true,
+
+      user:
+        req.session.user
     });
   }
-
-  res.json({
-    loggedIn: true,
-    user: req.session.user
-  });
-});
+);
 
 /* =========================
    RESTAURANTS
@@ -825,7 +1002,9 @@ app.get(
         ORDER BY id DESC
       `).all();
 
-    res.json(restaurants);
+    res.json(
+      restaurants
+    );
   }
 );
 
@@ -838,12 +1017,19 @@ app.get(
   (req, res) => {
 
     const restaurantId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
-    if (!Number.isInteger(restaurantId)) {
+    if (
+      !Number.isInteger(
+        restaurantId
+      )
+    ) {
 
       return res.status(400).json({
-        error: "Invalid restaurant id"
+        error:
+          "Invalid restaurant id"
       });
     }
 
@@ -854,7 +1040,9 @@ app.get(
         WHERE restaurant_id=?
         AND available=1
         ORDER BY id
-      `).all(restaurantId);
+      `).all(
+        restaurantId
+      );
 
     res.json(menu);
   }
@@ -871,7 +1059,9 @@ app.post(
   (req, res) => {
 
     const restaurantId =
-      Number(req.body.restaurant_id);
+      Number(
+        req.body.restaurant_id
+      );
 
     const address =
       String(
@@ -879,12 +1069,16 @@ app.post(
       ).trim();
 
     const items =
-      Array.isArray(req.body.items)
+      Array.isArray(
+        req.body.items
+      )
         ? req.body.items
         : [];
 
     if (
-      !Number.isInteger(restaurantId) ||
+      !Number.isInteger(
+        restaurantId
+      ) ||
       !address ||
       !items.length
     ) {
@@ -901,7 +1095,9 @@ app.post(
         FROM restaurants
         WHERE id=?
         AND approved=1
-      `).get(restaurantId);
+      `).get(
+        restaurantId
+      );
 
     if (!restaurant) {
 
@@ -915,17 +1111,27 @@ app.post(
 
     const normalizedItems = [];
 
-    for (const item of items) {
+    for (
+      const item of items
+    ) {
 
       const menuId =
-        Number(item.menu_id);
+        Number(
+          item.menu_id
+        );
 
       const qty =
-        Number(item.qty);
+        Number(
+          item.qty
+        );
 
       if (
-        !Number.isInteger(menuId) ||
-        !Number.isInteger(qty) ||
+        !Number.isInteger(
+          menuId
+        ) ||
+        !Number.isInteger(
+          qty
+        ) ||
         qty < 1
       ) {
         continue;
@@ -948,7 +1154,8 @@ app.post(
       }
 
       total +=
-        Number(menu.price) * qty;
+        Number(menu.price) *
+        qty;
 
       normalizedItems.push({
 
@@ -962,11 +1169,12 @@ app.post(
           Number(menu.price),
 
         qty
-
       });
     }
 
-    if (!normalizedItems.length) {
+    if (
+      !normalizedItems.length
+    ) {
 
       return res.status(400).json({
         error:
@@ -975,56 +1183,59 @@ app.post(
     }
 
     const createOrder =
-      db.transaction(() => {
+      db.transaction(
+        () => {
 
-        const order =
-          db.prepare(`
-            INSERT INTO orders(
-              customer_id,
-              restaurant_id,
+          const order =
+            db.prepare(`
+              INSERT INTO orders(
+                customer_id,
+                restaurant_id,
+                total,
+                address,
+                status
+              )
+              VALUES(?,?,?,?,?)
+            `).run(
+              req.session.user.id,
+              restaurantId,
               total,
               address,
-              status
-            )
-            VALUES(?,?,?,?,?)
-          `).run(
-            req.session.user.id,
-            restaurantId,
-            total,
-            address,
-            "Pending"
-          );
+              "Pending"
+            );
 
-        const orderId =
-          order.lastInsertRowid;
+          const orderId =
+            order.lastInsertRowid;
 
-        const insertItem =
-          db.prepare(`
-            INSERT INTO order_items(
-              order_id,
-              menu_id,
-              name,
-              price,
-              qty
-            )
-            VALUES(?,?,?,?,?)
-          `);
+          const insertItem =
+            db.prepare(`
+              INSERT INTO order_items(
+                order_id,
+                menu_id,
+                name,
+                price,
+                qty
+              )
+              VALUES(?,?,?,?,?)
+            `);
 
-        for (
-          const item of normalizedItems
-        ) {
+          for (
+            const item of
+            normalizedItems
+          ) {
 
-          insertItem.run(
-            orderId,
-            item.menu_id,
-            item.name,
-            item.price,
-            item.qty
-          );
+            insertItem.run(
+              orderId,
+              item.menu_id,
+              item.name,
+              item.price,
+              item.qty
+            );
+          }
+
+          return orderId;
         }
-
-        return orderId;
-      });
+      );
 
     const orderId =
       createOrder();
@@ -1041,7 +1252,7 @@ app.post(
 );
 
 /* =========================
-   CUSTOMER ORDERS
+   CUSTOMER / RIDER / ADMIN ORDERS
 ========================= */
 
 app.get(
@@ -1103,7 +1314,9 @@ app.get(
         `).all();
     }
 
-    res.json(orders);
+    res.json(
+      orders
+    );
   }
 );
 
@@ -1117,9 +1330,15 @@ app.get(
   (req, res) => {
 
     const orderId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
-    if (!Number.isInteger(orderId)) {
+    if (
+      !Number.isInteger(
+        orderId
+      )
+    ) {
 
       return res.status(400).json({
         error:
@@ -1136,7 +1355,9 @@ app.get(
         LEFT JOIN restaurants r
           ON r.id=o.restaurant_id
         WHERE o.id=?
-      `).get(orderId);
+      `).get(
+        orderId
+      );
 
     if (!order) {
 
@@ -1165,7 +1386,9 @@ app.get(
         FROM order_items
         WHERE order_id=?
         ORDER BY id
-      `).all(orderId);
+      `).all(
+        orderId
+      );
 
     res.json({
 
@@ -1187,7 +1410,9 @@ app.patch(
   (req, res) => {
 
     const orderId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
     const status =
       String(
@@ -1195,7 +1420,6 @@ app.patch(
       ).trim();
 
     const allowed = [
-
       "Pending",
       "Accepted",
       "Preparing",
@@ -1204,12 +1428,15 @@ app.patch(
       "Out for Delivery",
       "Delivered",
       "Cancelled"
-
     ];
 
     if (
-      !Number.isInteger(orderId) ||
-      !allowed.includes(status)
+      !Number.isInteger(
+        orderId
+      ) ||
+      !allowed.includes(
+        status
+      )
     ) {
 
       return res.status(400).json({
@@ -1223,7 +1450,9 @@ app.patch(
         SELECT *
         FROM orders
         WHERE id=?
-      `).get(orderId);
+      `).get(
+        orderId
+      );
 
     if (!order) {
 
@@ -1262,7 +1491,7 @@ app.patch(
 );
 
 /* =========================
-   RIDER - AVAILABLE ORDERS
+   RIDER AVAILABLE ORDERS
 ========================= */
 
 app.get(
@@ -1290,12 +1519,14 @@ app.get(
         ORDER BY o.id ASC
       `).all();
 
-    res.json(orders);
+    res.json(
+      orders
+    );
   }
 );
 
 /* =========================
-   RIDER - ACCEPT ORDER
+   RIDER ACCEPT ORDER
 ========================= */
 
 app.post(
@@ -1305,9 +1536,15 @@ app.post(
   (req, res) => {
 
     const orderId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
-    if (!Number.isInteger(orderId)) {
+    if (
+      !Number.isInteger(
+        orderId
+      )
+    ) {
 
       return res.status(400).json({
         error:
@@ -1320,7 +1557,9 @@ app.post(
         SELECT *
         FROM orders
         WHERE id=?
-      `).get(orderId);
+      `).get(
+        orderId
+      );
 
     if (!order) {
 
@@ -1356,7 +1595,7 @@ app.post(
 );
 
 /* =========================
-   ADMIN - ALL USERS
+   ADMIN USERS
 ========================= */
 
 app.get(
@@ -1376,12 +1615,14 @@ app.get(
         ORDER BY id DESC
       `).all();
 
-    res.json(users);
+    res.json(
+      users
+    );
   }
 );
 
 /* =========================
-   ADMIN - ALL ORDERS
+   ADMIN ORDERS
 ========================= */
 
 app.get(
@@ -1412,12 +1653,14 @@ app.get(
         ORDER BY o.id DESC
       `).all();
 
-    res.json(orders);
+    res.json(
+      orders
+    );
   }
 );
 
 /* =========================
-   ADMIN - RIDERS
+   ADMIN RIDERS
 ========================= */
 
 app.get(
@@ -1437,12 +1680,14 @@ app.get(
         ORDER BY id DESC
       `).all();
 
-    res.json(riders);
+    res.json(
+      riders
+    );
   }
 );
 
 /* =========================
-   ADMIN - ASSIGN RIDER
+   ADMIN ASSIGN RIDER
 ========================= */
 
 app.post(
@@ -1452,14 +1697,22 @@ app.post(
   (req, res) => {
 
     const orderId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
     const riderId =
-      Number(req.body.rider_id);
+      Number(
+        req.body.rider_id
+      );
 
     if (
-      !Number.isInteger(orderId) ||
-      !Number.isInteger(riderId)
+      !Number.isInteger(
+        orderId
+      ) ||
+      !Number.isInteger(
+        riderId
+      )
     ) {
 
       return res.status(400).json({
@@ -1474,7 +1727,9 @@ app.post(
         FROM users
         WHERE id=?
         AND role='rider'
-      `).get(riderId);
+      `).get(
+        riderId
+      );
 
     if (!rider) {
 
@@ -1489,7 +1744,9 @@ app.post(
         SELECT id
         FROM orders
         WHERE id=?
-      `).get(orderId);
+      `).get(
+        orderId
+      );
 
     if (!order) {
 
@@ -1517,7 +1774,7 @@ app.post(
 );
 
 /* =========================
-   ADMIN - RESTAURANTS
+   ADMIN RESTAURANTS
 ========================= */
 
 app.get(
@@ -1533,12 +1790,14 @@ app.get(
         ORDER BY id DESC
       `).all();
 
-    res.json(restaurants);
+    res.json(
+      restaurants
+    );
   }
 );
 
 /* =========================
-   ADMIN - APPROVE RESTAURANT
+   ADMIN APPROVE RESTAURANT
 ========================= */
 
 app.patch(
@@ -1548,10 +1807,14 @@ app.patch(
   (req, res) => {
 
     const restaurantId =
-      Number(req.params.id);
+      Number(
+        req.params.id
+      );
 
     if (
-      !Number.isInteger(restaurantId)
+      !Number.isInteger(
+        restaurantId
+      )
     ) {
 
       return res.status(400).json({
@@ -1564,7 +1827,9 @@ app.patch(
       UPDATE restaurants
       SET approved=1
       WHERE id=?
-    `).run(restaurantId);
+    `).run(
+      restaurantId
+    );
 
     res.json({
       ok: true
@@ -1588,13 +1853,19 @@ app.get(
         "Haroa Eats",
 
       msg91Widget:
-        Boolean(MSG91_WIDGET_ID),
+        Boolean(
+          MSG91_WIDGET_ID
+        ),
 
       msg91WidgetToken:
-        Boolean(MSG91_WIDGET_TOKEN),
+        Boolean(
+          MSG91_WIDGET_TOKEN
+        ),
 
       msg91AuthKey:
-        Boolean(MSG91_AUTHKEY),
+        Boolean(
+          MSG91_AUTHKEY
+        ),
 
       time:
         new Date().toISOString()
@@ -1622,7 +1893,12 @@ app.use(
 ========================= */
 
 app.use(
-  (error, req, res, next) => {
+  (
+    error,
+    req,
+    res,
+    next
+  ) => {
 
     console.error(
       "Server error:",
