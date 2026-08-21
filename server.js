@@ -26,31 +26,35 @@ app.use(
       process.env.SESSION_SECRET ||
       "change-this-secret",
 
-    resave: false,
+    resave:false,
 
-    saveUninitialized: false,
+    saveUninitialized:false,
 
-    cookie: {
-      httpOnly: true,
-
-      sameSite: "lax",
-
+    cookie:{
+      httpOnly:true,
+      sameSite:"lax",
       secure:
         process.env.NODE_ENV ===
-        "production"
+        "production",
+      maxAge:
+        7*24*60*60*1000
     }
   })
 );
 
 app.use(
   express.static(
-    path.join(__dirname, "public")
+    path.join(
+      __dirname,
+      "public"
+    )
   )
 );
 
-/* =========================
+
+/* =====================================================
    MSG91 CONFIG
-========================= */
+===================================================== */
 
 const MSG91_WIDGET_ID =
   process.env.MSG91_WIDGET_ID ||
@@ -64,86 +68,139 @@ const MSG91_AUTHKEY =
   process.env.MSG91_AUTHKEY ||
   "";
 
-/* =========================
+
+/* =====================================================
    DATABASE
-========================= */
+   IMPORTANT:
+   সব CREATE TABLE db.exec এর ভিতরে থাকবে
+===================================================== */
 
 db.exec(`
-CREATE TABLE IF NOT EXISTS users(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  phone TEXT UNIQUE NOT NULL,
-  password TEXT,
-  role TEXT NOT NULL DEFAULT 'customer'
-);
 
-CREATE TABLE IF NOT EXISTS restaurants(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  area TEXT NOT NULL,
-  phone TEXT,
-  approved INTEGER DEFAULT 0
-);
+  CREATE TABLE IF NOT EXISTS users (
 
-CREATE TABLE IF NOT EXISTS menu(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  restaurant_id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  price REAL NOT NULL,
-  available INTEGER DEFAULT 1
-);
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-CREATE TABLE IF NOT EXISTS orders(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  customer_id INTEGER NOT NULL,
-  restaurant_id INTEGER NOT NULL,
-  total REAL NOT NULL,
-  address TEXT NOT NULL,
-  status TEXT DEFAULT 'Pending',
-  delivery_id INTEGER,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
+    name TEXT NOT NULL,
 
-CREATE TABLE IF NOT EXISTS order_items(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  order_id INTEGER NOT NULL,
-  menu_id INTEGER NOT NULL,
-  name TEXT NOT NULL,
-  price REAL NOT NULL,
-  qty INTEGER NOT NULL
-);
+    phone TEXT UNIQUE NOT NULL,
+
+    password TEXT,
+
+    role TEXT NOT NULL
+      DEFAULT 'customer'
+
+  );
+
+  CREATE TABLE IF NOT EXISTS restaurants (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    name TEXT NOT NULL,
+
+    area TEXT NOT NULL,
+
+    phone TEXT,
+
+    approved INTEGER DEFAULT 0
+
+  );
+
+  CREATE TABLE IF NOT EXISTS menu (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    restaurant_id INTEGER NOT NULL,
+
+    name TEXT NOT NULL,
+
+    price REAL NOT NULL,
+
+    available INTEGER DEFAULT 1
+
+  );
+
+  CREATE TABLE IF NOT EXISTS orders (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    customer_id INTEGER NOT NULL,
+
+    restaurant_id INTEGER NOT NULL,
+
+    total REAL NOT NULL,
+
+    address TEXT NOT NULL,
+
+    status TEXT DEFAULT 'Pending',
+
+    delivery_id INTEGER,
+
+    created_at TEXT
+      DEFAULT CURRENT_TIMESTAMP
+
+  );
+
+  CREATE TABLE IF NOT EXISTS order_items (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    order_id INTEGER NOT NULL,
+
+    menu_id INTEGER NOT NULL,
+
+    name TEXT NOT NULL,
+
+    price REAL NOT NULL,
+
+    qty INTEGER NOT NULL
+
+  );
+
 `);
 
-/* =========================
+
+/* =====================================================
    DEMO DATA
-========================= */
+===================================================== */
 
-function seed() {
+function seed(){
 
-  const admin =
-    db
-      .prepare(
-        "SELECT id FROM users WHERE phone=?"
-      )
-      .get("9999999999");
+  const admin=
+    db.prepare(
+      "SELECT id FROM users WHERE phone=?"
+    )
+    .get(
+      "9999999999"
+    );
 
-  const rider =
-    db
-      .prepare(
-        "SELECT id FROM users WHERE phone=?"
-      )
-      .get("8888888888");
+  const rider=
+    db.prepare(
+      "SELECT id FROM users WHERE phone=?"
+    )
+    .get(
+      "8888888888"
+    );
 
-  if (!rider) {
+
+  if(!rider){
 
     db.prepare(`
+
       INSERT INTO users(
         name,
         phone,
         password,
         role
       )
-      VALUES(?,?,?,'rider')
+
+      VALUES(
+        ?,
+        ?,
+        ?,
+        'rider'
+      )
+
     `).run(
       "Haroa Rider",
       "8888888888",
@@ -152,18 +209,28 @@ function seed() {
         10
       )
     );
+
   }
 
-  if (!admin) {
+
+  if(!admin){
 
     db.prepare(`
+
       INSERT INTO users(
         name,
         phone,
         password,
         role
       )
-      VALUES(?,?,?,'admin')
+
+      VALUES(
+        ?,
+        ?,
+        ?,
+        'admin'
+      )
+
     `).run(
       "Haroa Eats Admin",
       "9999999999",
@@ -172,217 +239,322 @@ function seed() {
         10
       )
     );
+
   }
 
-  const count =
-    db
-      .prepare(
-        "SELECT COUNT(*) AS c FROM restaurants"
+
+  const count=
+    db.prepare(
+      "SELECT COUNT(*) AS c FROM restaurants"
+    )
+    .get()
+    .c;
+
+  if(count>0){
+    return;
+  }
+
+
+  const restaurant=
+    db.prepare(`
+
+      INSERT INTO restaurants(
+        name,
+        area,
+        phone,
+        approved
       )
-      .get().c;
 
-  if (!count) {
+      VALUES(
+        ?,
+        ?,
+        ?,
+        1
+      )
 
-    const restaurant =
-      db.prepare(`
-        INSERT INTO restaurants(
-          name,
-          area,
-          phone,
-          approved
-        )
-        VALUES(?,?,?,1)
-      `);
+    `);
 
-    const a =
-      restaurant.run(
-        "Swagatam Restaurant",
-        "Haroa",
-        ""
-      ).lastInsertRowid;
 
-    const b =
-      restaurant.run(
-        "Fry Nation",
-        "Haroa",
-        ""
-      ).lastInsertRowid;
+  const a=
+    restaurant.run(
+      "Swagatam Restaurant",
+      "Haroa",
+      ""
+    ).lastInsertRowid;
 
-    const c =
-      restaurant.run(
-        "A1 Haji Biryani",
-        "Haroa",
-        ""
-      ).lastInsertRowid;
+  const b=
+    restaurant.run(
+      "Fry Nation",
+      "Haroa",
+      ""
+    ).lastInsertRowid;
 
-    const menu =
-      db.prepare(`
-        INSERT INTO menu(
-          restaurant_id,
-          name,
-          price
-        )
-        VALUES(?,?,?)
-      `);
+  const c=
+    restaurant.run(
+      "A1 Haji Biryani",
+      "Haroa",
+      ""
+    ).lastInsertRowid;
 
-    [
-      ["Chicken Biryani", 160],
-      ["Egg Roll", 70],
-      ["Chicken Roll", 100],
-      ["Fried Rice", 120]
-    ].forEach(
-      item => menu.run(a, ...item)
-    );
 
-    [
-      ["Chicken Fry", 140],
-      ["French Fries", 80],
-      ["Chicken Burger", 130],
-      ["Momo", 100]
-    ].forEach(
-      item => menu.run(b, ...item)
-    );
+  const menu=
+    db.prepare(`
 
-    [
-      ["Chicken Biryani", 150],
-      ["Mutton Biryani", 220],
-      ["Chicken Chaap", 140]
-    ].forEach(
-      item => menu.run(c, ...item)
-    );
-  }
+      INSERT INTO menu(
+        restaurant_id,
+        name,
+        price
+      )
+
+      VALUES(
+        ?,
+        ?,
+        ?
+      )
+
+    `);
+
+
+  [
+    ["Chicken Biryani",160],
+    ["Egg Roll",70],
+    ["Chicken Roll",100],
+    ["Fried Rice",120]
+
+  ].forEach(
+    item=>
+      menu.run(
+        a,
+        ...item
+      )
+  );
+
+
+  [
+    ["Chicken Fry",140],
+    ["French Fries",80],
+    ["Chicken Burger",130],
+    ["Momo",100]
+
+  ].forEach(
+    item=>
+      menu.run(
+        b,
+        ...item
+      )
+  );
+
+
+  [
+    ["Chicken Biryani",150],
+    ["Mutton Biryani",220],
+    ["Chicken Chaap",140]
+
+  ].forEach(
+    item=>
+      menu.run(
+        c,
+        ...item
+      )
+  );
+
 }
 
 seed();
 
-/* =========================
+
+/* =====================================================
    HELPERS
-========================= */
+===================================================== */
 
-function auth(req, res, next) {
+function auth(
+  req,
+  res,
+  next
+){
 
-  if (!req.session.user) {
+  if(!req.session.user){
 
-    return res.status(401).json({
-      error: "Login required"
-    });
+    return res
+      .status(401)
+      .json({
+        error:"Login required"
+      });
+
   }
 
   next();
+
 }
 
-function role(...roles) {
 
-  return (req, res, next) => {
+function role(
+  ...roles
+){
 
-    if (
+  return (
+    req,
+    res,
+    next
+  )=>{
+
+    if(
       !req.session.user ||
       !roles.includes(
         req.session.user.role
       )
-    ) {
+    ){
 
-      return res.status(403).json({
-        error: "Not allowed"
-      });
+      return res
+        .status(403)
+        .json({
+          error:"Not allowed"
+        });
+
     }
 
     next();
+
   };
+
 }
 
-function normalizeIndianPhone(value) {
 
-  let phone =
-    String(value || "")
-      .replace(/\D/g, "");
+function normalizeIndianPhone(
+  value
+){
 
-  if (
+  let phone=
+    String(
+      value||""
+    )
+    .replace(
+      /\D/g,
+      ""
+    );
+
+  if(
     phone.startsWith("91") &&
-    phone.length === 12
-  ) {
-    phone =
+    phone.length===12
+  ){
+
+    phone=
       phone.slice(2);
+
   }
 
-  if (
+  if(
     phone.startsWith("0") &&
-    phone.length === 11
-  ) {
-    phone =
+    phone.length===11
+  ){
+
+    phone=
       phone.slice(1);
+
   }
 
   return phone;
+
 }
+
 
 function findValueDeep(
   value,
   keys
-) {
+){
 
-  if (
+  if(
     !value ||
-    typeof value !== "object"
-  ) {
+    typeof value!=="object"
+  ){
+
     return null;
+
   }
 
-  for (const key of keys) {
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        key
-      ) &&
-      value[key] != null
-    ) {
+  for(
+    const key of keys
+  ){
+
+    if(
+      Object.prototype
+        .hasOwnProperty
+        .call(
+          value,
+          key
+        ) &&
+      value[key]!=null
+    ){
 
       return value[key];
+
     }
+
   }
 
-  for (
-    const child of
-    Object.values(value)
-  ) {
 
-    if (
+  for(
+    const child
+    of Object.values(value)
+  ){
+
+    if(
       child &&
-      typeof child === "object"
-    ) {
+      typeof child==="object"
+    ){
 
-      const found =
+      const found=
         findValueDeep(
           child,
           keys
         );
 
-      if (found != null) {
+      if(found!=null){
+
         return found;
+
       }
+
     }
+
   }
 
   return null;
+
 }
 
-function decodeJwtPayload(token) {
 
-  try {
+function decodeJwtPayload(
+  token
+){
 
-    const parts =
-      String(token || "")
-        .split(".");
+  try{
 
-    if (parts.length !== 3) {
+    const parts=
+      String(
+        token||""
+      )
+      .split(".");
+
+    if(
+      parts.length!==3
+    ){
+
       return {};
+
     }
 
-    const payload =
+    const payload=
       parts[1]
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
+        .replace(
+          /-/g,
+          "+"
+        )
+        .replace(
+          /_/g,
+          "/"
+        );
 
     return JSON.parse(
       Buffer
@@ -393,15 +565,20 @@ function decodeJwtPayload(token) {
         .toString("utf8")
     );
 
-  } catch (_) {
+  }catch(_){
 
     return {};
+
   }
+
 }
 
-function extractMsg91Phone(data) {
 
-  const value =
+function extractMsg91Phone(
+  data
+){
+
+  const value=
     findValueDeep(
       data,
       [
@@ -417,30 +594,46 @@ function extractMsg91Phone(data) {
   return normalizeIndianPhone(
     value
   );
+
 }
 
-/* =========================
-   MSG91 ACCESS TOKEN VERIFY
-========================= */
+
+/* =====================================================
+   MSG91 SERVER-SIDE ACCESS TOKEN VERIFY
+===================================================== */
 
 async function verifyMsg91AccessToken(
   accessToken
-) {
+){
 
-  if (!MSG91_AUTHKEY) {
+  if(!MSG91_AUTHKEY){
 
     throw new Error(
-      "MSG91_AUTHKEY is not configured on the server"
+      "MSG91_AUTHKEY is not configured on Render"
     );
+
   }
 
-  const response =
+
+  const body=
+    new URLSearchParams({
+
+      authkey:
+        MSG91_AUTHKEY,
+
+      "access-token":
+        accessToken
+
+    });
+
+
+  const response=
     await fetch(
       "https://control.msg91.com/api/v5/widget/verifyAccessToken",
       {
-        method: "POST",
+        method:"POST",
 
-        headers: {
+        headers:{
           "Content-Type":
             "application/x-www-form-urlencoded",
 
@@ -448,144 +641,135 @@ async function verifyMsg91AccessToken(
             "application/json"
         },
 
-        body:
-          new URLSearchParams({
-            authkey:
-              MSG91_AUTHKEY,
-
-            "access-token":
-              accessToken
-          })
+        body
       }
     );
 
-  let data = {};
 
-  try {
+  let data={};
 
-    data =
+  try{
+
+    data=
       await response.json();
 
-  } catch (_) {}
+  }catch(_){}
 
-  if (!response.ok) {
+
+  if(!response.ok){
 
     throw new Error(
       data.message ||
       data.error ||
       "MSG91 access-token verification failed"
     );
+
   }
 
-  const status =
+
+  const status=
     String(
       data.type ||
       data.status ||
       data.message ||
       ""
-    ).toLowerCase();
+    )
+    .toLowerCase();
 
-  if (
-    data.success === false ||
+
+  if(
+    data.success===false ||
     status.includes("fail") ||
     status.includes("invalid")
-  ) {
+  ){
 
     throw new Error(
       data.message ||
       "OTP verification failed"
     );
+
   }
 
+
   return data;
+
 }
 
-/* =========================
-   OTP CONFIG
-========================= */
+
+/* =====================================================
+   OTP CONFIG FOR FRONTEND
+===================================================== */
 
 app.get(
   "/api/otp/config",
-  (req, res) => {
+  (req,res)=>{
 
-    const widgetConfigured =
+    const enabled=
       Boolean(
-        MSG91_WIDGET_ID
-      );
-
-    const tokenConfigured =
-      Boolean(
+        MSG91_WIDGET_ID &&
         MSG91_WIDGET_TOKEN
       );
 
-    res.set(
-      "Cache-Control",
-      "no-store"
-    );
-
     res.json({
 
-      enabled:
-        widgetConfigured &&
-        tokenConfigured,
+      enabled,
 
       widgetId:
-        widgetConfigured
-          ? MSG91_WIDGET_ID
-          : null,
+        MSG91_WIDGET_ID ||
+        null,
 
       tokenAuth:
-        tokenConfigured
-          ? MSG91_WIDGET_TOKEN
-          : null
+        MSG91_WIDGET_TOKEN ||
+        null
+
     });
+
   }
 );
 
-/* =========================
-   OTP LOGIN / SIGNUP
-========================= */
+
+/* =====================================================
+   OTP LOGIN ONLY
+===================================================== */
 
 app.post(
   "/api/otp/verify",
-  async (req, res) => {
+  async(req,res)=>{
 
-    const accessToken =
+    const accessToken=
       String(
-        req.body.accessToken || ""
+        req.body.accessToken ||
+        ""
       ).trim();
 
-    const requestedName =
-      String(
-        req.body.name || ""
-      ).trim();
 
-    const mode =
-      req.body.mode === "signup"
-        ? "signup"
-        : "login";
+    if(!accessToken){
 
-    if (!accessToken) {
+      return res
+        .status(400)
+        .json({
+          error:
+            "OTP access token missing"
+        });
 
-      return res.status(400).json({
-        error:
-          "OTP access token missing"
-      });
     }
 
-    try {
 
-      const verified =
+    try{
+
+      const verified=
         await verifyMsg91AccessToken(
           accessToken
         );
 
-      const tokenPayload =
+
+      const tokenPayload=
         decodeJwtPayload(
           accessToken
         );
 
-      const verifiedPhone =
+
+      const verifiedPhone=
         extractMsg91Phone(
           verified
         ) ||
@@ -593,67 +777,62 @@ app.post(
           tokenPayload
         );
 
-      if (
+
+      if(
         !/^\d{10}$/.test(
           verifiedPhone
         )
-      ) {
+      ){
 
-        return res.status(400).json({
-          error:
-            "MSG91 verified mobile number পাওয়া যায়নি"
-        });
+        return res
+          .status(400)
+          .json({
+            error:
+              "MSG91 verified mobile number পাওয়া যায়নি"
+          });
+
       }
 
-      let user =
-        db
-          .prepare(
-            "SELECT * FROM users WHERE phone=?"
-          )
-          .get(
-            verifiedPhone
-          );
 
-      if (
+      let user=
+        db.prepare(
+          "SELECT * FROM users WHERE phone=?"
+        )
+        .get(
+          verifiedPhone
+        );
+
+
+      /* Admin/Rider OTP দিয়ে login করতে পারবে না */
+
+      if(
         user &&
-        user.role !== "customer"
-      ) {
+        user.role!=="customer"
+      ){
 
-        return res.status(403).json({
-          error:
-            "Admin/Rider-এর জন্য password login ব্যবহার করুন"
-        });
+        return res
+          .status(403)
+          .json({
+            error:
+              "Admin/Rider-এর জন্য password login ব্যবহার করুন"
+          });
+
       }
 
-      if (
-        mode === "login" &&
-        !user
-      ) {
 
-        return res.status(404).json({
-          error:
-            "এই মোবাইল নম্বরে account নেই। আগে OTP Signup করুন।"
-        });
-      }
+      /*
+        IMPORTANT:
 
-      if (
-        mode === "signup" &&
-        user
-      ) {
+        Customer account না থাকলেও
+        প্রথম সফল OTP Login-এ account
+        automatically তৈরি হবে।
 
-        return res.status(409).json({
-          error:
-            "এই মোবাইল নম্বর আগে থেকেই registered। OTP Login করুন।"
-        });
-      }
+        তাই আলাদা OTP Signup আর দরকার নেই।
+      */
 
-      if (!user) {
+      if(!user){
 
-        const name =
-          requestedName ||
-          "Haroa Customer";
-
-        const randomPassword =
+        const randomPassword=
           bcrypt.hashSync(
             crypto
               .randomBytes(32)
@@ -661,1296 +840,1244 @@ app.post(
             10
           );
 
-        const info =
+
+        const info=
           db.prepare(`
+
             INSERT INTO users(
               name,
               phone,
               password,
               role
             )
-            VALUES(?,?,?,'customer')
-          `).run(
-            name,
+
+            VALUES(
+              ?,
+              ?,
+              ?,
+              'customer'
+            )
+
+          `)
+          .run(
+            "Haroa Customer",
             verifiedPhone,
             randomPassword
           );
 
-        user =
-          db
-            .prepare(
-              "SELECT * FROM users WHERE id=?"
-            )
-            .get(
-              info.lastInsertRowid
-            );
 
-      } else if (
-        requestedName &&
-        user.name !== requestedName
-      ) {
+        user=
+          db.prepare(
+            "SELECT * FROM users WHERE id=?"
+          )
+          .get(
+            info.lastInsertRowid
+          );
 
-        db.prepare(`
-          UPDATE users
-          SET name=?
-          WHERE id=?
-        `).run(
-          requestedName,
-          user.id
-        );
-
-        user =
-          db
-            .prepare(
-              "SELECT * FROM users WHERE id=?"
-            )
-            .get(
-              user.id
-            );
       }
 
-      req.session.user = {
 
-        id:
-          user.id,
+      req.session.user={
 
-        name:
-          user.name,
+        id:user.id,
 
-        phone:
-          user.phone,
+        name:user.name,
 
-        role:
-          user.role
+        phone:user.phone,
+
+        role:user.role
+
       };
+
 
       res.json({
 
-        ok: true,
+        ok:true,
 
         user:
-          req.session.user,
+          req.session.user
 
-        msg91:
-          verified
       });
 
-    } catch (error) {
+
+    }catch(error){
 
       console.error(
         "MSG91 OTP verify error:",
         error
       );
 
-      res.status(401).json({
+      res
+        .status(401)
+        .json({
+          error:
+            error.message ||
+            "OTP verification failed"
+        });
 
-        error:
-          error.message ||
-          "OTP verification failed"
-      });
     }
+
   }
 );
 
-/* =========================
-   PASSWORD REGISTER
-========================= */
 
-app.post(
-  "/api/register",
-  async (req, res) => {
-
-    const name =
-      String(
-        req.body.name || ""
-      ).trim();
-
-    const phone =
-      normalizeIndianPhone(
-        req.body.phone
-      );
-
-    const password =
-      String(
-        req.body.password || ""
-      );
-
-    if (
-      !name ||
-      !phone ||
-      !password
-    ) {
-
-      return res.status(400).json({
-        error:
-          "সব তথ্য দিন"
-      });
-    }
-
-    if (
-      !/^\d{10}$/.test(
-        phone
-      )
-    ) {
-
-      return res.status(400).json({
-        error:
-          "সঠিক 10 digit mobile number দিন"
-      });
-    }
-
-    if (
-      password.length < 6
-    ) {
-
-      return res.status(400).json({
-        error:
-          "Password কমপক্ষে 6 character হতে হবে"
-      });
-    }
-
-    try {
-
-      const hash =
-        await bcrypt.hash(
-          password,
-          10
-        );
-
-      const info =
-        db.prepare(`
-          INSERT INTO users(
-            name,
-            phone,
-            password,
-            role
-          )
-          VALUES(?,?,?,'customer')
-        `).run(
-          name,
-          phone,
-          hash
-        );
-
-      req.session.user = {
-
-        id:
-          info.lastInsertRowid,
-
-        name,
-
-        phone,
-
-        role:
-          "customer"
-      };
-
-      res.json({
-
-        ok: true,
-
-        user:
-          req.session.user
-      });
-
-    } catch (error) {
-
-      res.status(400).json({
-
-        error:
-          "এই মোবাইল নম্বর আগে ব্যবহার হয়েছে"
-      });
-    }
-  }
-);
-
-/* =========================
+/* =====================================================
    PASSWORD LOGIN
-========================= */
+   ONLY ADMIN / RIDER USE
+===================================================== */
 
 app.post(
   "/api/login",
-  async (req, res) => {
+  async(req,res)=>{
 
-    const phone =
+    const phone=
       normalizeIndianPhone(
         req.body.phone
       );
 
-    const password =
+    const password=
       String(
-        req.body.password || ""
+        req.body.password ||
+        ""
       );
 
-    const user =
-      db
-        .prepare(
-          "SELECT * FROM users WHERE phone=?"
-        )
-        .get(phone);
 
-    if (
+    const user=
+      db.prepare(
+        "SELECT * FROM users WHERE phone=?"
+      )
+      .get(
+        phone
+      );
+
+
+    if(
       !user ||
       !user.password ||
-      !(await bcrypt.compare(
-        password,
-        user.password
-      ))
-    ) {
+      !(
+        await bcrypt.compare(
+          password,
+          user.password
+        )
+      )
+    ){
 
-      return res.status(401).json({
-        error:
-          "মোবাইল বা password ভুল"
-      });
+      return res
+        .status(401)
+        .json({
+          error:
+            "মোবাইল বা password ভুল"
+        });
+
     }
 
-    req.session.user = {
 
-      id:
-        user.id,
+    req.session.user={
 
-      name:
-        user.name,
+      id:user.id,
 
-      phone:
-        user.phone,
+      name:user.name,
 
-      role:
-        user.role
+      phone:user.phone,
+
+      role:user.role
+
     };
+
 
     res.json({
 
-      ok: true,
+      ok:true,
 
       user:
         req.session.user
+
     });
+
   }
 );
 
-/* =========================
+
+/* =====================================================
    LOGOUT
-========================= */
+===================================================== */
 
 app.post(
   "/api/logout",
-  (req, res) => {
+  (req,res)=>{
 
     req.session.destroy(
-      error => {
-
-        if (error) {
-
-          console.error(
-            "Logout error:",
-            error
-          );
-
-          return res.status(500).json({
-            error:
-              "Logout failed"
-          });
-        }
-
+      ()=>{
         res.json({
-          ok: true
+          ok:true
         });
       }
     );
+
   }
 );
 
-/* =========================
+
+/* =====================================================
    CURRENT USER
-========================= */
+===================================================== */
 
 app.get(
   "/api/me",
-  (req, res) => {
-
-    if (!req.session.user) {
-
-      return res.json({
-        loggedIn: false
-      });
-    }
+  (req,res)=>{
 
     res.json({
 
-      loggedIn: true,
-
       user:
-        req.session.user
+        req.session.user ||
+        null
+
     });
+
   }
 );
 
-/* =========================
+
+/* =====================================================
    RESTAURANTS
-========================= */
+===================================================== */
 
 app.get(
   "/api/restaurants",
-  (req, res) => {
+  (req,res)=>{
 
-    const restaurants =
+    const restaurants=
       db.prepare(`
-        SELECT *
+
+        SELECT
+          id,
+          name,
+          area
+
         FROM restaurants
+
         WHERE approved=1
-        ORDER BY id DESC
+
+        ORDER BY name
+
       `).all();
+
+
+    const menuStmt=
+      db.prepare(`
+
+        SELECT
+          id,
+          name,
+          price
+
+        FROM menu
+
+        WHERE restaurant_id=?
+          AND available=1
+
+        ORDER BY id
+
+      `);
+
+
+    for(
+      const restaurant
+      of restaurants
+    ){
+
+      restaurant.menu=
+        menuStmt.all(
+          restaurant.id
+        );
+
+    }
+
 
     res.json(
       restaurants
     );
+
   }
 );
 
-/* =========================
-   RESTAURANT MENU
-========================= */
 
-app.get(
-  "/api/restaurants/:id/menu",
-  (req, res) => {
-
-    const restaurantId =
-      Number(
-        req.params.id
-      );
-
-    if (
-      !Number.isInteger(
-        restaurantId
-      )
-    ) {
-
-      return res.status(400).json({
-        error:
-          "Invalid restaurant id"
-      });
-    }
-
-    const menu =
-      db.prepare(`
-        SELECT *
-        FROM menu
-        WHERE restaurant_id=?
-        AND available=1
-        ORDER BY id
-      `).all(
-        restaurantId
-      );
-
-    res.json(menu);
-  }
-);
-
-/* =========================
+/* =====================================================
    CREATE ORDER
-========================= */
+===================================================== */
 
 app.post(
   "/api/orders",
   auth,
-  role("customer"),
-  (req, res) => {
+  (req,res)=>{
 
-    const restaurantId =
+    if(
+      req.session.user.role!=="customer"
+    ){
+
+      return res
+        .status(403)
+        .json({
+          error:
+            "Customer only"
+        });
+
+    }
+
+
+    const restaurantId=
       Number(
-        req.body.restaurant_id
+        req.body.restaurantId
       );
 
-    const address =
+    const address=
       String(
-        req.body.address || ""
+        req.body.address ||
+        ""
       ).trim();
 
-    const items =
-      Array.isArray(
-        req.body.items
-      )
-        ? req.body.items
-        : [];
+    const items=
+      req.body.items;
 
-    if (
-      !Number.isInteger(
-        restaurantId
-      ) ||
+
+    if(
+      !restaurantId ||
       !address ||
+      !Array.isArray(items) ||
       !items.length
-    ) {
+    ){
 
-      return res.status(400).json({
-        error:
-          "Restaurant, address এবং items প্রয়োজন"
-      });
+      return res
+        .status(400)
+        .json({
+          error:
+            "Order তথ্য অসম্পূর্ণ"
+        });
+
     }
 
-    const restaurant =
+
+    const ids=
+      items
+        .map(
+          item=>
+            Number(
+              item.menuId
+            )
+        )
+        .filter(Boolean);
+
+
+    if(!ids.length){
+
+      return res
+        .status(400)
+        .json({
+          error:
+            "Invalid menu"
+        });
+
+    }
+
+
+    const uniqueIds=
+      [
+        ...new Set(ids)
+      ];
+
+
+    const placeholders=
+      uniqueIds
+        .map(
+          ()=>"?"
+        )
+        .join(",");
+
+
+    const menus=
       db.prepare(`
-        SELECT *
-        FROM restaurants
-        WHERE id=?
-        AND approved=1
-      `).get(
-        restaurantId
+
+        SELECT
+          id,
+          name,
+          price,
+          restaurant_id
+
+        FROM menu
+
+        WHERE id IN (${placeholders})
+          AND available=1
+
+      `)
+      .all(
+        ...uniqueIds
       );
 
-    if (!restaurant) {
 
-      return res.status(404).json({
-        error:
-          "Restaurant পাওয়া যায়নি"
-      });
-    }
-
-    let total = 0;
-
-    const normalizedItems = [];
-
-    for (
-      const item of items
-    ) {
-
-      const menuId =
-        Number(
-          item.menu_id
-        );
-
-      const qty =
-        Number(
-          item.qty
-        );
-
-      if (
-        !Number.isInteger(
-          menuId
-        ) ||
-        !Number.isInteger(
-          qty
-        ) ||
-        qty < 1
-      ) {
-        continue;
-      }
-
-      const menu =
-        db.prepare(`
-          SELECT *
-          FROM menu
-          WHERE id=?
-          AND restaurant_id=?
-          AND available=1
-        `).get(
-          menuId,
+    if(
+      menus.length!==uniqueIds.length ||
+      menus.some(
+        m=>
+          Number(m.restaurant_id)!==
           restaurantId
-        );
+      )
+    ){
 
-      if (!menu) {
-        continue;
-      }
+      return res
+        .status(400)
+        .json({
+          error:
+            "Invalid menu"
+        });
 
-      total +=
-        Number(menu.price) *
-        qty;
-
-      normalizedItems.push({
-
-        menu_id:
-          menu.id,
-
-        name:
-          menu.name,
-
-        price:
-          Number(menu.price),
-
-        qty
-      });
     }
 
-    if (
-      !normalizedItems.length
-    ) {
 
-      return res.status(400).json({
-        error:
-          "Valid menu item পাওয়া যায়নি"
-      });
-    }
+    let total=0;
 
-    const createOrder =
-      db.transaction(
-        () => {
 
-          const order =
-            db.prepare(`
-              INSERT INTO orders(
-                customer_id,
-                restaurant_id,
-                total,
-                address,
-                status
-              )
-              VALUES(?,?,?,?,?)
-            `).run(
-              req.session.user.id,
-              restaurantId,
-              total,
-              address,
-              "Pending"
+    const normalized=
+      items.map(
+        item=>{
+
+          const menu=
+            menus.find(
+              m=>
+                Number(m.id)===
+                Number(item.menuId)
             );
 
-          const orderId =
-            order.lastInsertRowid;
 
-          const insertItem =
-            db.prepare(`
-              INSERT INTO order_items(
-                order_id,
-                menu_id,
-                name,
-                price,
-                qty
-              )
-              VALUES(?,?,?,?,?)
-            `);
+          if(!menu){
 
-          for (
-            const item of
-            normalizedItems
-          ) {
-
-            insertItem.run(
-              orderId,
-              item.menu_id,
-              item.name,
-              item.price,
-              item.qty
+            throw new Error(
+              "Invalid menu"
             );
+
           }
 
-          return orderId;
+
+          const qty=
+            Math.max(
+              1,
+              Math.min(
+                20,
+                Number(item.qty)||1
+              )
+            );
+
+
+          total+=
+            Number(menu.price)*
+            qty;
+
+
+          return{
+            ...menu,
+            qty
+          };
+
         }
       );
 
-    const orderId =
-      createOrder();
 
-    res.json({
+    try{
 
-      ok: true,
+      const createOrder=
+        db.transaction(
+          ()=>{
 
-      orderId,
+            const order=
+              db.prepare(`
 
-      total
-    });
+                INSERT INTO orders(
+                  customer_id,
+                  restaurant_id,
+                  total,
+                  address
+                )
+
+                VALUES(
+                  ?,
+                  ?,
+                  ?,
+                  ?
+                )
+
+              `)
+              .run(
+                req.session.user.id,
+                restaurantId,
+                total,
+                address
+              );
+
+
+            const insertItem=
+              db.prepare(`
+
+                INSERT INTO order_items(
+                  order_id,
+                  menu_id,
+                  name,
+                  price,
+                  qty
+                )
+
+                VALUES(
+                  ?,
+                  ?,
+                  ?,
+                  ?,
+                  ?
+                )
+
+              `);
+
+
+            for(
+              const item
+              of normalized
+            ){
+
+              insertItem.run(
+
+                order.lastInsertRowid,
+
+                item.id,
+
+                item.name,
+
+                item.price,
+
+                item.qty
+
+              );
+
+            }
+
+
+            return Number(
+              order.lastInsertRowid
+            );
+
+          }
+        );
+
+
+      const orderId=
+        createOrder();
+
+
+      res.json({
+
+        ok:true,
+
+        orderId,
+
+        total
+
+      });
+
+
+    }catch(error){
+
+      console.error(
+        error
+      );
+
+      res
+        .status(400)
+        .json({
+          error:
+            "Order create করা যায়নি"
+        });
+
+    }
+
   }
 );
 
-/* =========================
-   CUSTOMER / RIDER / ADMIN ORDERS
-========================= */
+
+/* =====================================================
+   ORDERS
+===================================================== */
 
 app.get(
   "/api/orders",
   auth,
-  (req, res) => {
+  (req,res)=>{
+
+    const user=
+      req.session.user;
 
     let orders;
 
-    if (
-      req.session.user.role ===
-      "customer"
-    ) {
 
-      orders =
+    if(
+      user.role==="customer"
+    ){
+
+      orders=
         db.prepare(`
+
           SELECT
             o.*,
-            r.name AS restaurant_name
+            r.name AS restaurant
+
           FROM orders o
-          LEFT JOIN restaurants r
+
+          JOIN restaurants r
             ON r.id=o.restaurant_id
+
           WHERE o.customer_id=?
+
           ORDER BY o.id DESC
-        `).all(
-          req.session.user.id
+
+        `)
+        .all(
+          user.id
         );
 
-    } else if (
-      req.session.user.role ===
-      "rider"
-    ) {
 
-      orders =
+    }else if(
+      user.role==="admin"
+    ){
+
+      orders=
         db.prepare(`
+
           SELECT
             o.*,
-            r.name AS restaurant_name
+            r.name AS restaurant,
+            u.name AS customer,
+            u.phone
+
           FROM orders o
-          LEFT JOIN restaurants r
+
+          JOIN restaurants r
             ON r.id=o.restaurant_id
-          WHERE o.delivery_id=?
+
+          JOIN users u
+            ON u.id=o.customer_id
+
           ORDER BY o.id DESC
-        `).all(
-          req.session.user.id
+
+        `)
+        .all();
+
+
+    }else{
+
+      orders=
+        db.prepare(`
+
+          SELECT
+            o.*,
+            r.name AS restaurant
+
+          FROM orders o
+
+          JOIN restaurants r
+            ON r.id=o.restaurant_id
+
+          WHERE
+            o.delivery_id=?
+
+            OR
+            (
+              o.delivery_id IS NULL
+              AND o.status='Pending'
+            )
+
+          ORDER BY o.id DESC
+
+        `)
+        .all(
+          user.id
         );
 
-    } else {
-
-      orders =
-        db.prepare(`
-          SELECT
-            o.*,
-            r.name AS restaurant_name
-          FROM orders o
-          LEFT JOIN restaurants r
-            ON r.id=o.restaurant_id
-          ORDER BY o.id DESC
-        `).all();
     }
+
+
+    const itemStmt=
+      db.prepare(`
+
+        SELECT
+          name,
+          price,
+          qty
+
+        FROM order_items
+
+        WHERE order_id=?
+
+      `);
+
+
+    for(
+      const order
+      of orders
+    ){
+
+      order.items=
+        itemStmt.all(
+          order.id
+        );
+
+    }
+
 
     res.json(
       orders
     );
+
   }
 );
 
-/* =========================
-   ORDER DETAILS
-========================= */
 
-app.get(
-  "/api/orders/:id",
-  auth,
-  (req, res) => {
-
-    const orderId =
-      Number(
-        req.params.id
-      );
-
-    if (
-      !Number.isInteger(
-        orderId
-      )
-    ) {
-
-      return res.status(400).json({
-        error:
-          "Invalid order id"
-      });
-    }
-
-    const order =
-      db.prepare(`
-        SELECT
-          o.*,
-          r.name AS restaurant_name
-        FROM orders o
-        LEFT JOIN restaurants r
-          ON r.id=o.restaurant_id
-        WHERE o.id=?
-      `).get(
-        orderId
-      );
-
-    if (!order) {
-
-      return res.status(404).json({
-        error:
-          "Order পাওয়া যায়নি"
-      });
-    }
-
-    if (
-      req.session.user.role ===
-      "customer" &&
-      order.customer_id !==
-        req.session.user.id
-    ) {
-
-      return res.status(403).json({
-        error:
-          "Not allowed"
-      });
-    }
-
-    const items =
-      db.prepare(`
-        SELECT *
-        FROM order_items
-        WHERE order_id=?
-        ORDER BY id
-      `).all(
-        orderId
-      );
-
-    res.json({
-
-      order,
-
-      items
-    });
-  }
-);
-
-/* =========================
+/* =====================================================
    UPDATE ORDER STATUS
-========================= */
+===================================================== */
 
 app.patch(
   "/api/orders/:id/status",
   auth,
-  role("admin", "rider"),
-  (req, res) => {
+  (req,res)=>{
 
-    const orderId =
-      Number(
-        req.params.id
+    const status=
+      String(
+        req.body.status ||
+        ""
       );
 
-    const status =
-      String(
-        req.body.status || ""
-      ).trim();
 
-    const allowed = [
-      "Pending",
+    const allowed=[
       "Accepted",
       "Preparing",
-      "Ready",
-      "Picked Up",
-      "Out for Delivery",
+      "Picked up",
       "Delivered",
       "Cancelled"
     ];
 
-    if (
-      !Number.isInteger(
-        orderId
-      ) ||
+
+    if(
       !allowed.includes(
         status
       )
-    ) {
+    ){
 
-      return res.status(400).json({
-        error:
-          "Invalid order status"
-      });
+      return res
+        .status(400)
+        .json({
+          error:
+            "Invalid status"
+        });
+
     }
 
-    const order =
-      db.prepare(`
-        SELECT *
-        FROM orders
-        WHERE id=?
-      `).get(
-        orderId
+
+    const order=
+      db.prepare(
+        "SELECT * FROM orders WHERE id=?"
+      )
+      .get(
+        req.params.id
       );
 
-    if (!order) {
 
-      return res.status(404).json({
-        error:
-          "Order পাওয়া যায়নি"
-      });
+    if(!order){
+
+      return res
+        .status(404)
+        .json({
+          error:
+            "Order not found"
+        });
+
     }
 
-    if (
-      req.session.user.role ===
-      "rider" &&
-      order.delivery_id !==
-        req.session.user.id
-    ) {
 
-      return res.status(403).json({
-        error:
-          "এই order আপনার assigned নয়"
+    const user=
+      req.session.user;
+
+
+    if(
+      user.role==="admin"
+    ){
+
+      db.prepare(
+        "UPDATE orders SET status=? WHERE id=?"
+      )
+      .run(
+        status,
+        order.id
+      );
+
+      return res.json({
+        ok:true
       });
+
     }
 
-    db.prepare(`
-      UPDATE orders
-      SET status=?
-      WHERE id=?
-    `).run(
-      status,
-      orderId
-    );
 
-    res.json({
-      ok: true
-    });
+    if(
+      user.role==="rider"
+    ){
+
+      if(
+        Number(order.delivery_id)!==
+        Number(user.id)
+      ){
+
+        return res
+          .status(403)
+          .json({
+            error:
+              "This order is not assigned to you"
+          });
+
+      }
+
+
+      if(
+        ![
+          "Picked up",
+          "Delivered"
+        ].includes(
+          status
+        )
+      ){
+
+        return res
+          .status(400)
+          .json({
+            error:
+              "Rider cannot set this status"
+          });
+
+      }
+
+
+      db.prepare(
+        "UPDATE orders SET status=? WHERE id=?"
+      )
+      .run(
+        status,
+        order.id
+      );
+
+
+      return res.json({
+        ok:true
+      });
+
+    }
+
+
+    res
+      .status(403)
+      .json({
+        error:
+          "Customer cannot change order status"
+      });
+
   }
 );
 
-/* =========================
-   RIDER AVAILABLE ORDERS
-========================= */
 
-app.get(
-  "/api/rider/orders",
+/* =====================================================
+   RIDER CLAIM
+===================================================== */
+
+app.post(
+  "/api/delivery/claim/:id",
   auth,
   role("rider"),
-  (req, res) => {
+  (req,res)=>{
 
-    const orders =
+    const order=
+      db.prepare(
+        "SELECT * FROM orders WHERE id=?"
+      )
+      .get(
+        req.params.id
+      );
+
+
+    if(!order){
+
+      return res
+        .status(404)
+        .json({
+          error:
+            "Order not found"
+        });
+
+    }
+
+
+    if(order.delivery_id){
+
+      return res
+        .status(409)
+        .json({
+          error:
+            "এই order অন্য rider already গ্রহণ করেছে"
+        });
+
+    }
+
+
+    const result=
       db.prepare(`
-        SELECT
-          o.*,
-          r.name AS restaurant_name
-        FROM orders o
-        LEFT JOIN restaurants r
-          ON r.id=o.restaurant_id
+
+        UPDATE orders
+
+        SET
+          delivery_id=?,
+          status='Accepted'
+
         WHERE
-          o.delivery_id IS NULL
-          AND o.status IN(
-            'Pending',
-            'Accepted',
-            'Preparing',
-            'Ready'
-          )
-        ORDER BY o.id ASC
-      `).all();
+          id=?
+          AND delivery_id IS NULL
+          AND status='Pending'
 
-    res.json(
-      orders
-    );
-  }
-);
-
-/* =========================
-   RIDER ACCEPT ORDER
-========================= */
-
-app.post(
-  "/api/rider/orders/:id/accept",
-  auth,
-  role("rider"),
-  (req, res) => {
-
-    const orderId =
-      Number(
-        req.params.id
+      `)
+      .run(
+        req.session.user.id,
+        order.id
       );
 
-    if (
-      !Number.isInteger(
-        orderId
-      )
-    ) {
 
-      return res.status(400).json({
-        error:
-          "Invalid order id"
-      });
+    if(!result.changes){
+
+      return res
+        .status(409)
+        .json({
+          error:
+            "Order আর available নেই"
+        });
+
     }
 
-    const order =
-      db.prepare(`
-        SELECT *
-        FROM orders
-        WHERE id=?
-      `).get(
-        orderId
-      );
-
-    if (!order) {
-
-      return res.status(404).json({
-        error:
-          "Order পাওয়া যায়নি"
-      });
-    }
-
-    if (order.delivery_id) {
-
-      return res.status(409).json({
-        error:
-          "এই order already assigned"
-      });
-    }
-
-    db.prepare(`
-      UPDATE orders
-      SET
-        delivery_id=?,
-        status='Accepted'
-      WHERE id=?
-    `).run(
-      req.session.user.id,
-      orderId
-    );
 
     res.json({
-      ok: true
+      ok:true
     });
+
   }
 );
 
-/* =========================
-   ADMIN USERS
-========================= */
 
-app.get(
-  "/api/admin/users",
+/* =====================================================
+   ADMIN ADD RESTAURANT
+===================================================== */
+
+app.post(
+  "/api/restaurants",
   auth,
   role("admin"),
-  (req, res) => {
+  (req,res)=>{
 
-    const users =
+    const name=
+      String(
+        req.body.name ||
+        ""
+      ).trim();
+
+    const area=
+      String(
+        req.body.area ||
+        ""
+      ).trim();
+
+    const phone=
+      String(
+        req.body.phone ||
+        ""
+      ).trim();
+
+
+    if(
+      !name ||
+      !area
+    ){
+
+      return res
+        .status(400)
+        .json({
+          error:
+            "Restaurant name এবং area দিন"
+        });
+
+    }
+
+
+    const result=
       db.prepare(`
-        SELECT
-          id,
+
+        INSERT INTO restaurants(
           name,
+          area,
           phone,
-          role
-        FROM users
-        ORDER BY id DESC
-      `).all();
+          approved
+        )
 
-    res.json(
-      users
-    );
+        VALUES(
+          ?,
+          ?,
+          ?,
+          1
+        )
+
+      `)
+      .run(
+        name,
+        area,
+        phone
+      );
+
+
+    res.json({
+
+      ok:true,
+
+      id:
+        result.lastInsertRowid
+
+    });
+
   }
 );
 
-/* =========================
-   ADMIN ORDERS
-========================= */
 
-app.get(
-  "/api/admin/orders",
-  auth,
-  role("admin"),
-  (req, res) => {
-
-    const orders =
-      db.prepare(`
-        SELECT
-          o.*,
-          c.name AS customer_name,
-          c.phone AS customer_phone,
-          r.name AS restaurant_name,
-          d.name AS rider_name
-        FROM orders o
-
-        LEFT JOIN users c
-          ON c.id=o.customer_id
-
-        LEFT JOIN restaurants r
-          ON r.id=o.restaurant_id
-
-        LEFT JOIN users d
-          ON d.id=o.delivery_id
-
-        ORDER BY o.id DESC
-      `).all();
-
-    res.json(
-      orders
-    );
-  }
-);
-
-/* =========================
-   ADMIN RIDERS
-========================= */
-
-app.get(
-  "/api/admin/riders",
-  auth,
-  role("admin"),
-  (req, res) => {
-
-    const riders =
-      db.prepare(`
-        SELECT
-          id,
-          name,
-          phone
-        FROM users
-        WHERE role='rider'
-        ORDER BY id DESC
-      `).all();
-
-    res.json(
-      riders
-    );
-  }
-);
-
-/* =========================
-   ADMIN ASSIGN RIDER
-========================= */
+/* =====================================================
+   ADMIN ADD MENU
+===================================================== */
 
 app.post(
-  "/api/admin/orders/:id/assign-rider",
+  "/api/menu",
   auth,
   role("admin"),
-  (req, res) => {
+  (req,res)=>{
 
-    const orderId =
+    const restaurantId=
       Number(
-        req.params.id
+        req.body.restaurantId
       );
 
-    const riderId =
+    const name=
+      String(
+        req.body.name ||
+        ""
+      ).trim();
+
+    const price=
       Number(
-        req.body.rider_id
+        req.body.price
       );
 
-    if (
-      !Number.isInteger(
-        orderId
-      ) ||
-      !Number.isInteger(
-        riderId
+
+    if(
+      !restaurantId ||
+      !name ||
+      !Number.isFinite(price) ||
+      price<=0
+    ){
+
+      return res
+        .status(400)
+        .json({
+          error:
+            "Menu তথ্য সঠিক নয়"
+        });
+
+    }
+
+
+    const restaurant=
+      db.prepare(
+        "SELECT id FROM restaurants WHERE id=?"
       )
-    ) {
-
-      return res.status(400).json({
-        error:
-          "Invalid order বা rider"
-      });
-    }
-
-    const rider =
-      db.prepare(`
-        SELECT id
-        FROM users
-        WHERE id=?
-        AND role='rider'
-      `).get(
-        riderId
+      .get(
+        restaurantId
       );
 
-    if (!rider) {
 
-      return res.status(404).json({
-        error:
-          "Rider পাওয়া যায়নি"
-      });
+    if(!restaurant){
+
+      return res
+        .status(404)
+        .json({
+          error:
+            "Restaurant not found"
+        });
+
     }
 
-    const order =
+
+    const result=
       db.prepare(`
-        SELECT id
-        FROM orders
-        WHERE id=?
-      `).get(
-        orderId
+
+        INSERT INTO menu(
+          restaurant_id,
+          name,
+          price
+        )
+
+        VALUES(
+          ?,
+          ?,
+          ?
+        )
+
+      `)
+      .run(
+        restaurantId,
+        name,
+        price
       );
 
-    if (!order) {
-
-      return res.status(404).json({
-        error:
-          "Order পাওয়া যায়নি"
-      });
-    }
-
-    db.prepare(`
-      UPDATE orders
-      SET
-        delivery_id=?,
-        status='Accepted'
-      WHERE id=?
-    `).run(
-      riderId,
-      orderId
-    );
 
     res.json({
-      ok: true
+
+      ok:true,
+
+      id:
+        result.lastInsertRowid
+
     });
+
   }
 );
 
-/* =========================
-   ADMIN RESTAURANTS
-========================= */
+
+/* =====================================================
+   ADMIN STATS
+===================================================== */
 
 app.get(
-  "/api/admin/restaurants",
+  "/api/admin/stats",
   auth,
   role("admin"),
-  (req, res) => {
-
-    const restaurants =
-      db.prepare(`
-        SELECT *
-        FROM restaurants
-        ORDER BY id DESC
-      `).all();
-
-    res.json(
-      restaurants
-    );
-  }
-);
-
-/* =========================
-   ADMIN APPROVE RESTAURANT
-========================= */
-
-app.patch(
-  "/api/admin/restaurants/:id/approve",
-  auth,
-  role("admin"),
-  (req, res) => {
-
-    const restaurantId =
-      Number(
-        req.params.id
-      );
-
-    if (
-      !Number.isInteger(
-        restaurantId
-      )
-    ) {
-
-      return res.status(400).json({
-        error:
-          "Invalid restaurant id"
-      });
-    }
-
-    db.prepare(`
-      UPDATE restaurants
-      SET approved=1
-      WHERE id=?
-    `).run(
-      restaurantId
-    );
+  (req,res)=>{
 
     res.json({
-      ok: true
+
+      restaurants:
+        db.prepare(
+          "SELECT COUNT(*) c FROM restaurants"
+        )
+        .get()
+        .c,
+
+      customers:
+        db.prepare(
+          "SELECT COUNT(*) c FROM users WHERE role='customer'"
+        )
+        .get()
+        .c,
+
+      riders:
+        db.prepare(
+          "SELECT COUNT(*) c FROM users WHERE role='rider'"
+        )
+        .get()
+        .c,
+
+      orders:
+        db.prepare(
+          "SELECT COUNT(*) c FROM orders"
+        )
+        .get()
+        .c,
+
+      revenue:
+        db.prepare(`
+
+          SELECT
+            COALESCE(
+              SUM(total),
+              0
+            ) s
+
+          FROM orders
+
+          WHERE status!='Cancelled'
+
+        `)
+        .get()
+        .s
+
     });
+
   }
 );
 
-/* =========================
-   HEALTH CHECK
-========================= */
+
+/* =====================================================
+   HEALTH
+===================================================== */
 
 app.get(
   "/api/health",
-  (req, res) => {
+  (req,res)=>{
 
     res.json({
 
-      ok: true,
+      ok:true,
 
       service:
-        "Haroa Eats",
+        "haroa-eats",
 
-      msg91Widget:
+      otpConfigured:
         Boolean(
-          MSG91_WIDGET_ID
-        ),
-
-      msg91WidgetToken:
-        Boolean(
-          MSG91_WIDGET_TOKEN
-        ),
-
-      msg91AuthKey:
-        Boolean(
+          MSG91_WIDGET_ID &&
+          MSG91_WIDGET_TOKEN &&
           MSG91_AUTHKEY
-        ),
+        )
 
-      time:
-        new Date().toISOString()
     });
+
   }
 );
 
-/* =========================
-   404 API
-========================= */
 
-app.use(
-  "/api",
-  (req, res) => {
+/* =====================================================
+   START
+===================================================== */
 
-    res.status(404).json({
-      error:
-        "API endpoint not found"
-    });
-  }
-);
-
-/* =========================
-   ERROR HANDLER
-========================= */
-
-app.use(
-  (
-    error,
-    req,
-    res,
-    next
-  ) => {
-
-    console.error(
-      "Server error:",
-      error
-    );
-
-    if (res.headersSent) {
-      return next(error);
-    }
-
-    res.status(500).json({
-
-      error:
-        "Internal server error"
-    });
-  }
-);
-
-/* =========================
-   START SERVER
-========================= */
-
-const PORT =
-  Number(
-    process.env.PORT || 10000
-  );
+const PORT=
+  process.env.PORT ||
+  3000;
 
 app.listen(
   PORT,
-  "0.0.0.0",
-  () => {
-
+  ()=>{
     console.log(
       `Haroa Eats running on port ${PORT}`
     );
 
     console.log(
-      `MSG91 widget configured: ${
-        Boolean(MSG91_WIDGET_ID)
-      }`
+      "MSG91 widget:",
+      MSG91_WIDGET_ID
+        ? "configured"
+        : "MISSING"
     );
 
     console.log(
-      `MSG91 widget token configured: ${
-        Boolean(MSG91_WIDGET_TOKEN)
-      }`
+      "MSG91 widget token:",
+      MSG91_WIDGET_TOKEN
+        ? "configured"
+        : "MISSING"
     );
 
     console.log(
-      `MSG91 authkey configured: ${
-        Boolean(MSG91_AUTHKEY)
-      }`
+      "MSG91 authkey:",
+      MSG91_AUTHKEY
+        ? "configured"
+        : "MISSING"
     );
   }
 );
